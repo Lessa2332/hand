@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>🎃 Манікюр на Гелловін! (WebGL)</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎃</text></svg>">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      touch-action: none;
+    }
+    body {
+      background: #0f0c29;
+      background: linear-gradient(to right, #24243e, #302b63, #0f0c29);
+      overflow: hidden;
+      font-family: 'Arial', 'Comic Sans MS', cursive, sans-serif;
+      color: white;
+    }
+    #video, #canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: none;
+    }
+    #video {
+      z-index: 5;
+    }
+    #canvas {
+      z-index: 10;
+    }
+
+    #langBtn {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(5px);
+      border: 2px solid white;
+      color: white;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 100;
+      font-weight: bold;
+      transition: transform 0.2s;
+    }
+    #langBtn:hover {
+      transform: scale(1.1);
+    }
+
+    #soundBtn {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(5px);
+      border: 2px solid white;
+      color: white;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 100;
+      transition: transform 0.2s;
+    }
+    #soundBtn:hover {
+      transform: scale(1.1);
+    }
+
+    #modeControls {
+      position: fixed;
+      top: 90px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 12px;
+      z-index: 100;
+    }
+    .mode-btn {
+      padding: 8px 16px;
+      border-radius: 20px;
+      background: #ff6b6b;
+      color: white;
+      border: none;
+      font-weight: bold;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      transition: transform 0.2s;
+    }
+    .mode-btn:hover {
+      transform: scale(1.05);
+    }
+    .mode-btn.active {
+      background: #ff4757;
+      animation: pulse 1.5s infinite;
+    }
+
+    #designPicker {
+      position: fixed;
+      bottom: 20px;
+      left: 0;
+      width: 100%;
+      display: flex;
+      gap: 14px;
+      z-index: 100;
+      overflow-x: auto;
+      white-space: nowrap;
+      padding: 0 20px;
+      box-sizing: border-box;
+      scrollbar-width: thin;
+      scrollbar-color: #ff4757 transparent;
+    }
+    .design-btn {
+      width: 64px;
+      height: 64px;
+      border-radius: 18px;
+      border: 3px solid white;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+      background: white;
+      cursor: pointer;
+      transition: transform 0.2s;
+      flex-shrink: 0;
+    }
+    .design-btn:hover, .design-btn.selected {
+      transform: scale(1.1);
+      box-shadow: 0 0 0 4px gold;
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.7); }
+      70% { box-shadow: 0 0 0 12px rgba(255, 71, 87, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(255, 71, 87, 0); }
+    }
+
+    #loading {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.9);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      color: orange;
+      font-size: 20px;
+      text-align: center;
+      padding: 20px;
+    }
+    #loading p {
+      margin-top: 20px;
+      color: white;
+      font-size: 16px;
+    }
+
+    #errorRetry {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #ff4757;
+      border: none;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 10px;
+    }
+
+    #cameraIndicator, #handIndicator {
+      position: fixed;
+      top: 70px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 14px;
+      color: lime;
+      z-index: 100;
+      display: none;
+    }
+    #handIndicator {
+      top: 100px;
+      color: white;
+    }
+
+    #tipOverlay {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0,0,0,0.7);
+      padding: 20px;
+      border-radius: 10px;
+      color: white;
+      font-size: 18px;
+      z-index: 99;
+      display: none;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div id="loading">
+    🎃 Завантаження Гелловінського манікюру...
+    <p>Надайте доступ до камери, коли з'явиться запит</p>
+  </div>
+
+  <video id="video" playsinline muted></video>
+  <canvas id="canvas"></canvas>
+
+  <div id="langBtn" aria-label="Переключити мову">UK</div>
+  <div id="soundBtn" aria-label="Увімкнути/вимкнути звук">🔊</div>
+
+  <div id="modeControls">
+    <button class="mode-btn active" id="applyAllBtn" aria-label="Застосувати до всіх пальців">💅 Усі пальці</button>
+    <button class="mode-btn" id="selectFingerBtn" aria-label="Обрати палець">👆 Обрати палець</button>
+  </div>
+
+  <div id="designPicker"></div>
+  <div id="cameraIndicator">📹 Задня камера активна</div>
+  <div id="handIndicator">✋ Рука не виявлена</div>
+  <div id="tipOverlay">Тримайте руку так, щоб було видно ваші нігті</div>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.158.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.158.0/examples/jsm/"
+      }
+    }
+  </script>
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { HandLandmarker, FilesetResolver } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/+esm";
+
+    const FINGER_INDICES = {
+      thumb: { tip: 4, dip: 3, pip: 2, mcp: 1 },
+      index: { tip: 8, dip: 7, pip: 6, mcp: 5 },
+      middle: { tip: 12, dip: 11, pip: 10, mcp: 9 },
+      ring: { tip: 16, dip: 15, pip: 14, mcp: 13 },
+      pinky: { tip: 20, dip: 19, pip: 18, mcp: 17 }
+    };
+    const FINGER_KEYS = ['thumb', 'index', 'middle', 'ring', 'pinky'];
+
+    const translations = {
+      en: {
+        title: "🎃 Halloween Nail Try-On!",
+        loading: "🎃 Loading Halloween Nail Try-On...",
+        cameraPrompt: "Please allow camera access when prompted",
+        allFingers: "💅 All Fingers",
+        pickFinger: "👆 Pick Finger",
+        cameraError: "❌ Could not access camera.<br>Try Chrome or Safari.",
+        arError: "❌ AR failed to load.<br>Refresh the page.",
+        retry: "Retry",
+        cameraIndicator: "📹 Camera Active",
+        rearCamera: "📹 Rear Camera Active",
+        frontCamera: "📹 Front Camera Active",
+        handNotDetected: "✋ Hand not detected"
+      },
+      uk: {
+        title: "🎃 Манікюр на Гелловін!",
+        loading: "🎃 Завантаження Гелловінського манікюру...",
+        cameraPrompt: "Надайте доступ до камери, коли з'явиться запит",
+        allFingers: "💅 Усі пальці",
+        pickFinger: "👆 Обрати палець",
+        cameraError: "❌ Не вдалося отримати доступ до камери.<br>Спробуйте у Chrome або Safari.",
+        arError: "❌ Помилка завантаження AR.<br>Спробуйте оновити сторінку.",
+        retry: "Повторити",
+        cameraIndicator: "📹 Камера активна",
+        rearCamera: "📹 Задня камера активна",
+        frontCamera: "📹 Передня камера активна",
+        handNotDetected: "✋ Рука не виявлена"
+      }
+    };
+
+    let currentLang = localStorage.getItem('lang') || 'uk';
+    if (!['en', 'uk'].includes(currentLang)) currentLang = 'uk';
+    document.documentElement.lang = currentLang;
+    document.title = translations[currentLang].title;
+
+    const video = document.getElementById("video");
+    const canvas = document.getElementById("canvas");
+    const loading = document.getElementById("loading");
+    const langBtn = document.getElementById("langBtn");
+    const soundBtn = document.getElementById("soundBtn");
+    const applyAllBtn = document.getElementById("applyAllBtn");
+    const selectFingerBtn = document.getElementById("selectFingerBtn");
+    const designPicker = document.getElementById("designPicker");
+    const cameraIndicator = document.getElementById("cameraIndicator");
+    const handIndicator = document.getElementById("handIndicator");
+    const tipOverlay = document.getElementById("tipOverlay");
+
+    let needsRedraw = true;
+
+    function updateTexts(isRearCamera = true) {
+      document.title = translations[currentLang].title;
+      langBtn.textContent = currentLang.toUpperCase();
+      langBtn.setAttribute('aria-label', currentLang === 'en' ? 'Switch to Ukrainian' : 'Переключити на українську');
+      
+      loading.innerHTML = `
+        🎃 ${translations[currentLang].loading}
+        <p>${translations[currentLang].cameraPrompt}</p>
+      `;
+      
+      applyAllBtn.textContent = translations[currentLang].allFingers;
+      selectFingerBtn.textContent = translations[currentLang].pickFinger;
+      cameraIndicator.textContent = isRearCamera ? translations[currentLang].rearCamera : translations[currentLang].frontCamera;
+      handIndicator.textContent = translations[currentLang].handNotDetected;
+    }
+
+    langBtn.onclick = () => {
+      currentLang = currentLang === 'en' ? 'uk' : 'en';
+      localStorage.setItem('lang', currentLang);
+      document.documentElement.lang = currentLang;
+      updateTexts(video.srcObject?.getVideoTracks()[0]?.getCapabilities().facingMode === 'environment');
+    };
+
+    const DESIGNS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
+    let currentDesign = "1";
+    let nailImages = {};
+    let isApplyAll = true;
+    let selectedFingerIndex = -1;
+    let isMuted = false;
+    let bgAudio, clickAudio;
+    let lastLandmarks = null;
+    let smoothedLandmarks = null;
+    const SMOOTHING_FACTOR = 0.7;
+
+    function initAudio() {
+      bgAudio = new Audio("audio/bg-music.mp3");
+      clickAudio = new Audio("audio/click.mp3");
+      bgAudio.loop = true;
+      bgAudio.volume = 0.3;
+      clickAudio.volume = 0.6;
+      if (!isMuted) bgAudio.play().catch(e => console.log("Audio autoplay blocked:", e));
+
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden && !isMuted) {
+          bgAudio.pause();
+        } else if (!document.hidden && !isMuted) {
+          bgAudio.play().catch(() => {});
+        }
+      });
+    }
+
+    async function loadDesigns() {
+      loading.innerHTML += '<p>Завантаження дизайнів...</p>';
+      const promises = DESIGNS.map(name => new Promise((resolve, reject) => {
+        const img = new Image();
+        img.src = `nails/halloween/${name}.png`;
+        img.onload = () => resolve({ name, img });
+        img.onerror = () => reject(new Error(`Failed to load image: nails/halloween/${name}.png`));
+      }));
+      try {
+        const loaded = await Promise.all(promises);
+        nailImages = Object.fromEntries(loaded.map(({ name, img }) => [name, img]));
+      } catch (e) {
+        console.error(e);
+        loading.innerHTML = `${translations[currentLang].arError}<br><button id="errorRetry">${translations[currentLang].retry}</button>`;
+        document.getElementById('errorRetry').onclick = () => location.reload();
+        throw e;
+      }
+    }
+
+    function buildDesignUI() {
+      designPicker.innerHTML = "";
+      DESIGNS.forEach(name => {
+        const btn = document.createElement("img");
+        btn.loading = "lazy";
+        btn.src = `nails/halloween/${name}.png`;
+        btn.className = "design-btn";
+        btn.alt = `Дизайн нігтів ${name}`;
+        if (name === currentDesign) btn.classList.add("selected");
+        btn.onclick = () => {
+          currentDesign = name;
+          document.querySelectorAll(".design-btn").forEach(b => b.classList.remove("selected"));
+          btn.classList.add("selected");
+          needsRedraw = true;
+          if (!isMuted) {
+            clickAudio.currentTime = 0;
+            clickAudio.play().catch(() => {});
+          }
+        };
+        designPicker.appendChild(btn);
+      });
+    }
+
+    applyAllBtn.onclick = () => {
+      isApplyAll = true;
+      selectedFingerIndex = -1;
+      applyAllBtn.classList.add("active");
+      selectFingerBtn.classList.remove("active");
+      needsRedraw = true;
+    };
+    
+    selectFingerBtn.onclick = () => {
+      isApplyAll = false;
+      applyAllBtn.classList.remove("active");
+      selectFingerBtn.classList.add("active");
+      needsRedraw = true;
+    };
+
+    soundBtn.onclick = () => {
+      isMuted = !isMuted;
+      soundBtn.textContent = isMuted ? "🔇" : "🎵";
+      soundBtn.setAttribute('aria-label', isMuted ? 'Увімкнути звук' : 'Вимкнути звук');
+      if (isMuted) {
+        bgAudio.pause();
+      } else {
+        bgAudio.play().catch(() => {});
+      }
+    };
+
+    async function getUserMediaWrapper(facingMode) {
+      return navigator.mediaDevices.getUserMedia({
+        video: { 
+          facingMode: facingMode,
+          width: { ideal: 1280 },
+          height: { ideal: 720 }
+        }
+      });
+    }
+
+    async function setupCamera() {
+      try {
+        const stream = await getUserMediaWrapper("environment");
+        video.srcObject = stream;
+        cameraIndicator.style.display = 'block';
+        const isRear = stream.getVideoTracks()[0].getCapabilities().facingMode === 'environment';
+        updateTexts(isRear);
+        return new Promise(resolve => {
+          video.onloadedmetadata = () => {
+            video.play();
+            resolve();
+          };
+        });
+      } catch (e) {
+        try {
+          const stream = await getUserMediaWrapper("user");
+          video.srcObject = stream;
+          cameraIndicator.style.display = 'block';
+          updateTexts(false);
+          return new Promise(resolve => {
+            video.onloadedmetadata = () => {
+              video.play();
+              resolve();
+            };
+          });
+        } catch (fallbackError) {
+          loading.innerHTML = `${translations[currentLang].cameraError}<br><button id="errorRetry">${translations[currentLang].retry}</button>`;
+          document.getElementById('errorRetry').onclick = setupCamera;
+          console.error("Camera error:", fallbackError);
+          throw fallbackError;
+        }
+      }
+    }
+
+    function smoothLandmarks(newLandmarks) {
+      if (!smoothedLandmarks) {
+        smoothedLandmarks = newLandmarks.map(lm => ({ x: lm.x, y: lm.y, z: lm.z }));
+        return smoothedLandmarks;
+      }
+      for (let i = 0; i < newLandmarks.length; i++) {
+        smoothedLandmarks[i].x = smoothedLandmarks[i].x * (1 - SMOOTHING_FACTOR) + newLandmarks[i].x * SMOOTHING_FACTOR;
+        smoothedLandmarks[i].y = smoothedLandmarks[i].y * (1 - SMOOTHING_FACTOR) + newLandmarks[i].y * SMOOTHING_FACTOR;
+        smoothedLandmarks[i].z = smoothedLandmarks[i].z * (1 - SMOOTHING_FACTOR) + newLandmarks[i].z * SMOOTHING_FACTOR;
+      }
+      return smoothedLandmarks;
+    }
+
+    function getClosestFinger(touchX, touchY, landmarks) {
+      if (!landmarks) return -1;
+      let minDist = Infinity;
+      let closestIndex = -1;
+      
+      FINGER_KEYS.forEach((key, i) => {
+        const lm = landmarks[FINGER_INDICES[key].tip];
+        if (!lm) return;
+        const xLm = lm.x * canvas.width;
+        const yLm = lm.y * canvas.height;
+        const dist = Math.hypot(touchX - xLm, touchY - yLm);
+        
+        if (dist < minDist && dist < canvas.width * 0.1) {
+          minDist = dist;
+          closestIndex = i;
+        }
+      });
+      return closestIndex;
+    }
+
+    canvas.addEventListener("touchstart", e => {
+      if (isApplyAll || !lastLandmarks) return;
+      e.preventDefault();
+      const touch = e.touches[0];
+      const rect = canvas.getBoundingClientRect();
+      const x = touch.clientX - rect.left;
+      const y = touch.clientY - rect.top;
+      selectedFingerIndex = getClosestFinger(x, y, lastLandmarks);
+      needsRedraw = true;
+    });
+
+    let scene, camera, renderer, videoTexture, nailGeometry, nailMaterial, nails = {};
+    let handLandmarker;
+
+    async function initWebGL() {
+      scene = new THREE.Scene();
+      camera = new THREE.OrthographicCamera(window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, 1, 1000);
+      camera.position.z = 10;
+      renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+
+      videoTexture = new THREE.VideoTexture(video);
+      videoTexture.minFilter = THREE.LinearFilter;
+      videoTexture.magFilter = THREE.LinearFilter;
+      scene.background = videoTexture;
+
+      const vertexShader = `
+        varying vec2 vUv;
+        uniform float curveStrength;
+        void main() {
+          vUv = uv;
+          vec3 pos = position;
+          pos.z += sin(uv.x * 3.14) * curveStrength; // Зігнення по X
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+        }
+      `;
+      const fragmentShader = `
+        varying vec2 vUv;
+        uniform sampler2D nailTexture;
+        void main() {
+          vec4 color = texture2D(nailTexture, vUv);
+          if (color.a < 0.1) discard; // Прозорість
+          gl_FragColor = color;
+        }
+      `;
+
+      nailMaterial = new THREE.ShaderMaterial({
+        vertexShader,
+        fragmentShader,
+        uniforms: {
+          curveStrength: { value: 0.1 },
+          nailTexture: { value: null }
+        },
+        transparent: true
+      });
+
+      FINGER_KEYS.forEach(key => {
+        nailGeometry = new THREE.PlaneGeometry(1, 0.5, 10, 10);
+        const nail = new THREE.Mesh(nailGeometry, nailMaterial.clone());
+        nail.visible = false;
+        nails[key] = nail;
+        scene.add(nail);
+      });
+
+      window.addEventListener('resize', () => {
+        camera.left = window.innerWidth / -2;
+        camera.right = window.innerWidth / 2;
+        camera.top = window.innerHeight / 2;
+        camera.bottom = window.innerHeight / -2;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+    }
+
+    function updateNailPosition(landmarks, fingerKey) {
+      if (!landmarks || !landmarks.length) return;
+      const indices = FINGER_INDICES[fingerKey];
+      const tip = landmarks[indices.tip];
+      const dip = landmarks[indices.dip];
+      const pip = landmarks[indices.pip];
+
+      if (!tip || !dip || !pip) return;
+
+      const x = (tip.x + dip.x + pip.x) / 3 * canvas.width;
+      const y = (tip.y + dip.y + pip.y) / 3 * canvas.height;
+      const size = Math.hypot((tip.x - pip.x) * canvas.width, (tip.y - pip.y) * canvas.height) * 1.5;
+      const curveStrength = Math.abs(tip.y - pip.y) * 0.2;
+
+      const nail = nails[fingerKey];
+      nail.position.set(x - canvas.width / 2, canvas.height / 2 - y, 0);
+      nail.scale.set(size, size / 2, 1);
+      nail.material.uniforms.curveStrength.value = curveStrength;
+      if (nailImages[currentDesign]) {
+        nail.material.uniforms.nailTexture.value = new THREE.Texture(nailImages[currentDesign]);
+        nail.material.uniforms.nailTexture.value.needsUpdate = true;
+      }
+    }
+
+    function renderAR(landmarks) {
+      if (!landmarks || !landmarks.length) {
+        FINGER_KEYS.forEach(key => nails[key].visible = false);
+        renderer.render(scene, camera);
+        return;
+      }
+
+      FINGER_KEYS.forEach((key, i) => {
+        if (!isApplyAll && i !== selectedFingerIndex) {
+          nails[key].visible = false;
+          return;
+        }
+        nails[key].visible = true;
+        updateNailPosition(landmarks, key);
+      });
+      renderer.render(scene, camera);
+    }
+
+    async function init() {
+      try {
+        await initWebGL();
+        const vision = await FilesetResolver.forVisionTasks(
+          "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/wasm"
+        );
+        
+        handLandmarker = await HandLandmarker.createFromOptions(vision, {
+          baseOptions: {
+            modelAssetPath: "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task",
+            delegate: "GPU"
+          },
+          runningMode: "VIDEO",
+          numHands: 1
+        });
+
+        await setupCamera();
+        
+        await loadDesigns();
+        buildDesignUI();
+        initAudio();
+        updateTexts();
+
+        loading.style.display = "none";
+        video.style.display = 'block';
+        canvas.style.display = 'block';
+
+        let lastVideoTime = -1;
+        
+        const predict = (now, metadata) => {
+          if (handLandmarker && video.readyState >= 2) {
+            if (now - lastVideoTime > 100) {
+              const predictions = handLandmarker.detectForVideo(video, now);
+              
+              if (predictions.landmarks && predictions.landmarks.length > 0) {
+                lastLandmarks = smoothLandmarks(predictions.landmarks[0]);
+                handIndicator.style.display = 'none';
+                tipOverlay.style.display = 'none';
+                renderAR(lastLandmarks);
+              } else {
+                handIndicator.style.display = 'block';
+                tipOverlay.style.display = 'block';
+                renderAR([]);
+              }
+              
+              lastVideoTime = now;
+            }
+          }
+          video.requestVideoFrameCallback(predict);
+        };
+        
+        video.requestVideoFrameCallback(predict);
+
+        window.addEventListener("beforeunload", () => {
+          if (video.srcObject) {
+            video.srcObject.getTracks().forEach(track => track.stop());
+          }
+          if (handLandmarker) {
+            handLandmarker.close();
+          }
+          cameraIndicator.style.display = 'none';
+        });
+      } catch (e) {
+        console.error("Initialization error:", e);
+        loading.innerHTML = `${translations[currentLang].arError}<br><button id="errorRetry">${translations[currentLang].retry}</button>`;
+        document.getElementById('errorRetry').onclick = () => location.reload();
+      }
+    }
+
+    window.addEventListener("load", init);
+  </script>
+</body>
+</html>
