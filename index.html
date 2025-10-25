@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-  <title>🌈 Чарівний Манікюр!</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎀</text></svg>">
+  <title>💅 Реалістичний AR Манікюр</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💅</text></svg>">
   <style>
     * {
       margin: 0;
@@ -13,10 +13,10 @@
       touch-action: manipulation;
     }
     body {
-      background: linear-gradient(135deg, #ff9cee, #d5aaff, #9ae8ff);
+      background: linear-gradient(135deg, #667eea, #764ba2, #0f0c29);
       overflow: hidden;
-      font-family: 'Comic Sans MS', 'Arial', sans-serif;
-      color: #5a2d82;
+      font-family: 'Arial', 'Segoe UI', system-ui, sans-serif;
+      color: white;
     }
     #video, #canvas {
       position: absolute;
@@ -41,10 +41,10 @@
       width: 55px;
       height: 55px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.9);
+      background: rgba(255, 255, 255, 0.2);
       backdrop-filter: blur(20px);
-      border: 3px solid #ff6bcd;
-      color: #ff6bcd;
+      border: 2px solid rgba(255, 255, 255, 0.4);
+      color: white;
       font-size: 22px;
       display: flex;
       align-items: center;
@@ -52,34 +52,30 @@
       cursor: pointer;
       z-index: 100;
       transition: all 0.3s ease;
-      box-shadow: 0 8px 25px rgba(255, 107, 205, 0.3);
-      font-weight: bold;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
     }
 
     .control-btn:hover {
-      transform: scale(1.2);
-      background: rgba(255, 255, 255, 1);
+      transform: scale(1.15);
+      background: rgba(255, 255, 255, 0.3);
     }
 
-    #langBtn { top: 20px; right: 20px; }
-    #soundBtn { top: 20px; left: 20px; }
-    #selfieBtn { top: 90px; left: 20px; background: linear-gradient(135deg, #ff6bcd, #ff8ce2); color: white; }
-    #uploadBtn { top: 160px; left: 20px; background: linear-gradient(135deg, #6bffcd, #8cffd2); color: white; }
-
-    /* Score Display */
-    #scoreDisplay {
-      position: fixed;
+    #langBtn {
       top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(255, 255, 255, 0.9);
-      padding: 10px 20px;
-      border-radius: 25px;
-      border: 3px solid #ffeb3b;
+      right: 20px;
       font-weight: bold;
-      font-size: 18px;
-      z-index: 100;
-      box-shadow: 0 4px 15px rgba(255, 235, 59, 0.3);
+      font-size: 16px;
+    }
+
+    #soundBtn {
+      top: 20px;
+      left: 20px;
+    }
+
+    #uploadBtn {
+      top: 90px;
+      left: 20px;
+      background: rgba(255, 107, 107, 0.3);
     }
 
     /* Mode Controls */
@@ -91,35 +87,35 @@
       display: flex;
       gap: 15px;
       z-index: 100;
-      background: rgba(255, 255, 255, 0.9);
+      background: rgba(0, 0, 0, 0.6);
       backdrop-filter: blur(20px);
-      padding: 10px;
+      padding: 12px;
       border-radius: 30px;
-      border: 3px solid #ff6bcd;
-      box-shadow: 0 8px 25px rgba(255, 107, 205, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     }
 
     .mode-btn {
       padding: 12px 24px;
       border-radius: 25px;
-      background: linear-gradient(135deg, #ff6bcd, #ff8ce2);
+      background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
       color: white;
       border: none;
-      font-weight: bold;
-      font-size: 16px;
+      font-weight: 600;
+      font-size: 14px;
       cursor: pointer;
       transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgba(255, 107, 205, 0.4);
+      box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
     }
 
     .mode-btn:hover {
-      transform: translateY(-3px) scale(1.05);
+      transform: translateY(-2px);
     }
 
     .mode-btn.active {
-      background: linear-gradient(135deg, #ffeb3b, #ffd700);
-      color: #ff6bcd;
-      animation: rainbow 2s infinite;
+      background: linear-gradient(135deg, #ffd93d, #ffed4e);
+      color: #ff6b6b;
+      animation: pulse 2s infinite;
     }
 
     /* Design Picker */
@@ -131,15 +127,15 @@
       display: flex;
       gap: 15px;
       z-index: 100;
-      background: rgba(255, 255, 255, 0.95);
+      background: rgba(0, 0, 0, 0.7);
       backdrop-filter: blur(20px);
       padding: 20px;
       border-radius: 30px;
-      border: 3px solid #ff6bcd;
+      border: 1px solid rgba(255, 255, 255, 0.3);
       max-width: 90vw;
       overflow-x: auto;
       scrollbar-width: none;
-      box-shadow: 0 8px 25px rgba(255, 107, 205, 0.3);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     }
 
     #designPicker::-webkit-scrollbar {
@@ -150,30 +146,28 @@
       width: 75px;
       height: 75px;
       border-radius: 20px;
-      border: 3px solid #ff6bcd;
+      border: 3px solid rgba(255, 255, 255, 0.4);
       background: #fff;
       cursor: pointer;
       transition: all 0.3s ease;
       flex-shrink: 0;
       object-fit: cover;
-      animation: float 3s ease-in-out infinite;
-      box-shadow: 0 4px 15px rgba(255, 107, 205, 0.3);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     }
 
     .design-btn:hover {
-      transform: scale(1.15) rotate(5deg);
-      border-color: #ffeb3b;
+      transform: scale(1.1);
+      border-color: rgba(255, 255, 255, 0.7);
     }
 
     .design-btn.selected {
-      transform: scale(1.2);
-      border-color: #ffeb3b;
-      box-shadow: 0 0 0 4px #ffeb3b, 0 0 20px rgba(255, 235, 59, 0.5);
-      animation: rainbow 2s infinite, sparkle 1s infinite;
+      transform: scale(1.15);
+      border-color: #ffd700;
+      box-shadow: 0 0 0 3px #ffd700, 0 8px 25px rgba(255, 215, 0, 0.4);
     }
 
     .design-btn.custom-design {
-      border: 3px dashed #6bffcd;
+      border: 3px dashed #ff6b6b;
     }
 
     /* Upload Modal */
@@ -182,13 +176,16 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      background: rgba(255, 255, 255, 0.95);
+      background: rgba(0, 0, 0, 0.9);
+      backdrop-filter: blur(20px);
       padding: 30px;
       border-radius: 25px;
-      border: 3px solid #6bffcd;
+      border: 2px solid rgba(255, 255, 255, 0.3);
       z-index: 1000;
       display: none;
-      box-shadow: 0 10px 30px rgba(107, 255, 205, 0.4);
+      color: white;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
     }
 
     #uploadModal.show {
@@ -197,26 +194,34 @@
     }
 
     #imageUpload {
-      margin: 15px 0;
-      padding: 10px;
-      border: 2px dashed #6bffcd;
+      margin: 20px 0;
+      padding: 15px;
+      border: 2px dashed rgba(255, 255, 255, 0.4);
       border-radius: 15px;
-      background: #f8fffc;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      width: 100%;
+      cursor: pointer;
     }
 
-    #saveDesign {
+    .modal-btn {
       padding: 12px 24px;
-      background: linear-gradient(135deg, #6bffcd, #8cffd2);
+      margin: 5px;
       border: none;
       border-radius: 20px;
-      color: white;
-      font-weight: bold;
+      font-weight: 600;
       cursor: pointer;
       transition: all 0.3s ease;
     }
 
-    #saveDesign:hover {
-      transform: scale(1.05);
+    #saveDesign {
+      background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+      color: white;
+    }
+
+    #closeModal {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
     }
 
     /* Loading & Indicators */
@@ -226,13 +231,13 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: linear-gradient(135deg, #ff9cee, #d5aaff, #9ae8ff);
+      background: linear-gradient(135deg, #667eea, #764ba2, #0f0c29);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       z-index: 1000;
-      color: #ff6bcd;
+      color: #ffd700;
       font-size: clamp(20px, 5vw, 28px);
       text-align: center;
       padding: 20px;
@@ -242,14 +247,14 @@
     .loader {
       width: 70px;
       height: 70px;
-      border: 5px solid rgba(255, 107, 205, 0.3);
-      border-top: 5px solid #ff6bcd;
+      border: 5px solid rgba(255, 215, 0, 0.3);
+      border-top: 5px solid #ffd700;
       border-radius: 50%;
       animation: spin 1s linear infinite;
     }
 
     #loading p {
-      color: #5a2d82;
+      color: rgba(255, 255, 255, 0.8);
       font-size: clamp(16px, 4vw, 20px);
       max-width: 300px;
       line-height: 1.4;
@@ -259,23 +264,27 @@
       position: fixed;
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(255, 255, 255, 0.95);
+      background: rgba(0, 0, 0, 0.7);
       backdrop-filter: blur(10px);
-      color: #ff6bcd;
+      color: white;
       padding: 12px 20px;
       border-radius: 25px;
-      border: 2px solid #ff6bcd;
+      border: 1px solid rgba(255, 255, 255, 0.3);
       display: none;
       align-items: center;
       gap: 10px;
       z-index: 99;
-      font-size: 16px;
-      font-weight: bold;
-      box-shadow: 0 4px 15px rgba(255, 107, 205, 0.3);
+      font-size: 14px;
+      font-weight: 600;
     }
 
-    #cameraIndicator { top: 20px; }
-    #handIndicator { top: 160px; }
+    #cameraIndicator {
+      top: 20px;
+    }
+
+    #handIndicator {
+      top: 160px;
+    }
 
     .indicator.show {
       display: flex;
@@ -285,44 +294,66 @@
     #errorRetry {
       margin-top: 20px;
       padding: 15px 30px;
-      background: linear-gradient(135deg, #ff6bcd, #ff8ce2);
+      background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
       border: none;
       color: white;
-      font-size: 18px;
+      font-size: 16px;
       font-weight: bold;
       cursor: pointer;
       border-radius: 25px;
       transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgba(255, 107, 205, 0.4);
     }
 
     #errorRetry:hover {
-      transform: translateY(-3px) scale(1.05);
+      transform: translateY(-2px);
     }
 
     /* Animations */
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
-    @keyframes slideDown { from { opacity: 0; transform: translateX(-50%) translateY(-20px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
-    @keyframes float { 0%, 100% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-15px) rotate(2deg); } }
-    @keyframes rainbow { 0% { border-color: #ff6bcd; } 25% { border-color: #6bffcd; } 50% { border-color: #cd6bff; } 75% { border-color: #ffcd6b; } 100% { border-color: #ff6bcd; } }
-    @keyframes sparkle { 0%, 100% { box-shadow: 0 0 0 4px #ffeb3b, 0 0 20px rgba(255, 235, 59, 0.5); } 50% { box-shadow: 0 0 0 6px #ffeb3b, 0 0 30px rgba(255, 235, 59, 0.8); } }
-    @keyframes flyGhost { 0% { transform: translateX(-50px) translateY(0) rotate(0deg); } 100% { transform: translateX(100vw) translateY(calc(var(--random-y) * 1px)) rotate(360deg); } }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+    }
 
     /* Mobile Optimizations */
     @media (max-width: 768px) {
-      .control-btn { width: 50px; height: 50px; font-size: 20px; }
-      #modeControls { top: 70px; }
-      .design-btn { width: 65px; height: 65px; }
-      #scoreDisplay { font-size: 16px; padding: 8px 16px; }
+      .control-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+      }
+
+      #modeControls {
+        top: 70px;
+      }
+
+      .design-btn {
+        width: 65px;
+        height: 65px;
+      }
     }
   </style>
 </head>
 <body>
   <div id="loading">
     <div class="loader"></div>
-    <div id="loadingText">🎀 Готуємо чарівні нігтики...</div>
-    <p>Покажи свою ручку камері! 📸</p>
+    <div id="loadingText">💅 Завантаження AR манікюру...</div>
+    <p>Дозвольте доступ до камери та покажіть руку</p>
   </div>
 
   <video id="video" playsinline muted></video>
@@ -330,34 +361,34 @@
 
   <button id="langBtn" class="control-btn" aria-label="Switch language">EN</button>
   <button id="soundBtn" class="control-btn" aria-label="Toggle sound">🔊</button>
-  <button id="selfieBtn" class="control-btn" aria-label="Take selfie">📸</button>
   <button id="uploadBtn" class="control-btn" aria-label="Upload design">📤</button>
 
-  <div id="scoreDisplay">⭐ Бали: 0</div>
-
   <div id="modeControls">
-    <button class="mode-btn active" id="applyAllBtn">✨ Всі пальчики</button>
-    <button class="mode-btn" id="selectFingerBtn">👆 Обери пальчик</button>
+    <button class="mode-btn active" id="applyAllBtn" aria-label="Apply to all fingers">💅 Всі пальці</button>
+    <button class="mode-btn" id="selectFingerBtn" aria-label="Select finger">👆 Обрати палець</button>
   </div>
 
   <div id="designPicker"></div>
 
   <!-- Модальне вікно для завантаження -->
   <div id="uploadModal">
-    <h3>🎨 Завантаж свій дизайн!</h3>
+    <h3>🎨 Завантажте свій дизайн</h3>
+    <p>Оберіть зображення для створення унікального манікюру</p>
     <input type="file" id="imageUpload" accept="image/*">
-    <button id="saveDesign">💾 Зберегти дизайн</button>
-    <button id="closeModal" style="margin-top: 10px; background: #ff6b6b;">❌ Скасувати</button>
+    <div>
+      <button id="saveDesign" class="modal-btn">💾 Зберегти</button>
+      <button id="closeModal" class="modal-btn">❌ Скасувати</button>
+    </div>
   </div>
 
   <div id="cameraIndicator" class="indicator">
     <span>📹</span>
-    <span>Камера працює!</span>
+    <span>Камера активна</span>
   </div>
 
   <div id="handIndicator" class="indicator">
     <span>✋</span>
-    <span>Покажи ручку камері!</span>
+    <span>Покажіть руку камері</span>
   </div>
 
   <script type="importmap">
@@ -375,62 +406,132 @@
 const CONFIG = {
   SMOOTHING_FACTOR: 0.7,
   HAND_NOT_DETECTED_THRESHOLD: 10,
-  NAIL_SCALE_FACTORS: { thumb: 0.5, index: 0.6, middle: 0.6, ring: 0.6, pinky: 0.4 },
-  NAIL_ASPECT_RATIOS: { thumb: 0.8, index: 1.2, middle: 1.2, ring: 1.1, pinky: 0.9 },
-  NAIL_OFFSETS: {
-    thumb: { x: -0.01, y: -0.02 }, index: { x: 0, y: -0.02 }, middle: { x: 0, y: -0.025 },
-    ring: { x: 0, y: -0.02 }, pinky: { x: 0.005, y: -0.015 }
+  
+  // Оптимальні коефіцієнти розміру
+  NAIL_SCALE_FACTORS: {
+    thumb: 0.4,
+    index: 0.5,
+    middle: 0.5,
+    ring: 0.5,
+    pinky: 0.4
   },
-  MAX_SIZES: { thumb: 50, index: 60, middle: 60, ring: 60, pinky: 45 },
-  MIN_SIZE: 20, MAX_SIZE: 90,
-  WRIST_DISTANCE_REF: 0.1, SCALE_SENSITIVITY: 1.8, MAX_SCALE_FACTOR: 2.0, MIN_SCALE_FACTOR: 0.6
+  
+  // Пропорції для нігтів
+  NAIL_ASPECT_RATIOS: {
+    thumb: 0.8,
+    index: 1.2,
+    middle: 1.2,
+    ring: 1.1,
+    pinky: 0.9
+  },
+  
+  // Зсуви для кращого позиціонування
+  NAIL_OFFSETS: {
+    thumb: { x: -0.01, y: -0.02 },
+    index: { x: 0, y: -0.02 },
+    middle: { x: 0, y: -0.025 },
+    ring: { x: 0, y: -0.02 },
+    pinky: { x: 0.005, y: -0.015 }
+  },
+  
+  // Максимальні розміри
+  MAX_SIZES: {
+    thumb: 50,
+    index: 60,
+    middle: 60,
+    ring: 60,
+    pinky: 45
+  },
+  
+  MIN_SIZE: 20,
+  MAX_SIZE: 90,
+  
+  // Динамічне масштабування
+  WRIST_DISTANCE_REF: 0.1,
+  SCALE_SENSITIVITY: 1.8,
+  MAX_SCALE_FACTOR: 2.0,
+  MIN_SCALE_FACTOR: 0.6
 };
 
 const FINGER_INDICES = {
-  thumb: { tip: 4, mcp: 2, pip: 3, ip: 3 }, index: { tip: 8, mcp: 5, pip: 6, dip: 7 },
-  middle: { tip: 12, mcp: 9, pip: 10, dip: 11 }, ring: { tip: 16, mcp: 13, pip: 14, dip: 15 },
+  thumb: { tip: 4, mcp: 2, pip: 3, ip: 3 },
+  index: { tip: 8, mcp: 5, pip: 6, dip: 7 },
+  middle: { tip: 12, mcp: 9, pip: 10, dip: 11 },
+  ring: { tip: 16, mcp: 13, pip: 14, dip: 15 },
   pinky: { tip: 20, mcp: 17, pip: 18, dip: 19 }
 };
 const FINGER_KEYS = Object.keys(FINGER_INDICES);
 
 const translations = {
   en: {
-    title: "🌈 Magic Nail Salon!", loading: "🎀 Preparing magic nails...", cameraPrompt: "Show your hand to the camera! 📸",
-    allFingers: "✨ All Fingers", pickFinger: "👆 Choose Finger", cameraError: "❌ Could not access camera.<br>Try Chrome or Safari.",
-    arError: "❌ Magic failed to load.<br>Refresh the page.", retry: "Try Again", cameraActive: "📹 Camera Ready!",
-    handNotDetected: "✋ Show your hand!", score: "⭐ Score: "
+    title: "💅 Realistic Nail AR Try-On",
+    loading: "Loading Realistic Nail AR Experience...",
+    cameraPrompt: "Please allow camera access when prompted",
+    allFingers: "💅 All Fingers",
+    pickFinger: "👆 Select Finger",
+    cameraError: "❌ Could not access camera.<br>Try Chrome or Safari.",
+    arError: "❌ AR failed to load.<br>Refresh the page.",
+    retry: "Retry",
+    cameraActive: "📹 Camera Active",
+    handNotDetected: "✋ Show your hand to the camera"
   },
   uk: {
-    title: "🌈 Чарівний Манікюр!", loading: "🎀 Готуємо чарівні нігтики...", cameraPrompt: "Покажи свою ручку камері! 📸",
-    allFingers: "✨ Всі пальчики", pickFinger: "👆 Обери пальчик", cameraError: "❌ Не вдалося отримати доступ до камери.<br>Спробуйте у Chrome або Safari.",
-    arError: "❌ Чарів не завантажився.<br>Спробуй оновити сторінку.", retry: "Спробувати знову", cameraActive: "📹 Камера працює!",
-    handNotDetected: "✋ Покажи ручку камері!", score: "⭐ Бали: "
+    title: "💅 Реалістичний AR Манікюр",
+    loading: "Завантаження реалістичного AR манікюру...",
+    cameraPrompt: "Надайте доступ до камери, коли з'явиться запит",
+    allFingers: "💅 Усі пальці",
+    pickFinger: "👆 Обрати палець",
+    cameraError: "❌ Не вдалося отримати доступ до камери.<br>Спробуйте у Chrome або Safari.",
+    arError: "❌ Помилка завантаження AR.<br>Спробуйте оновити сторінку.",
+    retry: "Повторити",
+    cameraActive: "📹 Камера активна",
+    handNotDetected: "✋ Покажіть руку камері"
   }
 };
 
 // Глобальний стан
 const state = {
-  currentLang: 'uk', currentDesign: "1", isApplyAll: true, selectedFingerIndex: -1, isMuted: true,
-  lastLandmarks: null, smoothedLandmarks: null, handNotDetectedCount: 0, animationFrameId: null,
-  palmOrientation: { x: 0, y: 0 }, currentHandSize: 1.0, wristDistance: 0, score: 0,
-  customDesigns: [], currentCustomDesign: null
+  currentLang: 'uk',
+  currentDesign: "1",
+  isApplyAll: true,
+  selectedFingerIndex: -1,
+  isMuted: true,
+  lastLandmarks: null,
+  smoothedLandmarks: null,
+  handNotDetectedCount: 0,
+  animationFrameId: null,
+  palmOrientation: { x: 0, y: 0 },
+  currentHandSize: 1.0,
+  wristDistance: 0,
+  customDesigns: [],
+  currentCustomDesign: null
 };
 
 // DOM elements
 const elements = {
-  video: document.getElementById("video"), canvas: document.getElementById("canvas"), loading: document.getElementById("loading"),
-  loadingText: document.getElementById("loadingText"), langBtn: document.getElementById("langBtn"), soundBtn: document.getElementById("soundBtn"),
-  selfieBtn: document.getElementById("selfieBtn"), uploadBtn: document.getElementById("uploadBtn"), scoreDisplay: document.getElementById("scoreDisplay"),
-  applyAllBtn: document.getElementById("applyAllBtn"), selectFingerBtn: document.getElementById("selectFingerBtn"),
-  designPicker: document.getElementById("designPicker"), cameraIndicator: document.getElementById("cameraIndicator"),
-  handIndicator: document.getElementById("handIndicator"), uploadModal: document.getElementById("uploadModal"),
-  imageUpload: document.getElementById("imageUpload"), saveDesign: document.getElementById("saveDesign"),
+  video: document.getElementById("video"),
+  canvas: document.getElementById("canvas"),
+  loading: document.getElementById("loading"),
+  loadingText: document.getElementById("loadingText"),
+  langBtn: document.getElementById("langBtn"),
+  soundBtn: document.getElementById("soundBtn"),
+  uploadBtn: document.getElementById("uploadBtn"),
+  applyAllBtn: document.getElementById("applyAllBtn"),
+  selectFingerBtn: document.getElementById("selectFingerBtn"),
+  designPicker: document.getElementById("designPicker"),
+  cameraIndicator: document.getElementById("cameraIndicator"),
+  handIndicator: document.getElementById("handIndicator"),
+  uploadModal: document.getElementById("uploadModal"),
+  imageUpload: document.getElementById("imageUpload"),
+  saveDesign: document.getElementById("saveDesign"),
   closeModal: document.getElementById("closeModal")
 };
 
 // Audio system
 const audio = {
-  bg: new Audio(), click: new Audio(), sparkle: new Audio(), isLoaded: false
+  bg: new Audio(),
+  click: new Audio(),
+  isLoaded: false
 };
 
 // Nail designs
@@ -442,6 +543,143 @@ let scene, camera, renderer;
 const nails = {};
 let handLandmarker;
 
+class NailEffectRenderer {
+  constructor() {
+    this.nailMasks = {};
+    this.shineTextures = {};
+    this.initMasks();
+  }
+
+  initMasks() {
+    this.createNailMasks();
+    this.createShineTexture();
+  }
+
+  createNailMasks() {
+    const shapes = ['oval', 'almond', 'square', 'round'];
+    shapes.forEach(shape => {
+      this.nailMasks[shape] = this.createMask(shape);
+    });
+  }
+
+  createMask(shape) {
+    const canvas = document.createElement('canvas');
+    canvas.width = 200;
+    canvas.height = 300;
+    const ctx = canvas.getContext('2d');
+    
+    ctx.fillStyle = 'white';
+    ctx.beginPath();
+    
+    switch(shape) {
+      case 'oval':
+        ctx.ellipse(100, 150, 80, 120, 0, 0, 2 * Math.PI);
+        break;
+      case 'almond':
+        ctx.moveTo(50, 50);
+        ctx.bezierCurveTo(50, 50, 100, 20, 150, 50);
+        ctx.bezierCurveTo(150, 50, 180, 150, 100, 280);
+        ctx.bezierCurveTo(100, 280, 20, 150, 50, 50);
+        break;
+      case 'square':
+        ctx.rect(40, 40, 120, 220);
+        break;
+      case 'round':
+        ctx.arc(100, 150, 80, 0, 2 * Math.PI);
+        break;
+    }
+    
+    ctx.fill();
+    return canvas;
+  }
+
+  createShineTexture() {
+    const canvas = document.createElement('canvas');
+    canvas.width = 200;
+    canvas.height = 300;
+    const ctx = canvas.getContext('2d');
+    
+    // Градієнт для відблиску
+    const gradient = ctx.createRadialGradient(100, 100, 0, 100, 100, 150);
+    gradient.addColorStop(0, 'rgba(255, 255, 255, 0.6)');
+    gradient.addColorStop(0.4, 'rgba(255, 255, 255, 0.3)');
+    gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+    
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, 200, 300);
+    
+    this.shineTextures.default = canvas;
+  }
+
+  async processUserImage(image, nailShape = 'oval') {
+    return new Promise((resolve) => {
+      const canvas = document.createElement('canvas');
+      canvas.width = 200;
+      canvas.height = 300;
+      const ctx = canvas.getContext('2d');
+      
+      // Очищаємо canvas
+      ctx.clearRect(0, 0, 200, 300);
+      
+      // Застосовуємо маску форми нігтя
+      ctx.save();
+      ctx.drawImage(this.nailMasks[nailShape], 0, 0);
+      ctx.globalCompositeOperation = 'source-in';
+      
+      // Малюємо зображення користувача
+      ctx.drawImage(image, 0, 0, 200, 300);
+      ctx.restore();
+      
+      // Додаємо гелевий ефект - відблиск
+      ctx.globalAlpha = 0.4;
+      ctx.drawImage(this.shineTextures.default, 0, 0);
+      ctx.globalAlpha = 1.0;
+      
+      // Додаємо обведення для реалістичності
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+      
+      const texture = new THREE.CanvasTexture(canvas);
+      resolve(texture);
+    });
+  }
+
+  createPreview(imageData, size = 75) {
+    const canvas = document.createElement('canvas');
+    canvas.width = size;
+    canvas.height = size;
+    const ctx = canvas.getContext('2d');
+    
+    // Форма нігтя для прев'ю
+    ctx.fillStyle = '#fff';
+    ctx.beginPath();
+    ctx.ellipse(size/2, size/2, size/3, size/2, 0, 0, 2 * Math.PI);
+    ctx.fill();
+    
+    ctx.globalCompositeOperation = 'source-in';
+    
+    const img = new Image();
+    return new Promise((resolve) => {
+      img.onload = () => {
+        ctx.drawImage(img, 0, 0, size, size);
+        
+        // Додаємо відблиск до прев'ю
+        ctx.globalCompositeOperation = 'overlay';
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+        ctx.beginPath();
+        ctx.ellipse(size/3, size/3, size/6, size/4, 0, 0, 2 * Math.PI);
+        ctx.fill();
+        
+        resolve(canvas.toDataURL());
+      };
+      img.src = imageData;
+    });
+  }
+}
+
+const nailEffectRenderer = new NailEffectRenderer();
+
 class CustomDesignManager {
   constructor() {
     this.customTextures = [];
@@ -451,42 +689,46 @@ class CustomDesignManager {
   async uploadImage(file) {
     return new Promise((resolve, reject) => {
       if (!file.type.match('image.*')) {
-        reject(new Error('Це не зображення!'));
+        reject(new Error('Будь ласка, оберіть зображення!'));
         return;
       }
 
       const reader = new FileReader();
-      reader.onload = (e) => {
-        const img = new Image();
-        img.onload = () => {
-          // Створюємо текстуру для Three.js
-          const texture = new THREE.CanvasTexture(img);
-          texture.name = `custom_${Date.now()}`;
-          
-          // Додаємо до масиву кастомних дизайнів
-          this.customTextures.push(texture);
-          this.customDesigns.push({
-            texture: texture,
-            name: file.name,
-            url: e.target.result
-          });
-          
-          // Додаємо кнопку в інтерфейс
-          this.addToDesignPicker(texture, e.target.result);
-          
-          resolve(texture);
-        };
-        img.onerror = () => reject(new Error('Помилка завантаження зображення'));
-        img.src = e.target.result;
+      reader.onload = async (e) => {
+        try {
+          const img = new Image();
+          img.onload = async () => {
+            // Обробляємо зображення з ефектами
+            const processedTexture = await nailEffectRenderer.processUserImage(img, 'oval');
+            processedTexture.name = `custom_${Date.now()}`;
+            
+            this.customTextures.push(processedTexture);
+            this.customDesigns.push({
+              texture: processedTexture,
+              name: file.name,
+              url: e.target.result
+            });
+            
+            // Створюємо прев'ю та додаємо кнопку
+            const previewUrl = await nailEffectRenderer.createPreview(e.target.result);
+            this.addToDesignPicker(processedTexture, previewUrl);
+            
+            resolve(processedTexture);
+          };
+          img.onerror = () => reject(new Error('Помилка завантаження зображення'));
+          img.src = e.target.result;
+        } catch (error) {
+          reject(error);
+        }
       };
       reader.onerror = () => reject(new Error('Помилка читання файлу'));
       reader.readAsDataURL(file);
     });
   }
 
-  addToDesignPicker(texture, dataUrl) {
+  addToDesignPicker(texture, previewUrl) {
     const btn = document.createElement('img');
-    btn.src = dataUrl;
+    btn.src = previewUrl;
     btn.className = 'design-btn custom-design';
     btn.alt = 'Мій дизайн';
     btn.title = 'Мій власний дизайн';
@@ -502,31 +744,13 @@ class CustomDesignManager {
     state.currentCustomDesign = texture;
     state.currentDesign = null;
     
-    // Оновлюємо вибір у всіх кнопках
+    // Оновлюємо вибір
     document.querySelectorAll('.design-btn').forEach(btn => {
       btn.classList.remove('selected');
     });
     
-    // Додаємо бали за використання власного дизайну
-    state.score += 15;
-    this.updateScore();
-    this.createSparkle(window.innerWidth/2, window.innerHeight/3);
-    audio.sparkle.play().catch(() => {});
-  }
-
-  updateScore() {
-    elements.scoreDisplay.textContent = translations[state.currentLang].score + state.score;
-  }
-
-  createSparkle(x, y) {
-    const sparkle = document.createElement('div');
-    sparkle.style.cssText = `
-      position: fixed; left: ${x}px; top: ${y}px; width: 30px; height: 30px;
-      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="gold" d="M12 2L9 12 2 12l7 7-2 10 10-7 10 7-2-10 7-7-7-2z"/></svg>');
-      animation: sparkle 1s ease-out; pointer-events: none; z-index: 1000;
-    `;
-    document.body.appendChild(sparkle);
-    setTimeout(() => sparkle.remove(), 1000);
+    // Додаємо ефект вибраного для кастомного дизайну
+    event.target.classList.add('selected');
   }
 }
 
@@ -545,7 +769,6 @@ class NailARApplication {
       await this.setupHandTracking();
       await this.loadResources();
       this.setupAudio();
-      this.createGhosts();
       this.updateUI();
       this.hideLoading();
       this.startRenderLoop();
@@ -557,7 +780,6 @@ class NailARApplication {
   setupEventListeners() {
     elements.langBtn.addEventListener('click', () => this.toggleLanguage());
     elements.soundBtn.addEventListener('click', () => this.toggleSound());
-    elements.selfieBtn.addEventListener('click', () => this.takeSelfie());
     elements.uploadBtn.addEventListener('click', () => this.showUploadModal());
     elements.applyAllBtn.addEventListener('click', () => this.setApplyAllMode());
     elements.selectFingerBtn.addEventListener('click', () => this.setSelectFingerMode());
@@ -584,17 +806,15 @@ class NailARApplication {
   async handleImageUpload() {
     const file = elements.imageUpload.files[0];
     if (!file) {
-      alert('Будь ласка, вибери зображення!');
+      alert('Будь ласка, оберіть зображення!');
       return;
     }
 
     try {
       await customDesignManager.uploadImage(file);
       this.hideUploadModal();
-      this.playSound(audio.sparkle);
-      state.score += 25; // Бонуси за завантаження
-      customDesignManager.updateScore();
-      alert('🎉 Твій дизайн додано! Тепер ти можеш його використовувати!');
+      this.playSound(audio.click);
+      alert('🎉 Ваш дизайн успішно додано! Тепер ви можете його використовувати.');
     } catch (error) {
       alert('❌ Помилка: ' + error.message);
     }
@@ -656,14 +876,14 @@ class NailARApplication {
 
   createNails() {
     FINGER_KEYS.forEach(key => {
-      const aspectRatio = CONFIG.NAIL_ASPECT_RATIOS[key];
-      const nailGeometry = new THREE.PlaneGeometry(1, aspectRatio);
+      const nailGeometry = new THREE.PlaneGeometry(1, 1);
       
       const nailMaterial = new THREE.MeshBasicMaterial({
         transparent: true,
         side: THREE.DoubleSide,
         depthTest: false,
-        depthWrite: false
+        depthWrite: false,
+        opacity: 0.95
       });
 
       const nail = new THREE.Mesh(nailGeometry, nailMaterial);
@@ -713,12 +933,12 @@ class NailARApplication {
         canvas.width = 100;
         canvas.height = 100;
         const ctx = canvas.getContext('2d');
-        ctx.fillStyle = '#FF6BCD';
+        ctx.fillStyle = '#FF6B6B';
         ctx.fillRect(0, 0, 100, 100);
         ctx.fillStyle = 'white';
-        ctx.font = 'bold 16px Comic Sans MS';
+        ctx.font = '16px Arial';
         ctx.textAlign = 'center';
-        ctx.fillText('🎀', 50, 55);
+        ctx.fillText('💅', 50, 55);
         
         const texture = new THREE.CanvasTexture(canvas);
         nailTextures[name] = texture;
@@ -755,17 +975,14 @@ class NailARApplication {
 
   setupAudio() {
     audio.bg.loop = true;
-    audio.bg.volume = 0.2;
+    audio.bg.volume = 0.3;
     audio.click.volume = 0.6;
-    audio.sparkle.volume = 0.7;
     
-    audio.bg.src = 'https://assets.mixkit.co/music/preview/mixkit-happy-pop-2.mp3';
-    audio.click.src = 'https://assets.mixkit.co/sfx/preview/mixkit-magic-sparkle-sound-3090.mp3';
-    audio.sparkle.src = 'https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.mp3';
+    audio.bg.src = 'audio/bg-music.mp3';
+    audio.click.src = 'audio/click.mp3';
     
     audio.bg.onerror = () => console.log('BG music not available');
     audio.click.onerror = () => console.log('Click sound not available');
-    audio.sparkle.onerror = () => console.log('Sparkle sound not available');
   }
 
   playSound(sound) {
@@ -784,12 +1001,11 @@ class NailARApplication {
     
     if (state.isMuted) {
       audio.bg.pause();
-      elements.soundBtn.textContent = '🔇';
     } else {
       this.playBackgroundMusic();
-      elements.soundBtn.textContent = '🔊';
     }
     
+    this.updateSoundButton();
     this.playSound(audio.click);
   }
 
@@ -799,42 +1015,6 @@ class NailARApplication {
     audio.bg.play().catch(e => {
       console.log('Background music autoplay blocked');
     });
-  }
-
-  createGhosts() {
-    setInterval(() => {
-      this.createGhost();
-    }, 5000);
-  }
-
-  createGhost() {
-    const ghost = document.createElement('div');
-    ghost.innerHTML = '👻';
-    const randomY = Math.random() * 200 - 100;
-    ghost.style.cssText = `
-      position: fixed;
-      top: ${Math.random() * 80 + 10}vh;
-      left: -50px;
-      font-size: 35px;
-      animation: flyGhost 8s linear;
-      z-index: 99;
-      pointer-events: none;
-      --random-y: ${randomY};
-    `;
-    
-    document.body.appendChild(ghost);
-    setTimeout(() => ghost.remove(), 8000);
-  }
-
-  takeSelfie() {
-    customDesignManager.createSparkle(window.innerWidth/2, window.innerHeight/2);
-    this.playSound(audio.sparkle);
-    state.score += 50;
-    customDesignManager.updateScore();
-    
-    setTimeout(() => {
-      alert('📸 Фото збережено! Покажи подружкам! 🎀');
-    }, 1000);
   }
 
   startRenderLoop() {
@@ -955,7 +1135,7 @@ class NailARApplication {
       this.updateFingerNailPosition(fingerKey, landmarks);
     }
 
-    // Застосовуємо або стандартний дизайн, або кастомний
+    // Застосовуємо текстуру з урахуванням пріоритету
     if (state.currentCustomDesign) {
       nail.material.map = state.currentCustomDesign;
     } else if (nailTextures[state.currentDesign]) {
@@ -1001,7 +1181,11 @@ class NailARApplication {
       0
     );
 
-    nail.scale.set(nailSize, nailSize * CONFIG.NAIL_ASPECT_RATIOS.thumb, 1);
+    nail.scale.set(
+      nailSize,
+      nailSize * CONFIG.NAIL_ASPECT_RATIOS.thumb,
+      1
+    );
     nail.rotation.z = angle;
   }
 
@@ -1037,7 +1221,11 @@ class NailARApplication {
       0
     );
 
-    nail.scale.set(nailSize, nailSize * CONFIG.NAIL_ASPECT_RATIOS[fingerKey], 1);
+    nail.scale.set(
+      nailSize,
+      nailSize * CONFIG.NAIL_ASPECT_RATIOS[fingerKey],
+      1
+    );
     nail.rotation.z = angle;
   }
 
@@ -1125,15 +1313,12 @@ class NailARApplication {
   selectDesign(name) {
     state.currentDesign = name;
     state.currentCustomDesign = null;
-    state.score += 10;
-    customDesignManager.updateScore();
-    
-    customDesignManager.createSparkle(Math.random() * window.innerWidth, Math.random() * window.innerHeight);
-    this.playSound(audio.sparkle);
     
     document.querySelectorAll('.design-btn').forEach(btn => {
       btn.classList.toggle('selected', btn.src.includes(`${name}.png`));
     });
+    
+    this.playSound(audio.click);
   }
 
   updateUI() {
@@ -1144,7 +1329,6 @@ class NailARApplication {
     elements.applyAllBtn.textContent = t.allFingers;
     elements.selectFingerBtn.textContent = t.pickFinger;
     elements.handIndicator.innerHTML = `<span>✋</span><span>${t.handNotDetected}</span>`;
-    elements.scoreDisplay.textContent = t.score + state.score;
     
     elements.langBtn.textContent = state.currentLang.toUpperCase();
     this.updateSoundButton();
@@ -1202,8 +1386,8 @@ class NailARApplication {
 
   showError(message) {
     elements.loading.innerHTML = `
-      <div style="color: #ff6bcd; font-size: 28px; margin-bottom: 20px;">❌</div>
-      <div style="color: #5a2d82; font-size: 20px; margin-bottom: 20px; line-height: 1.4;">${message}</div>
+      <div style="color: #ff4757; font-size: 28px; margin-bottom: 20px;">❌</div>
+      <div style="color: white; font-size: 18px; margin-bottom: 20px; line-height: 1.4;">${message}</div>
       <button id="errorRetry">${translations[state.currentLang].retry}</button>
     `;
     elements.loading.style.display = 'flex';
