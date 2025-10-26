@@ -67,7 +67,7 @@
       right: 20px;
     }
 
-    /* Mode Toggle — simplified */
+    /* Mode Toggle */
     #modeToggle {
       position: fixed;
       top: 20px;
@@ -97,7 +97,7 @@
       transform: scale(1.15);
     }
 
-    /* Design Picker — clean & elegant */
+    /* Design Picker */
     #designPicker {
       position: fixed;
       bottom: 20px;
@@ -357,17 +357,17 @@ const FINGER_INDICES = {
 };
 const FINGER_KEYS = Object.keys(FINGER_INDICES);
 
+// ОНОВЛЕНІ ФОРМИ НІГТІВ
 const NAIL_SHAPES = [
+  { id: 'rounded_rect', name: 'Rounded Rectangle', icon: '▢' },
   { id: 'oval', name: 'Oval', icon: '🫧' },
-  { id: 'almond', name: 'Almond', icon: '🔷' },
-  { id: 'square', name: 'Square', icon: '⬜' },
-  { id: 'round', name: 'Round', icon: '⚪' }
+  { id: 'triangle', name: 'Triangle', icon: '🔺' }
 ];
 
 // State
 const state = {
-  currentDesign: "classic",
-  currentShape: 'oval',
+  currentDesign: "classic_red", // Один червоний приклад
+  currentShape: 'rounded_rect', // Форма за замовчуванням
   isApplyAll: true,
   selectedFingerIndex: -1,
   lastLandmarks: null,
@@ -399,61 +399,147 @@ const el = {
 
 // Resources
 const nailTextures = {};
-const DESIGNS = ["classic", "glitter", "ombre", "floral", "minimal"];
+// ЛИШЕ ОДИН ПРИКЛАД
+const DESIGNS = ["classic_red"];
 let scene, camera, renderer;
 const nails = {};
 let handLandmarker;
 
-// === Nail Effect Renderer (for realistic finish) ===
+// === Nail Effect Renderer (оновлений для нових форм) ===
 class NailEffectRenderer {
   constructor() {
     this.masks = {};
     this.init();
   }
+  
   init() {
     NAIL_SHAPES.forEach(s => this.masks[s.id] = this.createMask(s.id));
   }
+  
   createMask(shape) {
     const c = document.createElement('canvas');
-    c.width = 200; c.height = 300;
+    c.width = 200; 
+    c.height = 300;
     const ctx = c.getContext('2d');
     ctx.fillStyle = 'white';
     ctx.beginPath();
+    
     switch(shape) {
-      case 'oval': ctx.ellipse(100,150,80,120,0,0,2*Math.PI); break;
-      case 'almond': 
-        ctx.moveTo(50,50);
-        ctx.bezierCurveTo(50,50,100,20,150,50);
-        ctx.bezierCurveTo(150,50,180,150,100,280);
-        ctx.bezierCurveTo(100,280,20,150,50,50);
+      case 'rounded_rect':
+        // Прямокутник з округлими краями
+        const radius = 40;
+        ctx.moveTo(radius, 20);
+        ctx.lineTo(160, 20);
+        ctx.arcTo(180, 20, 180, 40, radius);
+        ctx.lineTo(180, 260);
+        ctx.arcTo(180, 280, 160, 280, radius);
+        ctx.lineTo(40, 280);
+        ctx.arcTo(20, 280, 20, 260, radius);
+        ctx.lineTo(20, 40);
+        ctx.arcTo(20, 20, 40, 20, radius);
         break;
-      case 'square': ctx.rect(40,40,120,220); break;
-      case 'round': ctx.arc(100,150,80,0,2*Math.PI); break;
+        
+      case 'oval':
+        // Овал
+        ctx.ellipse(100, 150, 80, 120, 0, 0, 2 * Math.PI);
+        break;
+        
+      case 'triangle':
+        // Трикутна форма
+        ctx.moveTo(100, 30);
+        ctx.lineTo(170, 250);
+        ctx.lineTo(30, 250);
+        ctx.closePath();
+        break;
     }
+    
     ctx.fill();
     return c;
   }
-  async processImage(img, shape = 'oval') {
+  
+  async processImage(img, shape = 'rounded_rect') {
     const c = document.createElement('canvas');
-    c.width = 200; c.height = 300;
+    c.width = 200; 
+    c.height = 300;
     const ctx = c.getContext('2d');
-    ctx.clearRect(0,0,200,300);
+    
+    // Очищаємо canvas
+    ctx.clearRect(0, 0, 200, 300);
+    
+    // Застосовуємо маску форми нігтя
     ctx.save();
     ctx.drawImage(this.masks[shape], 0, 0);
     ctx.globalCompositeOperation = 'source-in';
+    
+    // Малюємо зображення користувача
     ctx.drawImage(img, 0, 0, 200, 300);
     ctx.restore();
-    // Add subtle shine
-    const g = ctx.createRadialGradient(80,80,0,80,80,150);
-    g.addColorStop(0, 'rgba(255,255,255,0.4)');
-    g.addColorStop(1, 'rgba(255,255,255,0)');
+    
+    // Додаємо гелевий ефект - відблиск
+    const g = ctx.createRadialGradient(80, 80, 0, 80, 80, 150);
+    g.addColorStop(0, 'rgba(255, 255, 255, 0.4)');
+    g.addColorStop(1, 'rgba(255, 255, 255, 0)');
     ctx.fillStyle = g;
     ctx.globalAlpha = 0.3;
-    ctx.fillRect(0,0,200,300);
+    ctx.fillRect(0, 0, 200, 300);
     ctx.globalAlpha = 1;
+    
     return new THREE.CanvasTexture(c);
   }
+  
+  // Метод для створення прев'ю
+  createPreview(imageData, shape = 'rounded_rect', size = 64) {
+    return new Promise((resolve) => {
+      const c = document.createElement('canvas');
+      c.width = size;
+      c.height = size;
+      const ctx = c.getContext('2d');
+      
+      // Створюємо маску форми для прев'ю
+      ctx.fillStyle = 'white';
+      ctx.beginPath();
+      
+      const scale = size / 200;
+      const previewRadius = 12;
+      
+      switch(shape) {
+        case 'rounded_rect':
+          ctx.moveTo(previewRadius, 5);
+          ctx.lineTo(size - previewRadius, 5);
+          ctx.arcTo(size - 5, 5, size - 5, previewRadius, previewRadius);
+          ctx.lineTo(size - 5, size - previewRadius);
+          ctx.arcTo(size - 5, size - 5, size - previewRadius, size - 5, previewRadius);
+          ctx.lineTo(previewRadius, size - 5);
+          ctx.arcTo(5, size - 5, 5, size - previewRadius, previewRadius);
+          ctx.lineTo(5, previewRadius);
+          ctx.arcTo(5, 5, previewRadius, 5, previewRadius);
+          break;
+          
+        case 'oval':
+          ctx.ellipse(size/2, size/2, size/3, size/2.5, 0, 0, 2 * Math.PI);
+          break;
+          
+        case 'triangle':
+          ctx.moveTo(size/2, 10);
+          ctx.lineTo(size - 10, size - 10);
+          ctx.lineTo(10, size - 10);
+          ctx.closePath();
+          break;
+      }
+      
+      ctx.fill();
+      ctx.globalCompositeOperation = 'source-in';
+      
+      const previewImg = new Image();
+      previewImg.onload = () => {
+        ctx.drawImage(previewImg, 0, 0, size, size);
+        resolve(c.toDataURL());
+      };
+      previewImg.src = imageData;
+    });
+  }
 }
+
 const effectRenderer = new NailEffectRenderer();
 
 // === Main App ===
@@ -538,41 +624,35 @@ class LuxeNailsAR {
   }
 
   async loadDesigns() {
-    const colors = {
-      classic: '#f8c3cd',
-      glitter: '#e0b1cb',
-      ombre: '#d4a5a5',
-      floral: '#f2e3db',
-      minimal: '#ffffff'
-    };
-    for (const name of DESIGNS) {
-      const c = document.createElement('canvas');
-      c.width = 200; c.height = 300;
-      const ctx = c.getContext('2d');
-      ctx.fillStyle = colors[name] || '#f0f0f0';
-      ctx.fillRect(0,0,200,300);
-      if (name === 'glitter') {
-        for (let i = 0; i < 200; i++) {
-          ctx.fillStyle = `rgba(255,255,255,${Math.random()*0.3})`;
-          ctx.fillRect(Math.random()*200, Math.random()*300, 2, 2);
-        }
-      }
-      nailTextures[name] = new THREE.CanvasTexture(c);
-    }
+    // ЛИШЕ ОДИН ЧЕРВОНИЙ ПРИКЛАД
+    const c = document.createElement('canvas');
+    c.width = 200; c.height = 300;
+    const ctx = c.getContext('2d');
+    
+    // Червоний градієнт
+    const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+    gradient.addColorStop(0, '#ff3b3b');
+    gradient.addColorStop(1, '#cc0000');
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, 200, 300);
+    
+    // Додаємо відблиск для реалістичності
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+    ctx.beginPath();
+    ctx.ellipse(60, 80, 30, 50, 0, 0, 2 * Math.PI);
+    ctx.fill();
+    
+    nailTextures["classic_red"] = new THREE.CanvasTexture(c);
   }
 
   buildUI() {
-    // Designs
+    // Designs - лише один червоний приклад
     el.designPicker.innerHTML = '';
+    
     DESIGNS.forEach(name => {
       const btn = document.createElement('div');
       btn.className = `design-btn ${name === state.currentDesign ? 'selected' : ''}`;
-      btn.style.backgroundColor = nailTextures[name].image.toDataURL ? 'transparent' : '#f0f0f0';
-      if (name === 'classic') btn.style.background = 'linear-gradient(135deg, #f8c3cd, #fde4e4)';
-      else if (name === 'glitter') btn.style.background = '#e0b1cb';
-      else if (name === 'ombre') btn.style.background = 'linear-gradient(to bottom, #d4a5a5, #f5e6e8)';
-      else if (name === 'floral') btn.style.background = '#f2e3db';
-      else if (name === 'minimal') btn.style.background = '#ffffff';
+      btn.style.background = 'linear-gradient(135deg, #ff3b3b, #cc0000)';
       btn.onclick = () => {
         state.currentDesign = name;
         document.querySelectorAll('.design-btn').forEach(b => b.classList.remove('selected'));
@@ -581,7 +661,7 @@ class LuxeNailsAR {
       el.designPicker.appendChild(btn);
     });
 
-    // Shapes
+    // Shapes - три форми
     el.shapePicker.innerHTML = '';
     NAIL_SHAPES.forEach(s => {
       const btn = document.createElement('div');
@@ -600,34 +680,45 @@ class LuxeNailsAR {
   async uploadCustom() {
     const file = el.imageUpload.files[0];
     if (!file) return alert("Please select an image.");
+    
     try {
+      el.saveDesign.textContent = 'Processing...';
+      el.saveDesign.disabled = true;
+      
       const img = new Image();
       await new Promise(r => {
         img.onload = r;
         img.src = URL.createObjectURL(file);
       });
+      
+      // Обробляємо зображення з обраною формою
       const texture = await effectRenderer.processImage(img, state.currentShape);
       const id = `custom_${Date.now()}`;
       nailTextures[id] = texture;
       state.currentDesign = id;
 
+      // Створюємо прев'ю для кнопки
+      const previewUrl = await effectRenderer.createPreview(img.src, state.currentShape);
+      
       const btn = document.createElement('div');
       btn.className = 'design-btn custom-design selected';
-      const preview = document.createElement('canvas');
-      preview.width = 64; preview.height = 64;
-      const pctx = preview.getContext('2d');
-      pctx.drawImage(img, 0, 0, 64, 64);
-      btn.style.backgroundImage = `url(${preview.toDataURL()})`;
+      btn.style.backgroundImage = `url(${previewUrl})`;
       btn.style.backgroundSize = 'cover';
       btn.onclick = () => {
         state.currentDesign = id;
         document.querySelectorAll('.design-btn').forEach(b => b.classList.remove('selected'));
         btn.classList.add('selected');
       };
+      
       el.designPicker.appendChild(btn);
       el.uploadModal.classList.remove('show');
+      el.imageUpload.value = '';
+      
     } catch (e) {
       alert("Failed to load image. Please try a PNG or JPG.");
+    } finally {
+      el.saveDesign.textContent = 'Save Design';
+      el.saveDesign.disabled = false;
     }
   }
 
