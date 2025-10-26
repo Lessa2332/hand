@@ -7,74 +7,76 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>Nail</text></svg>">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
-    body { background: #0f0f18; overflow: hidden; font-family: 'Helvetica Neue', Arial, sans-serif; color: white; }
+    body { background: #0a0a0a; overflow: hidden; font-family: 'Helvetica Neue', Arial, sans-serif; color: white; }
     #video, #canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
     #video { z-index: 1; display: none; } #canvas { z-index: 2; display: none; }
 
-    /* === SALON UI — ЧИСТИЙ, ПРОФЕСІЙНИЙ === */
+    /* === ЛЮКСОВИЙ UI — ОПТИМІЗОВАНО ПІД МОБІЛЬНІ === */
     .btn {
-      position: fixed; height: 44px; border-radius: 22px; background: rgba(255,255,255,0.1); backdrop-filter: blur(12px);
-      border: 1px solid rgba(255,255,255,0.15); color: white; font-size: 13px; font-weight: 600;
-      display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 100;
-      transition: all 0.25s ease; padding: 0 16px; gap: 6px; min-width: 44px;
+      position: fixed; height: 48px; min-width: 48px; border-radius: 24px;
+      background: rgba(20,20,20,0.9); backdrop-filter: blur(25px);
+      border: 1.5px solid rgba(212,175,55,0.4); color: #d4af37;
+      font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; z-index: 100; transition: all 0.3s ease; padding: 0 16px; gap: 6px;
     }
-    .btn:hover { transform: scale(1.05); background: rgba(255,255,255,0.18); }
-    #uploadBtn { top: 16px; left: 16px; }
-    #shapeBtn { top: 16px; right: 16px; }
-    #langBtn { top: 16px; left: 50%; transform: translateX(-50%); }
+    .btn:hover { transform: scale(1.06); border-color: #d4af37; }
+    #uploadBtn { top: 18px; left: 18px; }
+    #shapeBtn { top: 18px; right: 18px; }
+    #langBtn { top: 18px; left: 50%; transform: translateX(-50%); }
 
     #modeToggle {
-      position: fixed; top: 16px; left: 50%; transform: translateX(-50%); z-index: 100;
-      background: rgba(15,15,25,0.8); backdrop-filter: blur(12px); padding: 6px; border-radius: 20px;
-      border: 1px solid rgba(255,255,255,0.1); display: flex; gap: 6px; width: fit-content;
+      position: fixed; top: 18px; left: 50%; transform: translateX(-50%); z-index: 100;
+      background: rgba(20,20,20,0.9); backdrop-filter: blur(25px); padding: 8px; border-radius: 24px;
+      border: 1px solid rgba(212,175,55,0.25); display: flex; gap: 8px;
     }
-    .mode { width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.1); font-size: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-    .mode.active { background: #ff6b6b; color: #0f0f18; }
+    .mode { width: 36px; height: 36px; border-radius: 50%; background: rgba(40,40,40,0.8); font-size: 13px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    .mode.active { background: #d4af37; color: #0a0a0a; transform: scale(1.08); }
 
     #colorPicker, #shapePicker {
-      position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; z-index: 100;
-      background: rgba(15,15,25,0.9); backdrop-filter: blur(16px); padding: 14px 18px; border-radius: 24px;
-      border: 1px solid rgba(255,255,255,0.1); max-width: 92vw; overflow-x: auto; scrollbar-width: none;
+      position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); display: flex; gap: 12px; z-index: 100;
+      background: rgba(20,20,20,0.95); backdrop-filter: blur(30px); padding: 16px 20px; border-radius: 28px;
+      border: 1px solid rgba(212,175,55,0.2); max-width: 92vw; overflow-x: auto; scrollbar-width: none;
     }
     #colorPicker::-webkit-scrollbar, #shapePicker::-webkit-scrollbar { display: none; }
     #shapePicker { bottom: 100px; display: none; }
 
     .color { width: 44px; height: 44px; border-radius: 14px; cursor: pointer; border: 2px solid transparent; transition: all 0.25s; }
     .color:hover { transform: scale(1.1); }
-    .color.selected { border-color: white; box-shadow: 0 0 0 2px #ff6b6b; transform: scale(1.15); }
+    .color.selected { border-color: #d4af37; box-shadow: 0 0 0 2px #d4af37; transform: scale(1.15); }
 
-    .shape { width: 50px; height: 50px; border-radius: 12px; background: #1a1a22; border: 2px solid rgba(255,255,255,0.2); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; transition: all 0.25s; }
-    .shape:hover { transform: scale(1.08); border-color: rgba(255,255,255,0.4); }
-    .shape.selected { border-color: #6ab04c; transform: scale(1.1); }
+    .shape { width: 60px; height: 38px; border-radius: 19px; background: #1a1a1a; border: 2px solid rgba(255,255,255,0.15); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #d4af37; transition: all 0.3s; }
+    .shape:hover { transform: scale(1.05); border-color: rgba(212,175,55,0.5); }
+    .shape.selected { border-color: #d4af37; background: rgba(212,175,55,0.15); transform: scale(1.08); }
 
     #uploadModal {
-      position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(15,15,25,0.95); backdrop-filter: blur(20px);
-      padding: 24px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.15); z-index: 1000; display: none; text-align: center; width: 90%; max-width: 360px;
+      position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(15,15,15,0.98); backdrop-filter: blur(35px);
+      padding: 28px; border-radius: 24px; border: 1.5px solid rgba(212,175,55,0.3); z-index: 1000; display: none; text-align: center; width: 90%; max-width: 380px;
     }
     #uploadModal.show { display: block; }
-    #imageUpload { margin: 16px 0; padding: 12px; border: 1px dashed rgba(255,255,255,0.3); border-radius: 12px; background: rgba(255,255,255,0.05); color: white; width: 100%; cursor: pointer; }
-    .modal-btn { padding: 10px 20px; margin: 6px; border: none; border-radius: 16px; font-weight: 600; cursor: pointer; }
-    #saveDesign { background: #ff6b6b; color: white; } #closeModal { background: rgba(255,255,255,0.1); color: white; }
+    #imageUpload { margin: 18px 0; padding: 14px; border: 2px dashed rgba(212,175,55,0.4); border-radius: 16px; background: rgba(35,35,35,0.7); color: white; width: 100%; cursor: pointer; }
+    .modal-btn { padding: 12px 24px; margin: 8px; border: none; border-radius: 18px; font-weight: 600; cursor: pointer; }
+    #saveDesign { background: linear-gradient(135deg, #d4af37, #b8941f); color: #0a0a0a; }
+    #closeModal { background: rgba(40,40,40,0.9); color: #d4af37; border: 1.5px solid rgba(212,175,55,0.4); }
 
     #loading {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0f0f18; display: flex; flex-direction: column;
-      align-items: center; justify-content: center; z-index: 1000; color: white; font-size: 18px; text-align: center; padding: 20px; gap: 16px;
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0a0a0a; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; z-index: 1000; color: #d4af37; font-size: 24px; text-align: center; padding: 30px; gap: 20px;
     }
-    .loader { width: 48px; height: 48px; border: 3px solid rgba(255,107,107,0.3); border-top: 3px solid #ff6b6b; border-radius: 50%; animation: spin 1s linear infinite; }
+    .loader { width: 60px; height: 60px; border: 4px solid rgba(212,175,55,0.3); border-top: 4px solid #d4af37; border-radius: 50%; animation: spin 1.2s linear infinite; }
 
     .indicator {
-      position: fixed; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.6); color: white; padding: 8px 16px; border-radius: 18px;
-      display: none; align-items: center; gap: 8px; z-index: 99; font-size: 13px; top: 130px;
+      position: fixed; left: 50%; transform: translateX(-50%); background: rgba(20,20,20,0.95); color: #d4af37;
+      padding: 12px 20px; border-radius: 20px; display: none; align-items: center; gap: 10px; z-index: 99; font-size: 14px;
+      border: 1.5px solid rgba(212,175,55,0.3); backdrop-filter: blur(25px); top: 140px;
     }
     .indicator.show { display: flex; }
 
     @keyframes spin { to { transform: rotate(360deg); } }
 
     @media (max-width: 480px) {
-      .btn { height: 40px; font-size: 12px; padding: 0 12px; }
+      .btn { height: 44px; font-size: 12px; padding: 0 14px; }
       .color, .shape { width: 40px; height: 40px; }
-      #colorPicker, #shapePicker { padding: 12px 16px; gap: 8px; }
-      #modeToggle { top: 12px; padding: 4px; }
+      #colorPicker, #shapePicker { padding: 12px 16px; gap: 10px; }
       .mode { width: 32px; height: 32px; font-size: 11px; }
     }
   </style>
@@ -82,8 +84,8 @@
 <body>
   <div id="loading">
     <div class="loader"></div>
-    <div id="loadingTitle">LuxeNails Studio</div>
-    <p id="loadingText">Show your hand to the camera</p>
+    <div id="title">LuxeNails Studio</div>
+    <p id="subtitle">Show your hand to the camera</p>
   </div>
 
   <video id="video" playsinline muted></video>
@@ -103,9 +105,9 @@
 
   <div id="uploadModal">
     <h3 id="modalTitle">Upload Design</h3>
-    <p id="modalDesc" style="margin:8px 0; color:#aaa; font-size:13px;">PNG with transparent background</p>
+    <p id="modalDesc" style="margin:12px 0; color:#ccc; font-size:13px;">PNG with transparent background</p>
     <input type="file" id="imageUpload" accept="image/*">
-    <div style="margin-top:16px;">
+    <div style="margin-top:20px;">
       <button id="saveDesign" class="modal-btn">Save</button>
       <button id="closeModal" class="modal-btn">Cancel</button>
     </div>
@@ -142,35 +144,14 @@
       { id: 'stiletto', name: 'Stiletto', icon: 'Stiletto' }
     ];
 
-    const COLORS = [
-      '#ff6b6b', '#ff9ed8', '#d4af37', '#6ab04c', '#4a90e2',
-      '#9b59b6', '#e67e22', '#2ecc71', '#f1c40f', '#34495e'
-    ];
+    const COLORS = ['#d4af37', '#ff6b6b', '#ff9ed8', '#6ab04c', '#4a90e2', '#9b59b6', '#e67e22', '#2ecc71', '#f1c40f', '#34495e'];
 
     const TEXT = {
-      en: {
-        loadingTitle: "LuxeNails Studio",
-        loadingText: "Show your hand to the camera",
-        modalTitle: "Upload Design",
-        modalDesc: "PNG with transparent background",
-        handText: "Show your hand",
-        save: "Save", cancel: "Cancel"
-      },
-      ua: {
-        loadingTitle: "LuxeNails Студія",
-        loadingText: "Покажіть руку камері",
-        modalTitle: "Завантажити дизайн",
-        modalDesc: "PNG з прозорим фоном",
-        handText: "Покажіть руку",
-        save: "Зберегти", cancel: "Скасувати"
-      }
+      en: { title: "LuxeNails Studio", subtitle: "Show your hand", modalTitle: "Upload Design", modalDesc: "PNG with transparent background", handText: "Show your hand", save: "Save", cancel: "Cancel" },
+      ua: { title: "LuxeNails Студія", subtitle: "Покажіть руку", modalTitle: "Завантажити", modalDesc: "PNG з прозорим фоном", handText: "Покажіть руку", save: "Зберегти", cancel: "Скасувати" }
     };
 
-    const state = {
-      lang: 'en', currentColor: COLORS[0], currentShape: 'oval', isAll: true, selectedFinger: -1,
-      lastLandmarks: null, smoothed: null, handNotDetected: 0, handSize: 1.0, showShape: false
-    };
-
+    const state = { lang: 'en', currentColor: COLORS[0], currentShape: 'oval', isAll: true, selectedFinger: -1, lastLandmarks: null, smoothed: null, handNotDetected: 0, handSize: 1.0, showShape: false };
     const el = {
       video: document.getElementById("video"), canvas: document.getElementById("canvas"), loading: document.getElementById("loading"),
       uploadBtn: document.getElementById("uploadBtn"), shapeBtn: document.getElementById("shapeBtn"), langBtn: document.getElementById("langBtn"),
@@ -179,7 +160,7 @@
       uploadModal: document.getElementById("uploadModal"), imageUpload: document.getElementById("imageUpload"),
       saveDesign: document.getElementById("saveDesign"), closeModal: document.getElementById("closeModal"),
       handIndicator: document.getElementById("handIndicator"), handText: document.getElementById("handText"),
-      loadingTitle: document.getElementById("loadingTitle"), loadingText: document.getElementById("loadingText"),
+      title: document.getElementById("title"), subtitle: document.getElementById("subtitle"),
       modalTitle: document.getElementById("modalTitle"), modalDesc: document.getElementById("modalDesc")
     };
 
@@ -229,7 +210,7 @@
       }
       updateText() {
         const t = TEXT[state.lang];
-        el.loadingTitle.textContent = t.loadingTitle; el.loadingText.textContent = t.loadingText;
+        el.title.textContent = t.title; el.subtitle.textContent = t.subtitle;
         el.modalTitle.textContent = t.modalTitle; el.modalDesc.textContent = t.modalDesc;
         el.handText.textContent = t.handText; el.saveDesign.textContent = t.save; el.closeModal.textContent = t.cancel;
       }
