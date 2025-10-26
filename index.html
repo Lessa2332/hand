@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-  <title>LuxeNails Studio — AR Try-On</title>
+  <title>Nails Studio — AR SmartLessa</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💅</text></svg>">
   <style>
     * {
@@ -67,6 +67,14 @@
     #shapeBtn {
       top: 25px;
       right: 25px;
+    }
+    #authorBtn {
+      bottom: 25px;
+      right: 25px;
+      font-size: 16px;
+      font-weight: bold;
+      background: linear-gradient(135deg, #d4af37, #b8941f);
+      color: #0a0a0a;
     }
 
     /* Mode Toggle - Luxury */
@@ -392,6 +400,7 @@
       }
       #uploadBtn { top: 20px; left: 20px; }
       #shapeBtn { top: 20px; right: 20px; }
+      #authorBtn { bottom: 20px; right: 20px; }
       #modeToggle { top: 20px; }
       .design-btn { width: 62px; height: 62px; }
       .shape-btn { width: 50px; height: 50px; font-size: 22px; }
@@ -418,6 +427,11 @@
   <button id="shapeBtn" class="control-btn" aria-label="Nail shapes">
     ✨
     <div class="tooltip">Nail Shapes</div>
+  </button>
+
+  <button id="authorBtn" class="control-btn" aria-label="Shop designs">
+    S
+    <div class="tooltip">Shop Designs</div>
   </button>
 
   <div id="modeToggle">
@@ -490,17 +504,19 @@ const FINGER_INDICES = {
 };
 const FINGER_KEYS = Object.keys(FINGER_INDICES);
 
-// Luxury nail shapes
+// Realistic nail shapes
 const NAIL_SHAPES = [
-  { id: 'rounded_rect', name: 'Rounded', icon: '▢' },
   { id: 'oval', name: 'Oval', icon: '○' },
-  { id: 'almond', name: 'Almond', icon: '💎' }
+  { id: 'triangular', name: 'Triangular', icon: '▲' },
+  { id: 'squoval', name: 'Squoval', icon: '▢' },
+  { id: 'almond', name: 'Almond', icon: '💎' },
+  { id: 'mask', name: 'Natural Mask', icon: '🎭' }
 ];
 
 // State
 const state = {
   currentDesign: "luxury_sparkle",
-  currentShape: 'rounded_rect',
+  currentShape: 'oval',
   isApplyAll: true,
   selectedFingerIndex: -1,
   lastLandmarks: null,
@@ -519,6 +535,7 @@ const el = {
   loading: document.getElementById("loading"),
   uploadBtn: document.getElementById("uploadBtn"),
   shapeBtn: document.getElementById("shapeBtn"),
+  authorBtn: document.getElementById("authorBtn"),
   applyAllOpt: document.getElementById("applyAllOpt"),
   selectFingerOpt: document.getElementById("selectFingerOpt"),
   designPicker: document.getElementById("designPicker"),
@@ -538,8 +555,8 @@ let scene, camera, renderer;
 const nails = {};
 let handLandmarker;
 
-// === Luxury Nail Effect Renderer ===
-class LuxuryNailRenderer {
+// === Realistic Nail Effect Renderer ===
+class RealisticNailRenderer {
   constructor() {
     this.masks = {};
     this.init();
@@ -558,8 +575,21 @@ class LuxuryNailRenderer {
     ctx.beginPath();
     
     switch(shape) {
-      case 'rounded_rect':
-        // Elegant rounded rectangle
+      case 'oval':
+        // Natural oval shape
+        ctx.ellipse(100, 150, 75, 110, 0, 0, 2 * Math.PI);
+        break;
+        
+      case 'triangular':
+        // Triangular shape - more pointed
+        ctx.moveTo(100, 30);
+        ctx.lineTo(160, 250);
+        ctx.lineTo(40, 250);
+        ctx.closePath();
+        break;
+        
+      case 'squoval':
+        // Square with rounded corners
         const radius = 35;
         ctx.moveTo(radius, 25);
         ctx.lineTo(165, 25);
@@ -572,16 +602,21 @@ class LuxuryNailRenderer {
         ctx.arcTo(25, 25, 35, 25, radius);
         break;
         
-      case 'oval':
-        // Natural oval shape
-        ctx.ellipse(100, 150, 75, 110, 0, 0, 2 * Math.PI);
-        break;
-        
       case 'almond':
         // Elegant almond shape
         ctx.moveTo(100, 30);
         ctx.bezierCurveTo(130, 50, 160, 120, 100, 270);
         ctx.bezierCurveTo(40, 120, 70, 50, 100, 30);
+        ctx.closePath();
+        break;
+        
+      case 'mask':
+        // Realistic nail mask that follows natural nail shape
+        ctx.moveTo(60, 40);
+        ctx.bezierCurveTo(80, 30, 120, 30, 140, 40);
+        ctx.bezierCurveTo(160, 60, 160, 240, 140, 260);
+        ctx.bezierCurveTo(120, 270, 80, 270, 60, 260);
+        ctx.bezierCurveTo(40, 240, 40, 60, 60, 40);
         ctx.closePath();
         break;
     }
@@ -590,7 +625,7 @@ class LuxuryNailRenderer {
     return c;
   }
   
-  async processImage(img, shape = 'rounded_rect') {
+  async processImage(img, shape = 'oval') {
     const c = document.createElement('canvas');
     c.width = 200; 
     c.height = 300;
@@ -608,13 +643,13 @@ class LuxuryNailRenderer {
     ctx.drawImage(img, 0, 0, 200, 300);
     ctx.restore();
     
-    // Add luxury gel effect with sparkle
+    // Add realistic gel effect with subtle shine
     const g = ctx.createRadialGradient(70, 70, 0, 70, 70, 140);
-    g.addColorStop(0, 'rgba(255, 255, 255, 0.5)');
-    g.addColorStop(0.4, 'rgba(255, 255, 255, 0.2)');
+    g.addColorStop(0, 'rgba(255, 255, 255, 0.3)');
+    g.addColorStop(0.4, 'rgba(255, 255, 255, 0.15)');
     g.addColorStop(1, 'rgba(255, 255, 255, 0)');
     ctx.fillStyle = g;
-    ctx.globalAlpha = 0.4;
+    ctx.globalAlpha = 0.3;
     ctx.fillRect(0, 0, 200, 300);
     ctx.globalAlpha = 1;
     
@@ -622,7 +657,7 @@ class LuxuryNailRenderer {
   }
   
   // Method for creating preview
-  createPreview(imageData, shape = 'rounded_rect', size = 70) {
+  createPreview(imageData, shape = 'oval', size = 70) {
     return new Promise((resolve) => {
       const c = document.createElement('canvas');
       c.width = size;
@@ -636,7 +671,18 @@ class LuxuryNailRenderer {
       const previewRadius = 10;
       
       switch(shape) {
-        case 'rounded_rect':
+        case 'oval':
+          ctx.ellipse(size/2, size/2, size/3, size/2.3, 0, 0, 2 * Math.PI);
+          break;
+          
+        case 'triangular':
+          ctx.moveTo(size/2, 8);
+          ctx.lineTo(size - 8, size - 8);
+          ctx.lineTo(8, size - 8);
+          ctx.closePath();
+          break;
+          
+        case 'squoval':
           ctx.moveTo(previewRadius, 8);
           ctx.lineTo(size - previewRadius, 8);
           ctx.arcTo(size - 8, 8, size - 8, previewRadius, previewRadius);
@@ -648,14 +694,19 @@ class LuxuryNailRenderer {
           ctx.arcTo(8, 8, previewRadius, 8, previewRadius);
           break;
           
-        case 'oval':
-          ctx.ellipse(size/2, size/2, size/3, size/2.3, 0, 0, 2 * Math.PI);
-          break;
-          
         case 'almond':
           ctx.moveTo(size/2, 8);
           ctx.bezierCurveTo(size - 12, 15, size - 8, size - 12, size/2, size - 8);
           ctx.bezierCurveTo(12, size - 12, 8, 15, size/2, 8);
+          ctx.closePath();
+          break;
+          
+        case 'mask':
+          ctx.moveTo(15, 12);
+          ctx.bezierCurveTo(25, 8, 45, 8, 55, 12);
+          ctx.bezierCurveTo(60, 20, 60, 58, 55, 62);
+          ctx.bezierCurveTo(45, 65, 25, 65, 15, 62);
+          ctx.bezierCurveTo(10, 58, 10, 20, 15, 12);
           ctx.closePath();
           break;
       }
@@ -673,7 +724,7 @@ class LuxuryNailRenderer {
   }
 }
 
-const luxuryRenderer = new LuxuryNailRenderer();
+const realisticRenderer = new RealisticNailRenderer();
 
 // === Main App ===
 class LuxeNailsAR {
@@ -702,6 +753,10 @@ class LuxeNailsAR {
     el.shapeBtn.onclick = () => {
       state.showShapePicker = !state.showShapePicker;
       el.shapePicker.style.display = state.showShapePicker ? 'flex' : 'none';
+    };
+    
+    el.authorBtn.onclick = () => {
+      window.open('https://smartlessa.etsy.com', '_blank');
     };
     
     el.closeModal.onclick = () => {
@@ -847,7 +902,7 @@ class LuxeNailsAR {
       el.designPicker.appendChild(btn);
     });
 
-    // Shapes - luxury styles
+    // Shapes - realistic styles
     el.shapePicker.innerHTML = '';
     NAIL_SHAPES.forEach(s => {
       const btn = document.createElement('div');
@@ -888,13 +943,13 @@ class LuxeNailsAR {
       });
       
       // Process image with selected shape
-      const texture = await luxuryRenderer.processImage(img, state.currentShape);
+      const texture = await realisticRenderer.processImage(img, state.currentShape);
       const id = `custom_${Date.now()}`;
       nailTextures[id] = texture;
       state.currentDesign = id;
 
       // Create preview for button
-      const previewUrl = await luxuryRenderer.createPreview(img.src, state.currentShape);
+      const previewUrl = await realisticRenderer.createPreview(img.src, state.currentShape);
       
       const btn = document.createElement('div');
       btn.className = 'design-btn custom-design selected';
