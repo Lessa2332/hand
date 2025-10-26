@@ -283,27 +283,6 @@
       animation: spin 1.2s linear infinite;
       box-shadow: 0 0 25px rgba(212, 175, 55, 0.3);
     }
-    .indicator {
-      position: fixed;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(20, 20, 20, 0.95);
-      color: #d4af37;
-      padding: 14px 24px;
-      border-radius: 22px;
-      display: none;
-      align-items: center;
-      gap: 12px;
-      z-index: 99;
-      font-size: 15px;
-      border: 1.5px solid rgba(212, 175, 55, 0.3);
-      backdrop-filter: blur(25px);
-    }
-    #handIndicator { top: 150px; }
-    .indicator.show { 
-      display: flex; 
-      animation: indicatorAppear 0.4s ease; 
-    }
 
     /* Tooltips */
     .tooltip {
@@ -338,15 +317,6 @@
       } to { 
         opacity: 1; 
         transform: translate(-50%, -50%); 
-      } 
-    }
-    @keyframes indicatorAppear { 
-      from { 
-        opacity: 0; 
-        transform: translateX(-50%) translateY(-12px); 
-      } to { 
-        opacity: 1; 
-        transform: translateX(-50%) translateY(0); 
       } 
     }
 
@@ -430,11 +400,6 @@
       <button id="saveDesign" class="modal-btn">Save Design</button>
       <button id="closeModal" class="modal-btn">Cancel</button>
     </div>
-  </div>
-
-  <div id="handIndicator" class="indicator">
-    <span>👋</span>
-    <span>Show your hand to the camera</span>
   </div>
 
   <script type="importmap">
@@ -532,8 +497,7 @@
       uploadModal: document.getElementById("uploadModal"),
       imageUpload: document.getElementById("imageUpload"),
       saveDesign: document.getElementById("saveDesign"),
-      closeModal: document.getElementById("closeModal"),
-      handIndicator: document.getElementById("handIndicator")
+      closeModal: document.getElementById("closeModal")
     };
 
     // Resources
@@ -1153,7 +1117,6 @@
           
           if (results.landmarks && results.landmarks.length > 0) {
             state.handNotDetectedCount = 0;
-            el.handIndicator.classList.remove('show');
             
             const landmarks = results.landmarks[0];
             state.isLeftHand = results.handednesses[0][0].displayName === "Left";
@@ -1161,7 +1124,6 @@
             this.updateHandSize(landmarks);
           } else {
             if (++state.handNotDetectedCount > CONFIG.HAND_NOT_DETECTED_THRESHOLD) {
-              el.handIndicator.classList.add('show');
               this.hideAllNails();
             }
           }
@@ -1262,7 +1224,7 @@
         if (nailTextures[state.currentDesign]) {
           nail.material.uniforms.map.value = nailTextures[state.currentDesign];
           nail.material.uniforms.time.value = performance.now() * 0.001;
-          nail.material.neiforms.shine.value = 1.0;
+          nail.material.uniforms.shine.value = 1.0;
           nail.material.needsUpdate = true;
         }
       }
