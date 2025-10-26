@@ -30,32 +30,37 @@
     #video { z-index: 1; display: none; }
     #canvas { z-index: 2; display: none; }
 
-    /* Luxury Controls */
+    /* Enhanced Luxury Controls */
     .control-btn {
       position: fixed;
-      min-width: 60px;
-      height: 52px;
-      border-radius: 26px;
-      background: rgba(20, 20, 20, 0.9);
-      backdrop-filter: blur(25px);
-      border: 1.5px solid rgba(212, 175, 55, 0.4);
+      min-width: 68px;
+      height: 56px;
+      border-radius: 28px;
+      background: rgba(25, 25, 25, 0.95);
+      backdrop-filter: blur(30px);
+      border: 2px solid rgba(212, 175, 55, 0.5);
       color: #d4af37;
-      font-size: 14px;
+      font-size: 15px;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       z-index: 100;
       transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4);
-      padding: 0 18px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+      padding: 0 20px;
       font-weight: 600;
       gap: 8px;
     }
     .control-btn:hover {
-      transform: scale(1.08);
+      transform: scale(1.1);
       border-color: #d4af37;
-      box-shadow: 0 8px 30px rgba(212, 175, 55, 0.3);
+      box-shadow: 0 12px 35px rgba(212, 175, 55, 0.4);
+      background: rgba(35, 35, 35, 0.95);
+    }
+    .control-btn:active {
+      transform: scale(1.05);
+      transition: transform 0.1s ease;
     }
     #uploadBtn { top: 25px; left: 25px; }
     #shapeBtn { top: 25px; right: 25px; }
@@ -65,74 +70,85 @@
       background: linear-gradient(135deg, #d4af37, #b8941f);
       color: #0a0a0a;
       border: none;
-      box-shadow: 0 0 0 2px #0a0a0a, 0 6px 20px rgba(212, 175, 55, 0.4);
+      box-shadow: 0 0 0 2px #0a0a0a, 0 8px 25px rgba(212, 175, 55, 0.5);
+    }
+    #authorBtn:hover {
+      background: linear-gradient(135deg, #e6c158, #c9a229);
+      box-shadow: 0 0 0 2px #0a0a0a, 0 12px 30px rgba(212, 175, 55, 0.6);
     }
 
-    /* Mode Toggle */
+    /* Enhanced Mode Toggle */
     #modeToggle {
       position: fixed;
       top: 25px;
       left: 50%;
       transform: translateX(-50%);
       z-index: 100;
-      background: rgba(20, 20, 20, 0.9);
-      backdrop-filter: blur(25px);
-      padding: 10px;
-      border-radius: 28px;
-      border: 1px solid rgba(212, 175, 55, 0.25);
+      background: rgba(25, 25, 25, 0.95);
+      backdrop-filter: blur(30px);
+      padding: 12px;
+      border-radius: 30px;
+      border: 2px solid rgba(212, 175, 55, 0.3);
       display: flex;
-      gap: 12px;
+      gap: 15px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
     }
     .mode-option {
-      min-width: 110px;
-      height: 38px;
-      border-radius: 19px;
-      background: rgba(40, 40, 40, 0.8);
+      min-width: 120px;
+      height: 42px;
+      border-radius: 21px;
+      background: rgba(45, 45, 45, 0.9);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 14px;
+      font-size: 15px;
       cursor: pointer;
       transition: all 0.3s ease;
-      border: 1.5px solid transparent;
-      padding: 0 18px;
+      border: 2px solid transparent;
+      padding: 0 20px;
       font-weight: 600;
-      gap: 6px;
+      gap: 8px;
+    }
+    .mode-option:hover {
+      background: rgba(55, 55, 55, 0.9);
+      border-color: rgba(212, 175, 55, 0.4);
     }
     .mode-option.active {
       background: #d4af37;
       color: #0a0a0a;
-      transform: scale(1.08);
-      box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+      transform: scale(1.1);
+      box-shadow: 0 0 25px rgba(212, 175, 55, 0.5);
+      border-color: transparent;
     }
 
-    /* Design & Shape Pickers */
+    /* Enhanced Design & Shape Pickers */
     #designPicker, #shapePicker {
       position: fixed;
       bottom: 25px;
       left: 50%;
       transform: translateX(-50%);
       display: flex;
-      gap: 16px;
+      gap: 18px;
       z-index: 100;
-      background: rgba(20, 20, 20, 0.95);
-      backdrop-filter: blur(30px);
-      padding: 20px 24px;
-      border-radius: 32px;
-      border: 1px solid rgba(212, 175, 55, 0.2);
-      max-width: 92vw;
+      background: rgba(25, 25, 25, 0.98);
+      backdrop-filter: blur(35px);
+      padding: 22px 26px;
+      border-radius: 35px;
+      border: 2px solid rgba(212, 175, 55, 0.25);
+      max-width: 94vw;
       overflow-x: auto;
       scrollbar-width: none;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
     }
     #designPicker::-webkit-scrollbar, #shapePicker::-webkit-scrollbar { display: none; }
-    #shapePicker { bottom: 120px; display: none; }
+    #shapePicker { bottom: 130px; display: none; }
 
     .design-btn {
-      width: 70px;
-      height: 70px;
-      border-radius: 20px;
-      border: 2.5px solid rgba(255, 255, 255, 0.15);
-      background: #1a1a1a;
+      width: 75px;
+      height: 75px;
+      border-radius: 22px;
+      border: 3px solid rgba(255, 255, 255, 0.2);
+      background: #1f1f1f;
       cursor: pointer;
       transition: all 0.3s ease;
       position: relative;
@@ -143,32 +159,36 @@
       content: '';
       position: absolute;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: linear-gradient(135deg, transparent, rgba(212, 175, 55, 0.15));
+      background: linear-gradient(135deg, transparent, rgba(212, 175, 55, 0.2));
       opacity: 0;
       transition: opacity 0.3s ease;
     }
     .design-btn:hover::before { opacity: 1; }
-    .design-btn:hover { transform: scale(1.1); border-color: rgba(212, 175, 55, 0.6); }
+    .design-btn:hover { 
+      transform: scale(1.12); 
+      border-color: rgba(212, 175, 55, 0.7); 
+      box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
+    }
     .design-btn.selected {
       border-color: #d4af37;
-      box-shadow: 0 0 0 3px #d4af37, 0 10px 30px rgba(212, 175, 55, 0.4);
-      transform: scale(1.12);
+      box-shadow: 0 0 0 4px #d4af37, 0 12px 35px rgba(212, 175, 55, 0.5);
+      transform: scale(1.15);
     }
 
     .shape-btn {
-      min-width: 85px;
-      height: 42px;
-      border-radius: 21px;
-      border: 2px solid rgba(255, 255, 255, 0.15);
-      background: #1a1a1a;
+      min-width: 90px;
+      height: 46px;
+      border-radius: 23px;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      background: #1f1f1f;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 13px;
+      font-size: 14px;
       transition: all 0.3s ease;
       position: relative;
-      padding: 0 18px;
+      padding: 0 20px;
       font-weight: 600;
       color: #d4af37;
       flex-shrink: 0;
@@ -177,88 +197,98 @@
       content: '';
       position: absolute;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: linear-gradient(135deg, transparent, rgba(212, 175, 55, 0.1));
-      border-radius: 20px;
+      background: linear-gradient(135deg, transparent, rgba(212, 175, 55, 0.15));
+      border-radius: 22px;
       opacity: 0;
       transition: opacity 0.3s ease;
     }
     .shape-btn:hover::before { opacity: 1; }
-    .shape-btn:hover { transform: scale(1.05); border-color: rgba(212, 175, 55, 0.5); }
+    .shape-btn:hover { 
+      transform: scale(1.08); 
+      border-color: rgba(212, 175, 55, 0.6); 
+      box-shadow: 0 6px 20px rgba(212, 175, 55, 0.25);
+    }
     .shape-btn.selected {
       border-color: #d4af37;
-      background: rgba(212, 175, 55, 0.15);
-      transform: scale(1.08);
-      box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+      background: rgba(212, 175, 55, 0.2);
+      transform: scale(1.1);
+      box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
     }
 
-    /* Upload Modal */
+    /* Enhanced Upload Modal */
     #uploadModal {
       position: fixed;
       top: 50%; left: 50%;
       transform: translate(-50%, -50%);
-      background: rgba(15, 15, 15, 0.98);
-      backdrop-filter: blur(35px);
-      padding: 32px;
-      border-radius: 28px;
-      border: 1.5px solid rgba(212, 175, 55, 0.3);
+      background: rgba(18, 18, 18, 0.99);
+      backdrop-filter: blur(40px);
+      padding: 36px;
+      border-radius: 32px;
+      border: 2px solid rgba(212, 175, 55, 0.4);
       z-index: 1000;
       display: none;
       color: white;
       text-align: center;
-      width: 90%;
-      max-width: 440px;
-      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+      width: 92%;
+      max-width: 460px;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7);
     }
     #uploadModal.show { 
       display: block; 
       animation: modalAppear 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
     }
     #imageUpload {
-      margin: 22px 0;
-      padding: 18px;
-      border: 2.5px dashed rgba(212, 175, 55, 0.4);
-      border-radius: 18px;
-      background: rgba(35, 35, 35, 0.7);
+      margin: 25px 0;
+      padding: 20px;
+      border: 3px dashed rgba(212, 175, 55, 0.5);
+      border-radius: 20px;
+      background: rgba(40, 40, 40, 0.8);
       color: white;
       width: 100%;
       cursor: pointer;
-      font-size: 15px;
+      font-size: 16px;
       transition: all 0.3s ease;
     }
     #imageUpload:hover { 
       border-color: #d4af37; 
-      background: rgba(45, 45, 45, 0.7); 
+      background: rgba(50, 50, 50, 0.8); 
+      transform: translateY(-2px);
     }
     .modal-btn {
-      padding: 14px 28px;
-      margin: 10px;
+      padding: 16px 32px;
+      margin: 12px;
       border: none;
-      border-radius: 20px;
+      border-radius: 22px;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.3s ease;
-      font-size: 15px;
+      font-size: 16px;
+      min-width: 120px;
     }
     #saveDesign { 
       background: linear-gradient(135deg, #d4af37, #b8941f); 
       color: #0a0a0a; 
-      box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+      box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
     }
     #saveDesign:hover { 
-      transform: translateY(-2px); 
-      box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4); 
+      transform: translateY(-3px); 
+      box-shadow: 0 10px 25px rgba(212, 175, 55, 0.5); 
+    }
+    #saveDesign:active {
+      transform: translateY(-1px);
     }
     #closeModal { 
-      background: rgba(40, 40, 40, 0.9); 
+      background: rgba(45, 45, 45, 0.95); 
       color: #d4af37; 
-      border: 1.5px solid rgba(212, 175, 55, 0.4); 
+      border: 2px solid rgba(212, 175, 55, 0.5); 
     }
     #closeModal:hover { 
-      background: rgba(50, 50, 50, 0.9); 
-      border-color: rgba(212, 175, 55, 0.6); 
+      background: rgba(55, 55, 55, 0.95); 
+      border-color: rgba(212, 175, 55, 0.7); 
+      transform: translateY(-2px);
     }
 
-    /* Loading & Indicators */
+    /* Enhanced Loading & Indicators */
     #loading {
       position: fixed;
       top: 0; left: 0;
@@ -270,34 +300,35 @@
       justify-content: center;
       z-index: 1000;
       color: #d4af37;
-      font-size: 26px;
+      font-size: 28px;
       text-align: center;
-      padding: 30px;
-      gap: 28px;
+      padding: 35px;
+      gap: 30px;
     }
     .loader {
-      width: 70px; height: 70px;
-      border: 4px solid rgba(212, 175, 55, 0.3);
-      border-top: 4px solid #d4af37;
+      width: 75px; height: 75px;
+      border: 5px solid rgba(212, 175, 55, 0.3);
+      border-top: 5px solid #d4af37;
       border-radius: 50%;
       animation: spin 1.2s linear infinite;
-      box-shadow: 0 0 25px rgba(212, 175, 55, 0.3);
+      box-shadow: 0 0 30px rgba(212, 175, 55, 0.4);
     }
     .indicator {
       position: fixed;
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(20, 20, 20, 0.95);
+      background: rgba(25, 25, 25, 0.98);
       color: #d4af37;
-      padding: 14px 24px;
-      border-radius: 22px;
+      padding: 16px 28px;
+      border-radius: 25px;
       display: none;
       align-items: center;
-      gap: 12px;
+      gap: 14px;
       z-index: 99;
-      font-size: 15px;
-      border: 1.5px solid rgba(212, 175, 55, 0.3);
-      backdrop-filter: blur(25px);
+      font-size: 16px;
+      border: 2px solid rgba(212, 175, 55, 0.4);
+      backdrop-filter: blur(30px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
     }
     #handIndicator { top: 150px; }
     .indicator.show { 
@@ -305,22 +336,24 @@
       animation: indicatorAppear 0.4s ease; 
     }
 
-    /* Tooltips */
+    /* Enhanced Tooltips */
     .tooltip {
       position: absolute;
-      bottom: -40px;
+      bottom: -45px;
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(20, 20, 20, 0.95);
+      background: rgba(25, 25, 25, 0.98);
       color: #d4af37;
-      padding: 8px 14px;
-      border-radius: 12px;
-      font-size: 12px;
+      padding: 10px 16px;
+      border-radius: 14px;
+      font-size: 13px;
       white-space: nowrap;
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.3s ease;
-      border: 1px solid rgba(212, 175, 55, 0.2);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
     }
     .control-btn:hover .tooltip,
     .mode-option:hover .tooltip {
@@ -343,74 +376,120 @@
     @keyframes indicatorAppear { 
       from { 
         opacity: 0; 
-        transform: translateX(-50%) translateY(-12px); 
+        transform: translateX(-50%) translateY(-15px); 
       } to { 
         opacity: 1; 
         transform: translateX(-50%) translateY(0); 
       } 
     }
 
-    /* Mobile Optimizations */
+    /* Enhanced Mobile Optimizations */
     @media (max-width: 768px) {
+      .control-btn {
+        min-width: 60px;
+        height: 52px;
+        font-size: 14px;
+        padding: 0 16px;
+      }
+      #uploadBtn { top: 20px; left: 20px; }
+      #shapeBtn { top: 20px; right: 20px; }
+      #authorBtn { bottom: 20px; right: 20px; }
+      #modeToggle { 
+        top: 20px; 
+        padding: 10px; 
+        gap: 12px; 
+      }
+      .mode-option {
+        min-width: 110px;
+        height: 40px;
+        font-size: 14px;
+        padding: 0 16px;
+      }
+      .design-btn { 
+        width: 68px; 
+        height: 68px; 
+        border-radius: 20px;
+      }
+      .shape-btn { 
+        min-width: 82px; 
+        height: 42px; 
+        font-size: 13px; 
+        padding: 0 16px; 
+      }
+      #designPicker { 
+        bottom: 20px; 
+        padding: 18px 22px; 
+        border-radius: 30px;
+      }
+      #shapePicker { 
+        bottom: 120px; 
+        padding: 18px 22px; 
+        border-radius: 30px;
+      }
+      #uploadModal {
+        padding: 28px;
+        margin: 20px;
+        width: calc(100% - 40px);
+      }
+    }
+
+    @media (max-width: 480px) {
       .control-btn {
         min-width: 55px;
         height: 48px;
         font-size: 13px;
         padding: 0 14px;
       }
-      #uploadBtn { top: 20px; left: 20px; }
-      #shapeBtn { top: 20px; right: 20px; }
-      #authorBtn { bottom: 20px; right: 20px; }
-      #modeToggle { top: 20px; padding: 8px; gap: 10px; }
+      #modeToggle {
+        flex-direction: column;
+        gap: 8px;
+        top: 90px;
+      }
       .mode-option {
-        min-width: 100px;
-        height: 36px;
-        font-size: 13px;
-        padding: 0 14px;
+        min-width: 140px;
       }
-      .design-btn { width: 64px; height: 64px; }
-      .shape-btn { 
-        min-width: 78px; 
-        height: 38px; 
-        font-size: 12px; 
-        padding: 0 14px; 
+      #designPicker, #shapePicker {
+        gap: 12px;
+        padding: 16px 20px;
       }
-      #designPicker { bottom: 20px; padding: 16px 20px; }
-      #shapePicker { bottom: 110px; padding: 16px 20px; }
+      .design-btn {
+        width: 60px;
+        height: 60px;
+      }
     }
   </style>
 </head>
 <body>
   <div id="loading">
     <div class="loader"></div>
-    <div style="font-weight: 700; margin-bottom: 8px;">LuxeNails AR Studio</div>
-    <p style="color: #bbb; font-size: 16px; line-height: 1.4;">Position your hand in front of the camera<br>Allow camera access when prompted</p>
+    <div style="font-weight: 700; margin-bottom: 10px; font-size: 24px;">LuxeNails AR Studio</div>
+    <p style="color: #bbb; font-size: 16px; line-height: 1.5;">Position your hand in front of the camera<br>Allow camera access when prompted</p>
   </div>
 
   <video id="video" playsinline muted></video>
   <canvas id="canvas"></canvas>
 
-  <button id="uploadBtn" class="control-btn" aria-label="Upload design">
+  <button id="uploadBtn" class="control-btn" aria-label="Upload custom design">
     📤 Upload
     <div class="tooltip">Upload Custom Design</div>
   </button>
   
-  <button id="shapeBtn" class="control-btn" aria-label="Nail shapes">
+  <button id="shapeBtn" class="control-btn" aria-label="Change nail shapes">
     ✨ Shapes
     <div class="tooltip">Nail Shapes</div>
   </button>
 
-  <button id="authorBtn" class="control-btn" aria-label="Shop designs">
+  <button id="authorBtn" class="control-btn" aria-label="Shop premium designs">
     🛍️ Shop
-    <div class="tooltip">Shop Designs</div>
+    <div class="tooltip">Shop Premium Designs</div>
   </button>
 
   <div id="modeToggle">
-    <div class="mode-option active" id="applyAllOpt" title="Apply to all fingers">
+    <div class="mode-option active" id="applyAllOpt" title="Apply design to all fingers">
       💅 All Fingers
       <div class="tooltip">Apply to All Fingers</div>
     </div>
-    <div class="mode-option" id="selectFingerOpt" title="Select single finger">
+    <div class="mode-option" id="selectFingerOpt" title="Select individual finger">
       👆 Single Finger
       <div class="tooltip">Select Single Finger</div>
     </div>
@@ -420,13 +499,13 @@
   <div id="designPicker"></div>
 
   <div id="uploadModal">
-    <h3 style="margin:0; color:#d4af37; font-weight:600; font-size: 20px;">Upload Your Design</h3>
-    <p style="margin:16px 0; color:#ccc; font-size:14px; line-height:1.5;">
+    <h3 style="margin:0; color:#d4af37; font-weight:600; font-size: 22px;">Upload Your Design</h3>
+    <p style="margin:18px 0; color:#ccc; font-size:15px; line-height:1.5;">
       Choose an image to create your custom nail design.<br>
       For best results, use PNG images with transparent background.
     </p>
     <input type="file" id="imageUpload" accept="image/*">
-    <div style="margin-top: 24px;">
+    <div style="margin-top: 28px;">
       <button id="saveDesign" class="modal-btn">Save Design</button>
       <button id="closeModal" class="modal-btn">Cancel</button>
     </div>
@@ -798,6 +877,14 @@
             this.hideShapePicker();
           }
         });
+
+        // Handle escape key to close modals
+        document.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape') {
+            el.uploadModal.classList.remove('show');
+            this.hideShapePicker();
+          }
+        });
       }
       
       hideShapePicker() {
@@ -809,6 +896,13 @@
         state.isApplyAll = applyToAll;
         el.applyAllOpt.classList.toggle('active', applyToAll);
         el.selectFingerOpt.classList.toggle('active', !applyToAll);
+        
+        // Show visual feedback
+        if (applyToAll) {
+          this.showTemporaryMessage("All fingers mode activated");
+        } else {
+          this.showTemporaryMessage("Single finger mode - tap on a finger to select");
+        }
       }
 
       async setupCamera() {
@@ -1029,6 +1123,7 @@
               btn.classList.remove('selected');
             });
             button.classList.add('selected');
+            this.showTemporaryMessage(`${designName.replace('_', ' ')} design selected`);
           };
           
           el.designPicker.appendChild(button);
@@ -1050,6 +1145,7 @@
               btn.classList.remove('selected');
             });
             button.classList.add('selected');
+            this.showTemporaryMessage(`${shape.name} shape selected`);
           };
           
           el.shapePicker.appendChild(button);
@@ -1059,13 +1155,20 @@
       async handleDesignUpload() {
         const file = el.imageUpload.files[0];
         if (!file) {
-          alert("Please select an image file.");
+          this.showTemporaryMessage("Please select an image file", true);
           return;
         }
         
         // Check file size (max 5MB)
         if (file.size > 5 * 1024 * 1024) {
-          alert("Please select an image smaller than 5MB.");
+          this.showTemporaryMessage("Please select an image smaller than 5MB", true);
+          return;
+        }
+        
+        // Check file type
+        const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+        if (!validTypes.includes(file.type)) {
+          this.showTemporaryMessage("Please select a JPEG, PNG, or WebP image", true);
           return;
         }
         
@@ -1099,6 +1202,7 @@
               btn.classList.remove('selected');
             });
             button.classList.add('selected');
+            this.showTemporaryMessage("Custom design selected");
           };
           
           el.designPicker.appendChild(button);
@@ -1106,34 +1210,42 @@
           el.imageUpload.value = '';
           
           // Show success message
-          this.showSuccessMessage('Design added successfully!');
+          this.showTemporaryMessage('Custom design added successfully!');
           
         } catch (error) {
-          alert("Failed to process image. Please try a different image file (PNG or JPG recommended).");
+          this.showTemporaryMessage("Failed to process image. Please try a different file.", true);
         } finally {
           el.saveDesign.textContent = 'Save Design';
           el.saveDesign.disabled = false;
         }
       }
       
-      showSuccessMessage(message) {
-        const successMsg = document.createElement('div');
-        successMsg.textContent = message;
-        successMsg.style.cssText = `
+      showTemporaryMessage(message, isError = false) {
+        const messageEl = document.createElement('div');
+        messageEl.textContent = message;
+        messageEl.style.cssText = `
           position: fixed;
           top: 100px;
           left: 50%;
           transform: translateX(-50%);
-          background: rgba(212, 175, 55, 0.95);
-          color: #0a0a0a;
-          padding: 14px 24px;
-          border-radius: 20px;
+          background: ${isError ? 'rgba(220, 53, 69, 0.95)' : 'rgba(212, 175, 55, 0.95)'};
+          color: ${isError ? 'white' : '#0a0a0a'};
+          padding: 16px 28px;
+          border-radius: 22px;
           font-weight: 600;
           z-index: 1000;
-          animation: fadeOut 3s forwards;
+          animation: messageFade 3s forwards;
+          text-align: center;
+          max-width: 80vw;
+          backdrop-filter: blur(20px);
+          border: 2px solid ${isError ? 'rgba(220, 53, 69, 0.3)' : 'rgba(212, 175, 55, 0.3)'};
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         `;
-        document.body.appendChild(successMsg);
-        setTimeout(() => successMsg.remove(), 3000);
+        document.body.appendChild(messageEl);
+        setTimeout(() => {
+          messageEl.style.animation = 'messageFadeOut 0.5s forwards';
+          setTimeout(() => messageEl.remove(), 500);
+        }, 2500);
       }
 
       startRenderLoop() {
@@ -1258,11 +1370,11 @@
         nail.scale.set(size * flipFactor, size, 1);
         nail.rotation.z = angle;
         
-        // Update texture and shader uniforms
+        // Update texture and shader uniforms - CRITICAL FIX: uniforms instead of neiforms
         if (nailTextures[state.currentDesign]) {
           nail.material.uniforms.map.value = nailTextures[state.currentDesign];
           nail.material.uniforms.time.value = performance.now() * 0.001;
-          nail.material.neiforms.shine.value = 1.0;
+          nail.material.uniforms.shine.value = 1.0; // Fixed typo: uniforms instead of neiforms
           nail.material.needsUpdate = true;
         }
       }
@@ -1276,6 +1388,7 @@
         
         let minDistance = Infinity;
         let selectedIndex = -1;
+        let selectedFinger = '';
         
         FINGER_KEYS.forEach((fingerKey, index) => {
           const tipIndex = FINGER_INDICES[fingerKey].tip;
@@ -1288,10 +1401,14 @@
           if (distance < minDistance && distance < window.innerWidth * 0.12) {
             minDistance = distance;
             selectedIndex = index;
+            selectedFinger = fingerKey;
           }
         });
         
-        state.selectedFingerIndex = selectedIndex;
+        if (selectedIndex !== -1) {
+          state.selectedFingerIndex = selectedIndex;
+          this.showTemporaryMessage(`${selectedFinger} finger selected`);
+        }
       }
 
       hideAllNails() {
@@ -1318,17 +1435,41 @@
 
       showError(message) {
         el.loading.innerHTML = `
-          <div style="color:#d4af37; font-size:28px; margin-bottom:15px;">⚠️</div>
-          <div style="color:#d4af37; font-size:20px; margin-bottom:15px; font-weight:600">LuxeNails AR Studio</div>
-          <p style="color:#aaa; font-size:16px; line-height:1.5; max-width:300px;">${message}</p>
-          <button onclick="location.reload()" style="margin-top:20px; padding:12px 24px; background:#d4af37; color:#0a0a0a; border:none; border-radius:18px; font-weight:600; cursor:pointer;">Try Again</button>
+          <div style="color:#d4af37; font-size:32px; margin-bottom:20px;">⚠️</div>
+          <div style="color:#d4af37; font-size:22px; margin-bottom:20px; font-weight:600">LuxeNails AR Studio</div>
+          <p style="color:#aaa; font-size:16px; line-height:1.5; max-width:320px; margin-bottom:25px;">${message}</p>
+          <button onclick="location.reload()" style="padding:14px 28px; background:#d4af37; color:#0a0a0a; border:none; border-radius:20px; font-weight:600; cursor:pointer; transition:all 0.3s ease;">Try Again</button>
         `;
       }
     }
 
-    // Add CSS for fadeOut animation
+    // Add enhanced CSS animations
     const style = document.createElement('style');
     style.textContent = `
+      @keyframes messageFade {
+        0% { 
+          opacity: 0; 
+          transform: translateX(-50%) translateY(-20px); 
+        }
+        15% { 
+          opacity: 1; 
+          transform: translateX(-50%) translateY(0); 
+        }
+        85% { 
+          opacity: 1; 
+          transform: translateX(-50%) translateY(0); 
+        }
+        100% { 
+          opacity: 0; 
+          transform: translateX(-50%) translateY(-20px); 
+        }
+      }
+      @keyframes messageFadeOut {
+        to { 
+          opacity: 0; 
+          transform: translateX(-50%) translateY(-20px); 
+        }
+      }
       @keyframes fadeOut {
         0% { opacity: 1; }
         70% { opacity: 1; }
