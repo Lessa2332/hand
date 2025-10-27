@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-  <title>LuxeNails AR Studio</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💅</text></svg>">
+  <title>LuxeNails AR Studio — Try-On</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>Nails</text></svg>">
   <style>
     * {
       margin: 0;
@@ -30,193 +30,171 @@
     #video { z-index: 1; display: none; }
     #canvas { z-index: 2; display: none; }
 
-    /* Enhanced Luxury Controls */
+    /* === Люксовий UI === */
     .control-btn {
       position: fixed;
-      min-width: 70px;
-      height: 60px;
-      border-radius: 30px;
-      background: rgba(25, 25, 25, 0.95);
-      -webkit-backdrop-filter: blur(30px);
-      backdrop-filter: blur(30px);
-      border: 2px solid rgba(212, 175, 55, 0.5);
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: rgba(20, 20, 20, 0.8);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(212, 175, 55, 0.3);
       color: #d4af37;
-      font-size: 15px;
+      font-size: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       z-index: 100;
       transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
-      padding: 0 20px;
-      font-weight: 600;
-      gap: 8px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     }
-    
-    #uploadBtn { top: 25px; left: 25px; opacity: 0.6; pointer-events: none; }
+    .control-btn:hover {
+      transform: scale(1.1);
+      border-color: rgba(212, 175, 55, 0.6);
+      box-shadow: 0 6px 25px rgba(212, 175, 55, 0.2);
+    }
+    #uploadBtn { top: 25px; left: 25px; }
     #shapeBtn { top: 25px; right: 25px; }
-    #authorBtn {
+    #shopBtn {
       bottom: 25px;
       right: 25px;
+      font-size: 18px;
+      font-weight: bold;
       background: linear-gradient(135deg, #d4af37, #b8941f);
       color: #0a0a0a;
       border: none;
-      box-shadow: 0 0 0 2px #0a0a0a, 0 8px 25px rgba(212, 175, 55, 0.5);
-      z-index: 101;
+      box-shadow: 0 0 0 3px #0a0a0a, 0 8px 25px rgba(212, 175, 55, 0.5);
     }
 
-    /* Enhanced Mode Toggle */
     #modeToggle {
       position: fixed;
-      top: 100px;
+      top: 25px;
       left: 50%;
       transform: translateX(-50%);
       z-index: 100;
-      background: rgba(25, 25, 25, 0.95);
-      -webkit-backdrop-filter: blur(30px);
-      backdrop-filter: blur(30px);
-      padding: 12px;
-      border-radius: 30px;
-      border: 2px solid rgba(212, 175, 55, 0.3);
+      background: rgba(20, 20, 20, 0.8);
+      backdrop-filter: blur(20px);
+      padding: 8px;
+      border-radius: 25px;
+      border: 1px solid rgba(212, 175, 55, 0.2);
       display: flex;
-      gap: 15px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+      gap: 8px;
     }
-    
     .mode-option {
-      min-width: 120px;
-      height: 42px;
-      border-radius: 21px;
-      background: rgba(45, 45, 45, 0.9);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(40, 40, 40, 0.8);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 15px;
+      font-size: 16px;
       cursor: pointer;
       transition: all 0.3s ease;
-      border: 2px solid transparent;
-      padding: 0 20px;
-      font-weight: 600;
-      gap: 8px;
+      border: 1px solid transparent;
     }
-    
     .mode-option.active {
       background: #d4af37;
       color: #0a0a0a;
       transform: scale(1.1);
-      box-shadow: 0 0 25px rgba(212, 175, 55, 0.5);
+      box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
     }
 
-    /* Design & Shape Pickers */
-    #designPicker {
+    #designPicker, #shapePicker {
       position: fixed;
-      left: 25px;
-      top: 50%;
-      transform: translateY(-50%);
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      z-index: 100;
-      background: rgba(25, 25, 25, 0.95);
-      -webkit-backdrop-filter: blur(35px);
-      backdrop-filter: blur(35px);
-      padding: 20px;
-      border-radius: 25px;
-      border: 2px solid rgba(212, 175, 55, 0.25);
-      max-height: 70vh;
-      overflow-y: auto;
-      scrollbar-width: none;
-    }
-    
-    #shapePicker {
-      position: fixed;
-      right: 25px;
-      top: 50%;
-      transform: translateY(-50%);
-      display: none;
-      flex-direction: column;
-      gap: 12px;
-      z-index: 100;
-      background: rgba(25, 25, 25, 0.95);
-      -webkit-backdrop-filter: blur(35px);
-      backdrop-filter: blur(35px);
-      padding: 20px;
-      border-radius: 25px;
-      border: 2px solid rgba(212, 175, 55, 0.25);
-    }
-    
-    #designPicker::-webkit-scrollbar,
-    #shapePicker::-webkit-scrollbar { 
-      display: none; 
-    }
-
-    .design-btn {
-      width: 70px;
-      height: 70px;
-      border-radius: 20px;
-      border: 2px solid rgba(255, 255, 255, 0.2);
-      background: #1f1f1f;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-      flex-shrink: 0;
-    }
-    
-    .design-btn.selected {
-      border-color: #d4af37;
-      box-shadow: 0 0 0 3px #d4af37, 0 8px 25px rgba(212, 175, 55, 0.4);
-      transform: scale(1.1);
-    }
-
-    .shape-btn {
-      width: 70px;
-      height: 50px;
-      border-radius: 18px;
-      border: 2px solid rgba(255, 255, 255, 0.2);
-      background: #1f1f1f;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      transition: all 0.3s ease;
-      color: #d4af37;
-      flex-shrink: 0;
-      text-align: center;
-      line-height: 1.2;
-      padding: 5px;
-    }
-    
-    .shape-btn.selected {
-      border-color: #d4af37;
-      background: rgba(212, 175, 55, 0.15);
-      box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
-    }
-
-    /* Status Message */
-    #statusMessage {
-      position: fixed;
-      top: 160px;
+      bottom: 25px;
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(25, 25, 25, 0.95);
-      -webkit-backdrop-filter: blur(25px);
+      display: flex;
+      gap: 15px;
+      z-index: 100;
+      background: rgba(20, 20, 20, 0.9);
       backdrop-filter: blur(25px);
-      color: #d4af37;
-      padding: 12px 24px;
-      border-radius: 20px;
-      z-index: 99;
-      font-size: 14px;
-      border: 2px solid rgba(212, 175, 55, 0.3);
-      display: none;
-      text-align: center;
-      max-width: 80vw;
-      animation: fadeIn 0.3s ease;
+      padding: 18px 22px;
+      border-radius: 28px;
+      border: 1px solid rgba(212, 175, 55, 0.15);
+      max-width: 92vw;
+      overflow-x: auto;
+      scrollbar-width: none;
     }
+    #designPicker::-webkit-scrollbar, #shapePicker::-webkit-scrollbar { display: none; }
+    #shapePicker { bottom: 120px; display: none; }
 
-    /* Loading Screen */
+    .design-btn, .shape-btn {
+      width: 70px;
+      height: 70px;
+      border-radius: 18px;
+      border: 2px solid rgba(255, 255, 255, 0.15);
+      background: #1a1a1a;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      flex-shrink: 0;
+      object-fit: cover;
+      position: relative;
+      overflow: hidden;
+    }
+    .design-btn::before, .shape-btn::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(135deg, transparent 0%, rgba(212, 175, 55, 0.1) 100%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .design-btn:hover::before, .shape-btn:hover::before { opacity: 1; }
+    .design-btn:hover, .shape-btn:hover { transform: scale(1.08); border-color: rgba(212, 175, 55, 0.4); }
+    .design-btn.selected, .shape-btn.selected {
+      border-color: #d4af37;
+      box-shadow: 0 0 0 3px #d4af37, 0 8px 25px rgba(212, 175, 55, 0.3);
+      transform: scale(1.12);
+    }
+    .shape-btn { font-size: 24px; }
+
+    #uploadModal {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(15, 15, 15, 0.95);
+      backdrop-filter: blur(30px);
+      padding: 28px;
+      border-radius: 24px;
+      border: 1px solid rgba(212, 175, 55, 0.2);
+      z-index: 1000;
+      display: none;
+      color: white;
+      text-align: center;
+      width: 90%;
+      max-width: 420px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    }
+    #uploadModal.show { display: block; animation: modalAppear 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+    #imageUpload {
+      margin: 20px 0;
+      padding: 16px;
+      border: 2px dashed rgba(212, 175, 55, 0.3);
+      border-radius: 16px;
+      background: rgba(30, 30, 30, 0.6);
+      color: white;
+      width: 100%;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    #imageUpload:hover { border-color: rgba(212, 175, 55, 0.6); background: rgba(40, 40, 40, 0.6); }
+    .modal-btn {
+      padding: 12px 24px;
+      margin: 8px;
+      border: none;
+      border-radius: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 15px;
+    }
+    #saveDesign { background: linear-gradient(135deg, #d4af37, #b8941f); color: #0a0a0a; }
+    #saveDesign:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4); }
+    #closeModal { background: rgba(40, 40, 40, 0.8); color: #d4af37; border: 1px solid rgba(212, 175, 55, 0.3); }
+
     #loading {
       position: fixed;
       top: 0; left: 0;
@@ -228,136 +206,131 @@
       justify-content: center;
       z-index: 1000;
       color: #d4af37;
-      font-size: 28px;
+      font-size: 24px;
       text-align: center;
-      padding: 35px;
-      gap: 30px;
+      padding: 30px;
+      gap: 25px;
     }
-    
     .loader {
-      width: 75px; height: 75px;
-      border: 5px solid rgba(212, 175, 55, 0.3);
-      border-top: 5px solid #d4af37;
+      width: 60px; height: 60px;
+      border: 3px solid rgba(212, 175, 55, 0.3);
+      border-top: 3px solid #d4af37;
       border-radius: 50%;
       animation: spin 1.2s linear infinite;
-      box-shadow: 0 0 30px rgba(212, 175, 55, 0.4);
+      box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+    }
+    .indicator {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(20, 20, 20, 0.9);
+      color: #d4af37;
+      padding: 12px 20px;
+      border-radius: 20px;
+      display: none;
+      align-items: center;
+      gap: 10px;
+      z-index: 99;
+      font-size: 15px;
+      border: 1px solid rgba(212, 175, 55, 0.2);
+      backdrop-filter: blur(20px);
+    }
+    #handIndicator { top: 150px; }
+    .indicator.show { display: flex; animation: indicatorAppear 0.4s ease; }
+
+    .tooltip {
+      position: absolute;
+      bottom: -40px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(20, 20, 20, 0.9);
+      color: #d4af37;
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-size: 12px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      border: 1px solid rgba(212, 175, 55, 0.2);
+    }
+    .control-btn:hover .tooltip,
+    .mode-option:hover .tooltip,
+    .shape-btn:hover .tooltip {
+      opacity: 1;
     }
 
-    /* Mobile Optimizations */
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes modalAppear {
+      from { opacity: 0; transform: translate(-50%, -48%); }
+      to { opacity: 1; transform: translate(-50%, -50%); }
+    }
+    @keyframes indicatorAppear {
+      from { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+      to { opacity: 1; transform: translateX(-50%) translateY(0); }
+    }
+    @keyframes fadeOut { 0% { opacity: 1; } 70% { opacity: 1; } 100% { opacity: 0; } }
+
     @media (max-width: 768px) {
-      .control-btn {
-        min-width: 60px;
-        height: 55px;
-        font-size: 14px;
-        padding: 0 16px;
-      }
-      
-      #designPicker, #shapePicker {
-        padding: 15px;
-        gap: 12px;
-      }
-      
-      .design-btn, .shape-btn {
-        width: 60px;
-        height: 60px;
-      }
-      
-      .shape-btn {
-        height: 45px;
-        font-size: 11px;
-      }
-      
-      #modeToggle {
-        top: 90px;
-        padding: 10px;
-        gap: 12px;
-      }
-      
-      .mode-option {
-        min-width: 110px;
-        height: 40px;
-        font-size: 14px;
-      }
-      
-      #statusMessage {
-        top: 140px;
-        font-size: 13px;
-        padding: 10px 20px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      #designPicker {
-        left: 15px;
-        right: auto;
-        width: calc(100% - 30px);
-        max-width: 300px;
-      }
-      #shapePicker {
-        right: 15px;
-        left: auto;
-        width: calc(100% - 30px);
-        max-width: 300px;
-      }
-      
-      .control-btn {
-        min-width: 55px;
-        height: 50px;
-      }
-    }
-
-    @keyframes spin { 
-      to { transform: rotate(360deg); } 
-    }
-    
-    @keyframes fadeIn { 
-      from { opacity: 0; } 
-      to { opacity: 1; } 
+      .control-btn { width: 48px; height: 48px; font-size: 18px; }
+      #uploadBtn, #shapeBtn, #shopBtn { top: 20px; }
+      #shopBtn { bottom: 20px; }
+      .design-btn, .shape-btn { width: 62px; height: 62px; }
+      #modeToggle { top: 20px; }
     }
   </style>
 </head>
 <body>
   <div id="loading">
     <div class="loader"></div>
-    <div style="font-weight: 700; margin-bottom: 10px; font-size: 24px;">LuxeNails AR Studio</div>
-    <p style="color: #bbb; font-size: 16px; line-height: 1.5;">Покладіть руку перед задньою камерою<br>Дозвольте доступ до камери</p>
+    <div style="font-weight: 600; margin-bottom: 10px;">LuxeNails AR Studio</div>
+    <p style="color: #aaa; font-size: 16px;">Show your hand to the camera</p>
   </div>
 
   <video id="video" playsinline muted></video>
   <canvas id="canvas"></canvas>
 
-  <button id="uploadBtn" class="control-btn" aria-label="Функція завантаження тимчасово недоступна">
-    📤 Завантажити
+  <button id="uploadBtn" class="control-btn">Upload
+    <div class="tooltip">Upload Design</div>
   </button>
-  
-  <button id="shapeBtn" class="control-btn" aria-label="Вибрати форму нігтя">
-    ✨ Форми
+  <button id="shapeBtn" class="control-btn">Shape
+    <div class="tooltip">Nail Shapes</div>
   </button>
-
-  <button id="authorBtn" class="control-btn" aria-label="Відвідати магазин">
-    🛍️ Магазин
+  <button id="shopBtn" class="control-btn">Shop
+    <div class="tooltip">Buy Real Designs</div>
   </button>
 
-  <div id="modeToggle" aria-label="Режим нанесення дизайну">
-    <div class="mode-option active" id="applyAllOpt">
-      💅 Всі пальці
+  <div id="modeToggle">
+    <div class="mode-option active" id="applyAllOpt">All
+      <div class="tooltip">All Fingers</div>
     </div>
-    <div class="mode-option" id="selectFingerOpt">
-      👆 Один палець
+    <div class="mode-option" id="selectFingerOpt">Finger
+      <div class="tooltip">Single Finger</div>
     </div>
   </div>
 
   <div id="shapePicker"></div>
   <div id="designPicker"></div>
 
-  <div id="statusMessage" role="status" aria-live="polite"></div>
+  <div id="uploadModal">
+    <h3 style="margin:0;font-weight:600;color:#d4af37">Upload Your Design</h3>
+    <p style="margin:12px 0;color:#aaa;font-size:14px;line-height:1.4">
+      Best results: PNG with transparent background.
+    </p>
+    <input type="file" id="imageUpload" accept="image/*">
+    <div style="margin-top: 20px;">
+      <button id="saveDesign" class="modal-btn">Save Design</button>
+      <button id="closeModal" class="modal-btn">Cancel</button>
+    </div>
+  </div>
+
+  <div id="handIndicator" class="indicator">
+    <span>Hand</span>
+    <span>Show your hand</span>
+  </div>
 
   <script type="importmap">
-    {
-      "imports": {
-        "three": "https://unpkg.com/three@0.158.0/build/three.module.js"
-      }
-    }
+    { "imports": { "three": "https://unpkg.com/three@0.158.0/build/three.module.js" } }
   </script>
   <script type="module">
     import * as THREE from 'three';
@@ -366,9 +339,8 @@
     const CONFIG = {
       SMOOTHING_FACTOR: 0.75,
       HAND_NOT_DETECTED_THRESHOLD: 12,
-      NAIL_SCALE_FACTORS: { 
-        thumb: 0.42, index: 0.53, middle: 0.55, ring: 0.53, pinky: 0.41 
-      },
+      NAIL_SCALE_FACTORS: { thumb: 0.42, index: 0.53, middle: 0.55, ring: 0.53, pinky: 0.41 },
+      NAIL_ASPECT_RATIOS: { thumb: 0.78, index: 0.72, middle: 0.70, ring: 0.74, pinky: 0.80 },
       NAIL_OFFSETS: {
         thumb: { x: -0.015, y: -0.025 },
         index: { x: 0, y: -0.022 },
@@ -376,12 +348,9 @@
         ring: { x: 0, y: -0.022 },
         pinky: { x: 0.006, y: -0.018 }
       },
-      MIN_SIZE: 28,
-      MAX_SIZE: 92,
-      WRIST_DISTANCE_REF: 0.1,
-      SCALE_SENSITIVITY: 1.9,
-      MAX_SCALE_FACTOR: 2.1,
-      MIN_SCALE_FACTOR: 0.55
+      MIN_SIZE: 28, MAX_SIZE: 92,
+      WRIST_REF: 0.1, SCALE_SENS: 1.9,
+      MAX_SCALE: 2.1, MIN_SCALE: 0.55
     };
 
     const FINGER_INDICES = {
@@ -394,12 +363,11 @@
     const FINGER_KEYS = Object.keys(FINGER_INDICES);
 
     const NAIL_SHAPES = [
-      { id: 'oval', name: 'Овал' },
-      { id: 'almond', name: 'Миндаль' },
-      { id: 'squoval', name: 'Скувал' },
-      { id: 'coffin', name: 'Гроб' },
-      { id: 'stiletto', name: 'Стілетто' },
-      { id: 'square', name: 'Квадрат' }
+      { id: 'oval', name: 'Oval', icon: 'Oval' },
+      { id: 'almond', name: 'Almond', icon: 'Almond' },
+      { id: 'squoval', name: 'Squoval', icon: 'Squoval' },
+      { id: 'triangular', name: 'Pointed', icon: 'Pointed' },
+      { id: 'natural', name: 'Natural', icon: 'Natural' }
     ];
 
     const state = {
@@ -410,11 +378,9 @@
       lastLandmarks: null,
       smoothedLandmarks: null,
       handNotDetectedCount: 0,
-      animationFrameId: null,
       currentHandSize: 1.0,
       showShapePicker: false,
-      isLeftHand: false,
-      customDesigns: []
+      isLeftHand: false
     };
 
     const el = {
@@ -423,26 +389,28 @@
       loading: document.getElementById("loading"),
       uploadBtn: document.getElementById("uploadBtn"),
       shapeBtn: document.getElementById("shapeBtn"),
-      authorBtn: document.getElementById("authorBtn"),
+      shopBtn: document.getElementById("shopBtn"),
       applyAllOpt: document.getElementById("applyAllOpt"),
       selectFingerOpt: document.getElementById("selectFingerOpt"),
       designPicker: document.getElementById("designPicker"),
       shapePicker: document.getElementById("shapePicker"),
-      statusMessage: document.getElementById("statusMessage")
+      uploadModal: document.getElementById("uploadModal"),
+      imageUpload: document.getElementById("imageUpload"),
+      saveDesign: document.getElementById("saveDesign"),
+      closeModal: document.getElementById("closeModal"),
+      handIndicator: document.getElementById("handIndicator")
     };
 
     const nailTextures = {};
-    const DESIGNS = ["luxury_gold", "french_manicure", "glitter_pink", "marble_effect", "galaxy", "floral_gold"];
     let scene, camera, renderer;
     const nails = {};
     let handLandmarker;
 
-    const PROFESSIONAL_NAIL_SHADER = {
+    const NAIL_SHADER = {
       vertexShader: `
         varying vec2 vUv;
         varying vec3 vNormal;
         varying vec3 vViewPosition;
-        
         void main() {
           vUv = uv;
           vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
@@ -466,644 +434,342 @@
           vec3 color = tex.rgb;
 
           float highlight = pow(smoothstep(0.3, 0.7, vUv.y + sin(vUv.y * 10.0 - time) * 0.08), 2.0) * shine;
-          color += vec3(1.0) * highlight * 0.6;
+          color += vec3(1.0) * highlight;
 
-          float rim = pow(1.0 - dot(normalize(vViewPosition), vNormal), 2.5) * 0.3;
+          float rim = pow(1.0 - dot(normalize(vViewPosition), vNormal), 2.5) * 0.4;
           color += vec3(1.0, 0.95, 0.9) * rim;
+
+          float shadow = smoothstep(0.0, 0.3, vUv.y);
+          color *= (1.0 - shadow * 0.2);
 
           gl_FragColor = vec4(color, tex.a);
         }
       `
     };
 
+    class RealisticNailMask {
+      constructor() { this.masks = {}; this.init(); }
+      init() { NAIL_SHAPES.forEach(s => this.masks[s.id] = this.create(s.id)); }
+      create(shape) {
+        const c = document.createElement('canvas');
+        c.width = 256; c.height = 384;
+        const ctx = c.getContext('2d');
+        ctx.fillStyle = 'white';
+        ctx.beginPath();
+
+        const w = 256, h = 384;
+        const cx = w / 2, cy = h / 2;
+
+        switch (shape) {
+          case 'oval': ctx.ellipse(cx, cy - 20, 100, 150, 0, 0, Math.PI * 2); break;
+          case 'almond': ctx.moveTo(cx, 50); ctx.bezierCurveTo(cx + 90, 80, cx + 110, 160, cx, 340); ctx.bezierCurveTo(cx - 110, 160, cx - 90, 80, cx, 50); break;
+          case 'squoval': const r = 50; ctx.roundRect(60, 60, 136, 264, r); break;
+          case 'triangular': ctx.moveTo(cx, 40); ctx.lineTo(cx + 100, 320); ctx.lineTo(cx - 100, 320); ctx.closePath(); break;
+          case 'natural': ctx.moveTo(80, 60); ctx.bezierCurveTo(100, 50, 140, 50, 160, 60); ctx.bezierCurveTo(180, 80, 180, 300, 160, 320); ctx.bezierCurveTo(140, 340, 100, 340, 80, 320); ctx.bezierCurveTo(60, 300, 60, 80, 80, 60); break;
+        }
+        ctx.fill();
+        return c;
+      }
+      async apply(img, shape) {
+        const c = document.createElement('canvas');
+        c.width = 256; c.height = 384;
+        const ctx = c.getContext('2d');
+        ctx.drawImage(this.masks[shape], 0, 0);
+        ctx.globalCompositeOperation = 'source-in';
+        ctx.drawImage(img, 0, 0, 256, 384);
+        return new THREE.CanvasTexture(c);
+      }
+      createPreview(imgData, shape, size = 70) {
+        return new Promise(resolve => {
+          const c = document.createElement('canvas');
+          c.width = size; c.height = size;
+          const ctx = c.getContext('2d');
+          ctx.fillStyle = 'white';
+          ctx.beginPath();
+          const r = 10;
+          switch(shape) {
+            case 'oval': ctx.ellipse(size/2, size/2, size/3, size/2.3, 0, 0, Math.PI*2); break;
+            case 'almond': ctx.moveTo(size/2, 8); ctx.bezierCurveTo(size-12,15,size-8,size-12,size/2,size-8); ctx.bezierCurveTo(12,size-12,8,15,size/2,8); ctx.closePath(); break;
+            case 'squoval': ctx.roundRect(12,12,size-24,size-24,r); break;
+            case 'triangular': ctx.moveTo(size/2,8); ctx.lineTo(size-15,size-8); ctx.lineTo(15,size-8); ctx.closePath(); break;
+            case 'natural': ctx.roundRect(10,10,size-20,size-20,r); break;
+          }
+          ctx.fill();
+          ctx.globalCompositeOperation = 'source-in';
+          const img = new Image();
+          img.onload = () => { ctx.drawImage(img,0,0,size,size); resolve(c.toDataURL()); };
+          img.src = imgData;
+        });
+      }
+    }
+
+    const masker = new RealisticNailMask();
+
     class LuxeNailsAR {
       async init() {
         try {
-          this.setupEventListeners();
+          this.setupEvents();
           await this.setupCamera();
           await this.initWebGL();
           await this.setupHandTracking();
-          await this.loadProfessionalDesigns();
-          this.buildUserInterface();
-          this.hideLoadingScreen();
-          this.startRenderLoop();
-          this.showStatusMessage("Покладіть руку перед задньою камерою", 5000);
-        } catch (error) {
-          console.error('Initialization error:', error);
-          this.showError("Потрібен доступ до камери. Дозвольте доступ та оновіть сторінку.");
+          await this.loadDefaultDesign();
+          this.buildUI();
+          this.hideLoading();
+          this.startLoop();
+        } catch (e) {
+          this.showError("Camera access denied. Use Chrome/Safari on mobile.");
         }
       }
 
-      setupEventListeners() {
-        el.uploadBtn.onclick = () => {
-          this.showStatusMessage("Функція завантаження тимчасово недоступна", 3000);
-        };
-        
+      setupEvents() {
+        el.uploadBtn.onclick = () => el.uploadModal.classList.add('show');
         el.shapeBtn.onclick = () => {
           state.showShapePicker = !state.showShapePicker;
           el.shapePicker.style.display = state.showShapePicker ? 'flex' : 'none';
-          this.showStatusMessage(state.showShapePicker ? "Виберіть форму нігтя" : "");
         };
-        
-        el.authorBtn.onclick = () => {
-          window.open('https://smartlessa.etsy.com', '_blank');
-        };
-        
-        el.applyAllOpt.onclick = () => this.setApplicationMode(true);
-        el.selectFingerOpt.onclick = () => this.setApplicationMode(false);
-        el.canvas.onclick = (event) => this.handleCanvasClick(event);
-        
-        window.addEventListener('resize', () => this.handleResize());
-        
-        document.addEventListener('click', (event) => {
-          if (!el.shapePicker.contains(event.target) && event.target !== el.shapeBtn) {
-            this.hideShapePicker();
+        el.shopBtn.onclick = () => window.open('https://smartlessa.etsy.com', '_blank');
+        el.closeModal.onclick = () => { el.uploadModal.classList.remove('show'); el.imageUpload.value = ''; };
+        el.saveDesign.onclick = () => this.uploadDesign();
+        el.applyAllOpt.onclick = () => this.setMode(true);
+        el.selectFingerOpt.onclick = () => this.setMode(false);
+        el.canvas.onclick = e => this.handleClick(e);
+        window.addEventListener('resize', () => this.resize());
+        document.addEventListener('click', e => {
+          if (!el.shapePicker.contains(e.target) && e.target !== el.shapeBtn) {
+            state.showShapePicker = false;
+            el.shapePicker.style.display = 'none';
           }
         });
       }
-      
-      hideShapePicker() {
-        if (state.showShapePicker) {
-          state.showShapePicker = false;
-          el.shapePicker.style.display = 'none';
-        }
-      }
 
-      setApplicationMode(applyToAll) {
-        state.isApplyAll = applyToAll;
-        el.applyAllOpt.classList.toggle('active', applyToAll);
-        el.selectFingerOpt.classList.toggle('active', !applyToAll);
-        
-        this.showStatusMessage(applyToAll ? 
-          "Режим: всі пальці" : 
-          "Режим: один палець — торкніться пальця на екрані", 4000);
+      setMode(all) {
+        state.isApplyAll = all;
+        el.applyAllOpt.classList.toggle('active', all);
+        el.selectFingerOpt.classList.toggle('active', !all);
       }
 
       async setupCamera() {
-        try {
-          const stream = await navigator.mediaDevices.getUserMedia({
-            video: { 
-              facingMode: "environment", 
-              width: { ideal: 1280 }, 
-              height: { ideal: 720 } 
-            }
-          });
-          el.video.srcObject = stream;
-          await new Promise(resolve => {
-            el.video.onloadedmetadata = () => resolve();
-          });
-          el.video.play();
-        } catch (error) {
-          throw new Error("Доступ до камери заборонено.");
-        }
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: "environment", width: 1280, height: 720 }
+        });
+        el.video.srcObject = stream;
+        await new Promise(r => el.video.onloadedmetadata = r);
+        el.video.play();
       }
 
       async initWebGL() {
         scene = new THREE.Scene();
-        
-        camera = new THREE.OrthographicCamera(
-          -window.innerWidth / 2,
-          window.innerWidth / 2,
-          window.innerHeight / 2,
-          -window.innerHeight / 2,
-          0.1,
-          1000
-        );
+        camera = new THREE.OrthographicCamera(-innerWidth/2, innerWidth/2, innerHeight/2, -innerHeight/2, 0.1, 1000);
         camera.position.z = 10;
-        
-        renderer = new THREE.WebGLRenderer({ 
-          canvas: el.canvas, 
-          alpha: true, 
-          antialias: true 
-        });
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        
-        this.createNailMeshes();
+        renderer = new THREE.WebGLRenderer({ canvas: el.canvas, alpha: true, antialias: true });
+        renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+        renderer.setSize(innerWidth, innerHeight);
+        this.createNails();
       }
 
-      createNailMeshes() {
-        FINGER_KEYS.forEach(finger => {
-          const geometry = new THREE.PlaneGeometry(0.7, 1);
-          const material = new THREE.ShaderMaterial({
-            uniforms: { 
-              map: { value: nailTextures[state.currentDesign] || null },
-              time: { value: 0 },
-              shine: { value: 1.0 }
-            },
-            vertexShader: PROFESSIONAL_NAIL_SHADER.vertexShader,
-            fragmentShader: PROFESSIONAL_NAIL_SHADER.fragmentShader,
-            transparent: true,
-            side: THREE.DoubleSide
-          });
-          
-          const mesh = new THREE.Mesh(geometry, material);
+      createNails() {
+        const mat = new THREE.ShaderMaterial({
+          uniforms: { map: { value: null }, time: { value: 0 }, shine: { value: 1.0 } },
+          vertexShader: NAIL_SHADER.vertexShader,
+          fragmentShader: NAIL_SHADER.fragmentShader,
+          transparent: true,
+          side: THREE.DoubleSide
+        });
+
+        FINGER_KEYS.forEach(key => {
+          const geom = new THREE.PlaneGeometry(CONFIG.NAIL_ASPECT_RATIOS[key], 1);
+          const mesh = new THREE.Mesh(geom, mat.clone());
           mesh.visible = false;
           mesh.frustumCulled = false;
-          nails[finger] = mesh;
+          nails[key] = mesh;
           scene.add(mesh);
         });
       }
 
       async setupHandTracking() {
-        const vision = await FilesetResolver.forVisionTasks(
-          "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/wasm"
-        );
-        
+        const vision = await FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/wasm");
         handLandmarker = await HandLandmarker.createFromOptions(vision, {
-          baseOptions: {
-            modelAssetPath: "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task",
-            delegate: "GPU"
-          },
+          baseOptions: { modelAssetPath: "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task", delegate: "GPU" },
           runningMode: "VIDEO",
           numHands: 1
         });
       }
 
-      async loadProfessionalDesigns() {
-        const designs = [
-          this.createLuxuryGold(),
-          this.createFrenchManicure(),
-          this.createGlitterPink(),
-          this.createMarbleEffect(),
-          this.createGalaxyDesign(),
-          this.createFloralGold()
-        ];
-        await Promise.all(designs);
-        this.buildUserInterface();
-      }
-      
-      createLuxuryGold() {
-        return new Promise(resolve => {
-          setTimeout(() => {
-            const canvas = document.createElement('canvas');
-            canvas.width = 512;
-            canvas.height = 768;
-            const ctx = canvas.getContext('2d');
-            
-            const gradient = ctx.createLinearGradient(0, 0, 0, 768);
-            gradient.addColorStop(0, '#ffd700');
-            gradient.addColorStop(0.3, '#d4af37');
-            gradient.addColorStop(0.7, '#b8941f');
-            gradient.addColorStop(1, '#9a7c1a');
-            
-            ctx.fillStyle = gradient;
-            ctx.fillRect(0, 0, 512, 768);
-            
-            for (let i = 0; i < 150; i++) {
-              ctx.fillStyle = `rgba(255, 255, 255, ${Math.random() * 0.5 + 0.2})`;
-              const x = Math.random() * 512;
-              const y = Math.random() * 768;
-              const size = Math.random() * 3 + 1;
-              ctx.beginPath();
-              ctx.arc(x, y, size, 0, Math.PI * 2);
-              ctx.fill();
-            }
-            
-            nailTextures["luxury_gold"] = new THREE.CanvasTexture(canvas);
-            resolve();
-          }, 0);
-        });
-      }
-      
-      createFrenchManicure() {
-        return new Promise(resolve => {
-          setTimeout(() => {
-            const canvas = document.createElement('canvas');
-            canvas.width = 512;
-            canvas.height = 768;
-            const ctx = canvas.getContext('2d');
-            
-            const baseGradient = ctx.createLinearGradient(0, 0, 0, 768);
-            baseGradient.addColorStop(0, '#fff8f0');
-            baseGradient.addColorStop(1, '#ffe8cc');
-            ctx.fillStyle = baseGradient;
-            ctx.fillRect(0, 0, 512, 768);
-            
-            ctx.fillStyle = '#ffffff';
-            ctx.beginPath();
-            ctx.moveTo(80, 600);
-            ctx.bezierCurveTo(150, 550, 362, 550, 432, 600);
-            ctx.lineTo(432, 768);
-            ctx.lineTo(80, 768);
-            ctx.closePath();
-            ctx.fill();
-            
-            nailTextures["french_manicure"] = new THREE.CanvasTexture(canvas);
-            resolve();
-          }, 0);
-        });
-      }
-      
-      createGlitterPink() {
-        return new Promise(resolve => {
-          setTimeout(() => {
-            const canvas = document.createElement('canvas');
-            canvas.width = 512;
-            canvas.height = 768;
-            const ctx = canvas.getContext('2d');
-            
-            const pinkGradient = ctx.createLinearGradient(0, 0, 0, 768);
-            pinkGradient.addColorStop(0, '#ffb6e1');
-            pinkGradient.addColorStop(0.5, '#ff85c8');
-            pinkGradient.addColorStop(1, '#ff66b2');
-            ctx.fillStyle = pinkGradient;
-            ctx.fillRect(0, 0, 512, 768);
-            
-            const glitterColors = ['#ff99cc', '#ff66aa', '#ffffff', '#ffccdd'];
-            for (let i = 0; i < 200; i++) {
-              ctx.fillStyle = glitterColors[Math.floor(Math.random() * glitterColors.length)];
-              ctx.globalAlpha = Math.random() * 0.6 + 0.2;
-              const x = Math.random() * 512;
-              const y = Math.random() * 768;
-              const size = Math.random() * 4 + 1;
-              ctx.beginPath();
-              ctx.arc(x, y, size, 0, Math.PI * 2);
-              ctx.fill();
-            }
-            
-            nailTextures["glitter_pink"] = new THREE.CanvasTexture(canvas);
-            resolve();
-          }, 0);
-        });
-      }
-      
-      createMarbleEffect() {
-        return new Promise(resolve => {
-          setTimeout(() => {
-            const canvas = document.createElement('canvas');
-            canvas.width = 512;
-            canvas.height = 768;
-            const ctx = canvas.getContext('2d');
-            
-            ctx.fillStyle = '#f8f8f8';
-            ctx.fillRect(0, 0, 512, 768);
-            
-            ctx.strokeStyle = '#e0e0e0';
-            ctx.lineWidth = 8;
-            ctx.beginPath();
-            for (let i = 0; i < 20; i++) {
-              ctx.moveTo(Math.random() * 512, Math.random() * 768);
-              ctx.bezierCurveTo(
-                Math.random() * 512, Math.random() * 768,
-                Math.random() * 512, Math.random() * 768,
-                Math.random() * 512, Math.random() * 768
-              );
-            }
-            ctx.stroke();
-            
-            nailTextures["marble_effect"] = new THREE.CanvasTexture(canvas);
-            resolve();
-          }, 0);
-        });
-      }
-      
-      createGalaxyDesign() {
-        return new Promise(resolve => {
-          setTimeout(() => {
-            const canvas = document.createElement('canvas');
-            canvas.width = 512;
-            canvas.height = 768;
-            const ctx = canvas.getContext('2d');
-            
-            const galaxy = ctx.createRadialGradient(256, 384, 0, 256, 384, 500);
-            galaxy.addColorStop(0, '#1a0b2e');
-            galaxy.addColorStop(0.5, '#2d1b69');
-            galaxy.addColorStop(1, '#4a2a95');
-            ctx.fillStyle = galaxy;
-            ctx.fillRect(0, 0, 512, 768);
-            
-            ctx.fillStyle = '#ffffff';
-            for (let i = 0; i < 100; i++) {
-              ctx.globalAlpha = Math.random() * 0.8 + 0.2;
-              const x = Math.random() * 512;
-              const y = Math.random() * 768;
-              const size = Math.random() * 2 + 0.5;
-              ctx.beginPath();
-              ctx.arc(x, y, size, 0, Math.PI * 2);
-              ctx.fill();
-            }
-            
-            nailTextures["galaxy"] = new THREE.CanvasTexture(canvas);
-            resolve();
-          }, 0);
-        });
-      }
-      
-      createFloralGold() {
-        return new Promise(resolve => {
-          setTimeout(() => {
-            const canvas = document.createElement('canvas');
-            canvas.width = 512;
-            canvas.height = 768;
-            const ctx = canvas.getContext('2d');
-            
-            const goldGradient = ctx.createLinearGradient(0, 0, 0, 768);
-            goldGradient.addColorStop(0, '#d4af37');
-            goldGradient.addColorStop(1, '#b8941f');
-            ctx.fillStyle = goldGradient;
-            ctx.fillRect(0, 0, 512, 768);
-            
-            ctx.fillStyle = '#7a5c1f';
-            ctx.globalAlpha = 0.6;
-            
-            for (let i = 0; i < 8; i++) {
-              const x = 100 + (i % 3) * 150;
-              const y = 150 + Math.floor(i / 3) * 200;
-              
-              ctx.beginPath();
-              ctx.arc(x, y, 30, 0, Math.PI * 2);
-              ctx.fill();
-              
-              for (let j = 0; j < 6; j++) {
-                const angle = (j / 6) * Math.PI * 2;
-                const petalX = x + Math.cos(angle) * 50;
-                const petalY = y + Math.sin(angle) * 50;
-                ctx.beginPath();
-                ctx.arc(petalX, petalY, 20, 0, Math.PI * 2);
-                ctx.fill();
-              }
-            }
-            
-            nailTextures["floral_gold"] = new THREE.CanvasTexture(canvas);
-            resolve();
-          }, 0);
-        });
+      async loadDefaultDesign() {
+        const c = document.createElement('canvas');
+        c.width = 256; c.height = 384;
+        const ctx = c.getContext('2d');
+        const grad = ctx.createLinearGradient(0, 0, 0, 384);
+        grad.addColorStop(0, '#2c2c2c');
+        grad.addColorStop(1, '#1a1a1a');
+        ctx.fillStyle = grad; ctx.fillRect(0, 0, 256, 384);
+        nailTextures["luxury_gold"] = new THREE.CanvasTexture(c);
       }
 
-      buildUserInterface() {
-        this.buildDesignPicker();
-        this.buildShapePicker();
-      }
-      
-      buildDesignPicker() {
+      buildUI() {
         el.designPicker.innerHTML = '';
-        
-        DESIGNS.forEach(designName => {
-          const button = document.createElement('div');
-          button.className = `design-btn ${designName === state.currentDesign ? 'selected' : ''}`;
-          
-          if (designName === "luxury_gold") {
-            button.style.background = 'linear-gradient(135deg, #ffd700, #b8941f)';
-          } else if (designName === "french_manicure") {
-            button.style.background = 'linear-gradient(135deg, #fff8f0, #ffe8cc)';
-          } else if (designName === "glitter_pink") {
-            button.style.background = 'linear-gradient(135deg, #ffb6e1, #ff66b2)';
-          } else if (designName === "marble_effect") {
-            button.style.background = 'linear-gradient(135deg, #f8f8f8, #e0e0e0)';
-          } else if (designName === "galaxy") {
-            button.style.background = 'linear-gradient(135deg, #2d1b69, #1a0b2e)';
-          } else if (designName === "floral_gold") {
-            button.style.background = 'linear-gradient(135deg, #d4af37, #7a5c1f)';
-          }
-          
-          button.onclick = () => {
-            state.currentDesign = designName;
-            document.querySelectorAll('.design-btn').forEach(btn => {
-              btn.classList.remove('selected');
-            });
-            button.classList.add('selected');
-            this.showStatusMessage(`Обрано дизайн: ${designName.replace('_', ' ')}`, 4000);
-          };
-          
-          el.designPicker.appendChild(button);
-        });
-      }
-      
-      buildShapePicker() {
+        const btn = document.createElement('div');
+        btn.className = 'design-btn selected';
+        btn.style.background = 'linear-gradient(135deg, #2c2c2c, #1a1a1a)';
+        const overlay = document.createElement('div');
+        overlay.style.position = 'absolute'; overlay.style.inset = '0';
+        overlay.style.background = 'radial-gradient(circle at 30% 30%, rgba(212,175,55,0.3), transparent 70%)';
+        overlay.style.pointerEvents = 'none';
+        btn.appendChild(overlay);
+        btn.onclick = () => { state.currentDesign = "luxury_gold"; document.querySelectorAll('.design-btn').forEach(b => b.classList.remove('selected')); btn.classList.add('selected'); };
+        el.designPicker.appendChild(btn);
+
         el.shapePicker.innerHTML = '';
-        
-        NAIL_SHAPES.forEach(shape => {
-          const button = document.createElement('div');
-          button.className = `shape-btn ${shape.id === state.currentShape ? 'selected' : ''}`;
-          button.textContent = shape.name;
-          
-          button.onclick = () => {
-            state.currentShape = shape.id;
-            document.querySelectorAll('.shape-btn').forEach(btn => {
-              btn.classList.remove('selected');
-            });
-            button.classList.add('selected');
-            this.showStatusMessage(`Обрано форму: ${shape.name}`, 4000);
+        NAIL_SHAPES.forEach(s => {
+          const b = document.createElement('div');
+          b.className = `shape-btn ${s.id === state.currentShape ? 'selected' : ''}`;
+          b.textContent = s.icon;
+          b.onclick = () => {
+            state.currentShape = s.id;
+            document.querySelectorAll('.shape-btn').forEach(x => x.classList.remove('selected'));
+            b.classList.add('selected');
           };
-          
-          el.shapePicker.appendChild(button);
+          el.shapePicker.appendChild(b);
         });
       }
 
-      showStatusMessage(message, duration = 5000) {
-        if (!message) {
-          el.statusMessage.style.display = 'none';
-          return;
-        }
-        
-        el.statusMessage.textContent = message;
-        el.statusMessage.style.display = 'block';
-        el.statusMessage.style.animation = 'none';
-        void el.statusMessage.offsetWidth; // trigger reflow
-        el.statusMessage.style.animation = 'fadeIn 0.3s ease';
-        
-        if (duration > 0) {
-          clearTimeout(this.statusTimeout);
-          this.statusTimeout = setTimeout(() => {
-            el.statusMessage.style.display = 'none';
-          }, duration);
-        }
+      async uploadDesign() {
+        const file = el.imageUpload.files[0];
+        if (!file || file.size > 5*1024*1024) return alert("Max 5MB, PNG/JPG");
+        el.saveDesign.disabled = true; el.saveDesign.textContent = "Processing...";
+
+        const img = new Image();
+        img.src = URL.createObjectURL(file);
+        await new Promise(r => img.onload = r);
+
+        const tex = await masker.apply(img, state.currentShape);
+        const id = `custom_${Date.now()}`;
+        nailTextures[id] = tex;
+        state.currentDesign = id;
+
+        const previewUrl = await masker.createPreview(img.src, state.currentShape);
+        const preview = document.createElement('div');
+        preview.className = 'design-btn selected custom-design';
+        preview.style.backgroundImage = `url(${previewUrl})`;
+        preview.style.backgroundSize = 'cover';
+        preview.onclick = () => { state.currentDesign = id; document.querySelectorAll('.design-btn').forEach(b => b.classList.remove('selected')); preview.classList.add('selected'); };
+        el.designPicker.appendChild(preview);
+
+        el.uploadModal.classList.remove('show');
+        el.imageUpload.value = '';
+        el.saveDesign.disabled = false; el.saveDesign.textContent = "Save Design";
+
+        const msg = document.createElement('div');
+        msg.textContent = 'Design added!';
+        msg.style.cssText = `position:fixed;top:100px;left:50%;transform:translateX(-50%);background:rgba(212,175,55,0.9);color:#0a0a0a;padding:12px 20px;border-radius:20px;font-weight:600;z-index:1000;animation:fadeOut 3s forwards;`;
+        document.body.appendChild(msg);
+        setTimeout(() => msg.remove(), 3000);
       }
 
-      startRenderLoop() {
-        const renderLoop = () => {
-          this.detectHands();
-          this.renderAR();
-          state.animationFrameId = requestAnimationFrame(renderLoop);
+      startLoop() {
+        const loop = () => {
+          this.detect();
+          this.render();
+          requestAnimationFrame(loop);
         };
-        renderLoop();
+        loop();
       }
 
-      detectHands() {
+      detect() {
         if (!handLandmarker || el.video.readyState < 2) return;
-        
-        try {
-          const results = handLandmarker.detectForVideo(el.video, performance.now());
-          
-          if (results.landmarks && results.landmarks.length > 0) {
-            state.handNotDetectedCount = 0;
-            
-            const landmarks = results.landmarks[0];
-            state.isLeftHand = results.handednesses[0][0].displayName === "Left";
-            state.lastLandmarks = this.smoothLandmarks(landmarks);
-            this.updateHandSize(landmarks);
-          } else {
-            if (++state.handNotDetectedCount > CONFIG.HAND_NOT_DETECTED_THRESHOLD) {
-              this.showStatusMessage("Покладіть руку перед камерою", 4000);
-              this.hideAllNails();
-            }
-          }
-        } catch (error) {
-          console.error('Hand detection error:', error);
+        const res = handLandmarker.detectForVideo(el.video, performance.now());
+        if (res.landmarks?.length) {
+          state.handNotDetectedCount = 0;
+          el.handIndicator.classList.remove('show');
+          const lm = res.landmarks[0];
+          state.isLeftHand = res.handednesses[0][0].displayName === "Left";
+          state.lastLandmarks = this.smooth(lm);
+          this.calcSize(lm);
+        } else if (++state.handNotDetectedCount > CONFIG.HAND_NOT_DETECTED_THRESHOLD) {
+          el.handIndicator.classList.add('show');
+          this.hideAll();
         }
       }
 
-      smoothLandmarks(newLandmarks) {
-        if (!state.smoothedLandmarks) {
-          state.smoothedLandmarks = newLandmarks.map(point => ({...point}));
-          return state.smoothedLandmarks;
-        }
-        
-        for (let i = 0; i < newLandmarks.length; i++) {
-          state.smoothedLandmarks[i].x = this.linearInterpolation(
-            state.smoothedLandmarks[i].x, 
-            newLandmarks[i].x, 
-            CONFIG.SMOOTHING_FACTOR
-          );
-          state.smoothedLandmarks[i].y = this.linearInterpolation(
-            state.smoothedLandmarks[i].y, 
-            newLandmarks[i].y, 
-            CONFIG.SMOOTHING_FACTOR
-          );
-        }
-        
+      smooth(lm) {
+        if (!state.smoothedLandmarks) state.smoothedLandmarks = lm.map(p => ({...p}));
+        state.smoothedLandmarks.forEach((s, i) => {
+          s.x = this.lerp(s.x, lm[i].x, CONFIG.SMOOTHING_FACTOR);
+          s.y = this.lerp(s.y, lm[i].y, CONFIG.SMOOTHING_FACTOR);
+        });
         return state.smoothedLandmarks;
       }
 
-      linearInterpolation(start, end, factor) {
-        return start * (1 - factor) + end * factor;
+      lerp(a, b, t) { return a + (b - a) * t; }
+
+      calcSize(lm) {
+        const d = Math.hypot(lm[0].x - lm[1].x, lm[0].y - lm[1].y);
+        let s = d / CONFIG.WRIST_REF * CONFIG.SCALE_SENS;
+        s = Math.max(CONFIG.MIN_SCALE, Math.min(CONFIG.MAX_SCALE, s));
+        state.currentHandSize = s;
       }
 
-      updateHandSize(landmarks) {
-        const wristDistance = Math.hypot(
-          (landmarks[0].x - landmarks[1].x) * window.innerWidth,
-          (landmarks[0].y - landmarks[1].y) * window.innerHeight
-        );
-        
-        let scale = wristDistance / CONFIG.WRIST_DISTANCE_REF * CONFIG.SCALE_SENSITIVITY;
-        scale = Math.max(CONFIG.MIN_SCALE_FACTOR, Math.min(CONFIG.MAX_SCALE_FACTOR, scale));
-        state.currentHandSize = scale;
-      }
-
-      renderAR() {
+      render() {
         if (!state.lastLandmarks) return;
-        
-        const flipFactor = state.isLeftHand ? -1 : 1;
-        
-        FINGER_KEYS.forEach((fingerKey, index) => {
-          const nail = nails[fingerKey];
-          
-          if (!state.isApplyAll && index !== state.selectedFingerIndex) {
-            nail.visible = false;
-            return;
-          }
-          
-          this.updateNailPosition(fingerKey, flipFactor);
+        const flip = state.isLeftHand ? -1 : 1;
+        FINGER_KEYS.forEach((k, i) => {
+          const nail = nails[k];
+          if (!state.isApplyAll && i !== state.selectedFingerIndex) { nail.visible = false; return; }
+          this.updateNail(k, flip);
           nail.visible = true;
-          
-          if (nail.material.uniforms.map.value !== nailTextures[state.currentDesign]) {
-            nail.material.uniforms.map.value = nailTextures[state.currentDesign];
-          }
         });
-        
         renderer.render(scene, camera);
       }
 
-      updateNailPosition(fingerKey, flipFactor) {
-        const landmarks = state.lastLandmarks;
-        const { tip, pip } = FINGER_INDICES[fingerKey];
-        const tipLandmark = landmarks[tip];
-        const pipLandmark = landmarks[pip];
-        const offset = CONFIG.NAIL_OFFSETS[fingerKey];
-        
-        const rect = el.canvas.getBoundingClientRect();
-        const x = (tipLandmark.x + offset.x * flipFactor) * rect.width;
-        const y = (1 - (tipLandmark.y + offset.y)) * rect.height;
-        
-        const fingerLength = Math.hypot(
-          (tipLandmark.x - pipLandmark.x) * rect.width,
-          (tipLandmark.y - pipLandmark.y) * rect.height
-        );
-        
-        let size = fingerLength * CONFIG.NAIL_SCALE_FACTORS[fingerKey] * state.currentHandSize;
+      updateNail(key, flip) {
+        const lm = state.lastLandmarks;
+        const { tip, pip } = FINGER_INDICES[key];
+        const t = lm[tip], p = lm[pip];
+        const off = CONFIG.NAIL_OFFSETS[key];
+        const x = (t.x + off.x * flip) * innerWidth;
+        const y = (1 - (t.y + off.y)) * innerHeight;
+        const len = Math.hypot((t.x - p.x) * innerWidth, (t.y - p.y) * innerHeight);
+        let size = len * CONFIG.NAIL_SCALE_FACTORS[key] * state.currentHandSize;
         size = Math.max(CONFIG.MIN_SIZE, Math.min(CONFIG.MAX_SIZE, size));
-        
-        const angle = Math.atan2(
-          tipLandmark.y - pipLandmark.y,
-          (tipLandmark.x - pipLandmark.x) * flipFactor
-        );
-        
-        const nail = nails[fingerKey];
-        nail.position.set(x - rect.width / 2, y - rect.height / 2, 0);
-        nail.scale.set(size * flipFactor, size, 1);
-        nail.rotation.z = angle;
-        nail.material.uniforms.time.value = performance.now() * 0.001;
-        nail.material.uniforms.shine.value = 1.0;
-      }
+        const angle = Math.atan2(t.y - p.y, (t.x - p.x) * flip);
 
-      handleCanvasClick(event) {
-        if (state.isApplyAll || !state.lastLandmarks) return;
-        
-        const rect = el.canvas.getBoundingClientRect();
-        const clickX = event.clientX - rect.left;
-        const clickY = event.clientY - rect.top;
-        
-        let minDistance = Infinity;
-        let selectedIndex = -1;
-        
-        FINGER_KEYS.forEach((fingerKey, index) => {
-          const tipIndex = FINGER_INDICES[fingerKey].tip;
-          const tipLandmark = state.lastLandmarks[tipIndex];
-          const screenX = tipLandmark.x * rect.width;
-          const screenY = tipLandmark.y * rect.height;
-          
-          const distance = Math.hypot(clickX - screenX, clickY - screenY);
-          
-          if (distance < minDistance && distance < rect.width * 0.12) {
-            minDistance = distance;
-            selectedIndex = index;
-          }
-        });
-        
-        if (selectedIndex !== -1) {
-          state.selectedFingerIndex = selectedIndex;
-          const fingerName = FINGER_KEYS[selectedIndex];
-          this.showStatusMessage(`Обрано палець: ${fingerName}`, 3000);
+        const nail = nails[key];
+        nail.position.set(x - innerWidth/2, y - innerHeight/2, 0);
+        nail.scale.set(size * flip, size, 1);
+        nail.rotation.z = angle;
+
+        if (nailTextures[state.currentDesign]) {
+          nail.material.uniforms.map.value = nailTextures[state.currentDesign];
+          nail.material.uniforms.time.value = performance.now() * 0.001;
+          nail.material.needsUpdate = true;
         }
       }
 
-      hideAllNails() {
-        FINGER_KEYS.forEach(fingerKey => {
-          nails[fingerKey].visible = false;
-        });
-        renderer.render(scene, camera);
-      }
-
-      handleResize() {
+      handleClick(e) {
+        if (state.isApplyAll || !state.lastLandmarks) return;
         const rect = el.canvas.getBoundingClientRect();
-        camera.left = -rect.width / 2;
-        camera.right = rect.width / 2;
-        camera.top = rect.height / 2;
-        camera.bottom = -rect.height / 2;
+        const x = e.clientX - rect.left, y = e.clientY - rect.top;
+        let min = Infinity, idx = -1;
+        FINGER_KEYS.forEach((k, i) => {
+          const tip = state.lastLandmarks[FINGER_INDICES[k].tip];
+          const d = Math.hypot(x - tip.x * innerWidth, y - tip.y * innerHeight);
+          if (d < min && d < innerWidth * 0.12) { min = d; idx = i; }
+        });
+        state.selectedFingerIndex = idx;
+      }
+
+      hideAll() { FINGER_KEYS.forEach(k => nails[k].visible = false); renderer.render(scene, camera); }
+      resize() {
+        camera.left = -innerWidth/2; camera.right = innerWidth/2;
+        camera.top = innerHeight/2; camera.bottom = -innerHeight/2;
         camera.updateProjectionMatrix();
-        renderer.setSize(rect.width, rect.height);
+        renderer.setSize(innerWidth, innerHeight);
       }
-
-      hideLoadingScreen() {
-        el.loading.style.display = 'none';
-        el.video.style.display = 'block';
-        el.canvas.style.display = 'block';
-      }
-
-      showError(message) {
-        el.loading.innerHTML = `
-          <div style="color:#d4af37; font-size:32px; margin-bottom:20px;">⚠️</div>
-          <div style="color:#d4af37; font-size:22px; margin-bottom:20px; font-weight:600">LuxeNails AR Studio</div>
-          <p style="color:#aaa; font-size:16px; line-height:1.5; max-width:320px; margin-bottom:25px;">${message}</p>
-          <button onclick="location.reload()" style="padding:14px 28px; background:#d4af37; color:#0a0a0a; border:none; border-radius:20px; font-weight:600; cursor:pointer;">Спробувати знову</button>
-        `;
-      }
+      hideLoading() { el.loading.style.display = 'none'; el.video.style.display = 'block'; el.canvas.style.display = 'block'; }
+      showError(msg) { el.loading.innerHTML = `<div style="color:#d4af37">Error</div><p>${msg}</p><button onclick="location.reload()" style="margin-top:20px;padding:12px 24px;background:#d4af37;color:#000;border:none;border-radius:20px;">Retry</button>`; }
     }
 
-    window.addEventListener('DOMContentLoaded', () => {
-      new LuxeNailsAR().init();
-    });
+    window.addEventListener('DOMContentLoaded', () => new LuxeNailsAR().init());
   </script>
 </body>
 </html>
