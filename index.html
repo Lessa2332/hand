@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -33,9 +34,9 @@
     /* Enhanced Luxury Controls */
     .control-btn {
       position: fixed;
-      min-width: 68px;
-      height: 56px;
-      border-radius: 28px;
+      min-width: 70px;
+      height: 60px;
+      border-radius: 30px;
       background: rgba(25, 25, 25, 0.95);
       backdrop-filter: blur(30px);
       border: 2px solid rgba(212, 175, 55, 0.5);
@@ -58,10 +59,6 @@
       box-shadow: 0 12px 35px rgba(212, 175, 55, 0.4);
       background: rgba(35, 35, 35, 0.95);
     }
-    .control-btn:active {
-      transform: scale(1.05);
-      transition: transform 0.1s ease;
-    }
     #uploadBtn { top: 25px; left: 25px; }
     #shapeBtn { top: 25px; right: 25px; }
     #authorBtn {
@@ -71,16 +68,13 @@
       color: #0a0a0a;
       border: none;
       box-shadow: 0 0 0 2px #0a0a0a, 0 8px 25px rgba(212, 175, 55, 0.5);
-    }
-    #authorBtn:hover {
-      background: linear-gradient(135deg, #e6c158, #c9a229);
-      box-shadow: 0 0 0 2px #0a0a0a, 0 12px 30px rgba(212, 175, 55, 0.6);
+      z-index: 101; /* Higher z-index to prevent overlap */
     }
 
-    /* Enhanced Mode Toggle */
+    /* Enhanced Mode Toggle - Moved to prevent hand overlap */
     #modeToggle {
       position: fixed;
-      top: 25px;
+      top: 100px; /* Moved down to avoid hand */
       left: 50%;
       transform: translateX(-50%);
       z-index: 100;
@@ -109,45 +103,55 @@
       font-weight: 600;
       gap: 8px;
     }
-    .mode-option:hover {
-      background: rgba(55, 55, 55, 0.9);
-      border-color: rgba(212, 175, 55, 0.4);
-    }
     .mode-option.active {
       background: #d4af37;
       color: #0a0a0a;
       transform: scale(1.1);
       box-shadow: 0 0 25px rgba(212, 175, 55, 0.5);
-      border-color: transparent;
     }
 
-    /* Enhanced Design & Shape Pickers */
-    #designPicker, #shapePicker {
+    /* Enhanced Design & Shape Pickers - Moved to sides */
+    #designPicker {
       position: fixed;
-      bottom: 25px;
-      left: 50%;
-      transform: translateX(-50%);
+      left: 25px;
+      top: 50%;
+      transform: translateY(-50%);
       display: flex;
-      gap: 18px;
+      flex-direction: column;
+      gap: 15px;
       z-index: 100;
-      background: rgba(25, 25, 25, 0.98);
+      background: rgba(25, 25, 25, 0.95);
       backdrop-filter: blur(35px);
-      padding: 22px 26px;
-      border-radius: 35px;
+      padding: 20px;
+      border-radius: 25px;
       border: 2px solid rgba(212, 175, 55, 0.25);
-      max-width: 94vw;
-      overflow-x: auto;
+      max-height: 70vh;
+      overflow-y: auto;
       scrollbar-width: none;
-      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+    }
+    #shapePicker {
+      position: fixed;
+      right: 25px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      z-index: 100;
+      background: rgba(25, 25, 25, 0.95);
+      backdrop-filter: blur(35px);
+      padding: 20px;
+      border-radius: 25px;
+      border: 2px solid rgba(212, 175, 55, 0.25);
+      display: none;
     }
     #designPicker::-webkit-scrollbar, #shapePicker::-webkit-scrollbar { display: none; }
-    #shapePicker { bottom: 130px; display: none; }
 
     .design-btn {
-      width: 75px;
-      height: 75px;
-      border-radius: 22px;
-      border: 3px solid rgba(255, 255, 255, 0.2);
+      width: 70px;
+      height: 70px;
+      border-radius: 20px;
+      border: 2px solid rgba(255, 255, 255, 0.2);
       background: #1f1f1f;
       cursor: pointer;
       transition: all 0.3s ease;
@@ -155,64 +159,34 @@
       overflow: hidden;
       flex-shrink: 0;
     }
-    .design-btn::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: linear-gradient(135deg, transparent, rgba(212, 175, 55, 0.2));
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-    .design-btn:hover::before { opacity: 1; }
-    .design-btn:hover { 
-      transform: scale(1.12); 
-      border-color: rgba(212, 175, 55, 0.7); 
-      box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
-    }
     .design-btn.selected {
       border-color: #d4af37;
-      box-shadow: 0 0 0 4px #d4af37, 0 12px 35px rgba(212, 175, 55, 0.5);
-      transform: scale(1.15);
+      box-shadow: 0 0 0 3px #d4af37, 0 8px 25px rgba(212, 175, 55, 0.4);
+      transform: scale(1.1);
     }
 
     .shape-btn {
-      min-width: 90px;
-      height: 46px;
-      border-radius: 23px;
+      width: 70px;
+      height: 50px;
+      border-radius: 18px;
       border: 2px solid rgba(255, 255, 255, 0.2);
       background: #1f1f1f;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 14px;
+      font-size: 12px;
       transition: all 0.3s ease;
-      position: relative;
-      padding: 0 20px;
-      font-weight: 600;
       color: #d4af37;
       flex-shrink: 0;
-    }
-    .shape-btn::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: linear-gradient(135deg, transparent, rgba(212, 175, 55, 0.15));
-      border-radius: 22px;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-    .shape-btn:hover::before { opacity: 1; }
-    .shape-btn:hover { 
-      transform: scale(1.08); 
-      border-color: rgba(212, 175, 55, 0.6); 
-      box-shadow: 0 6px 20px rgba(212, 175, 55, 0.25);
+      text-align: center;
+      line-height: 1.2;
+      padding: 5px;
     }
     .shape-btn.selected {
       border-color: #d4af37;
-      background: rgba(212, 175, 55, 0.2);
-      transform: scale(1.1);
-      box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+      background: rgba(212, 175, 55, 0.15);
+      box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
     }
 
     /* Enhanced Upload Modal */
@@ -220,7 +194,7 @@
       position: fixed;
       top: 50%; left: 50%;
       transform: translate(-50%, -50%);
-      background: rgba(18, 18, 18, 0.99);
+      background: rgba(18, 18, 18, 0.98);
       backdrop-filter: blur(40px);
       padding: 36px;
       border-radius: 32px;
@@ -229,63 +203,13 @@
       display: none;
       color: white;
       text-align: center;
-      width: 92%;
+      width: 90%;
       max-width: 460px;
       box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7);
     }
     #uploadModal.show { 
       display: block; 
       animation: modalAppear 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
-    }
-    #imageUpload {
-      margin: 25px 0;
-      padding: 20px;
-      border: 3px dashed rgba(212, 175, 55, 0.5);
-      border-radius: 20px;
-      background: rgba(40, 40, 40, 0.8);
-      color: white;
-      width: 100%;
-      cursor: pointer;
-      font-size: 16px;
-      transition: all 0.3s ease;
-    }
-    #imageUpload:hover { 
-      border-color: #d4af37; 
-      background: rgba(50, 50, 50, 0.8); 
-      transform: translateY(-2px);
-    }
-    .modal-btn {
-      padding: 16px 32px;
-      margin: 12px;
-      border: none;
-      border-radius: 22px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      font-size: 16px;
-      min-width: 120px;
-    }
-    #saveDesign { 
-      background: linear-gradient(135deg, #d4af37, #b8941f); 
-      color: #0a0a0a; 
-      box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
-    }
-    #saveDesign:hover { 
-      transform: translateY(-3px); 
-      box-shadow: 0 10px 25px rgba(212, 175, 55, 0.5); 
-    }
-    #saveDesign:active {
-      transform: translateY(-1px);
-    }
-    #closeModal { 
-      background: rgba(45, 45, 45, 0.95); 
-      color: #d4af37; 
-      border: 2px solid rgba(212, 175, 55, 0.5); 
-    }
-    #closeModal:hover { 
-      background: rgba(55, 55, 55, 0.95); 
-      border-color: rgba(212, 175, 55, 0.7); 
-      transform: translateY(-2px);
     }
 
     /* Enhanced Loading & Indicators */
@@ -330,131 +254,63 @@
       backdrop-filter: blur(30px);
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
     }
-    #handIndicator { top: 150px; }
+    #handIndicator { top: 180px; }
     .indicator.show { 
       display: flex; 
       animation: indicatorAppear 0.4s ease; 
     }
 
-    /* Enhanced Tooltips */
-    .tooltip {
-      position: absolute;
-      bottom: -45px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(25, 25, 25, 0.98);
-      color: #d4af37;
-      padding: 10px 16px;
-      border-radius: 14px;
-      font-size: 13px;
-      white-space: nowrap;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s ease;
-      border: 1px solid rgba(212, 175, 55, 0.3);
-      backdrop-filter: blur(20px);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-    }
-    .control-btn:hover .tooltip,
-    .mode-option:hover .tooltip {
-      opacity: 1;
-    }
-
     /* Animations */
-    @keyframes spin { 
-      to { transform: rotate(360deg); } 
-    }
+    @keyframes spin { to { transform: rotate(360deg); } }
     @keyframes modalAppear { 
-      from { 
-        opacity: 0; 
-        transform: translate(-50%, -48%); 
-      } to { 
-        opacity: 1; 
-        transform: translate(-50%, -50%); 
-      } 
+      from { opacity: 0; transform: translate(-50%, -48%); } 
+      to { opacity: 1; transform: translate(-50%, -50%); } 
     }
     @keyframes indicatorAppear { 
-      from { 
-        opacity: 0; 
-        transform: translateX(-50%) translateY(-15px); 
-      } to { 
-        opacity: 1; 
-        transform: translateX(-50%) translateY(0); 
-      } 
+      from { opacity: 0; transform: translateX(-50%) translateY(-15px); } 
+      to { opacity: 1; transform: translateX(-50%) translateY(0); } 
     }
 
-    /* Enhanced Mobile Optimizations */
+    /* Mobile Optimizations */
     @media (max-width: 768px) {
       .control-btn {
         min-width: 60px;
-        height: 52px;
+        height: 55px;
         font-size: 14px;
         padding: 0 16px;
       }
-      #uploadBtn { top: 20px; left: 20px; }
-      #shapeBtn { top: 20px; right: 20px; }
-      #authorBtn { bottom: 20px; right: 20px; }
-      #modeToggle { 
-        top: 20px; 
-        padding: 10px; 
-        gap: 12px; 
+      #designPicker, #shapePicker {
+        padding: 15px;
+        gap: 12px;
+      }
+      .design-btn, .shape-btn {
+        width: 60px;
+        height: 60px;
+      }
+      .shape-btn {
+        height: 45px;
+        font-size: 11px;
+      }
+      #modeToggle {
+        top: 90px;
+        padding: 10px;
+        gap: 12px;
       }
       .mode-option {
         min-width: 110px;
         height: 40px;
         font-size: 14px;
-        padding: 0 16px;
-      }
-      .design-btn { 
-        width: 68px; 
-        height: 68px; 
-        border-radius: 20px;
-      }
-      .shape-btn { 
-        min-width: 82px; 
-        height: 42px; 
-        font-size: 13px; 
-        padding: 0 16px; 
-      }
-      #designPicker { 
-        bottom: 20px; 
-        padding: 18px 22px; 
-        border-radius: 30px;
-      }
-      #shapePicker { 
-        bottom: 120px; 
-        padding: 18px 22px; 
-        border-radius: 30px;
-      }
-      #uploadModal {
-        padding: 28px;
-        margin: 20px;
-        width: calc(100% - 40px);
       }
     }
 
     @media (max-width: 480px) {
+      #designPicker, #shapePicker {
+        left: 15px;
+        right: 15px;
+      }
       .control-btn {
         min-width: 55px;
-        height: 48px;
-        font-size: 13px;
-        padding: 0 14px;
-      }
-      #modeToggle {
-        flex-direction: column;
-        gap: 8px;
-        top: 90px;
-      }
-      .mode-option {
-        min-width: 140px;
-      }
-      #designPicker, #shapePicker {
-        gap: 12px;
-        padding: 16px 20px;
-      }
-      .design-btn {
-        width: 60px;
-        height: 60px;
+        height: 50px;
       }
     }
   </style>
@@ -471,27 +327,22 @@
 
   <button id="uploadBtn" class="control-btn" aria-label="Upload custom design">
     📤 Upload
-    <div class="tooltip">Upload Custom Design</div>
   </button>
   
   <button id="shapeBtn" class="control-btn" aria-label="Change nail shapes">
     ✨ Shapes
-    <div class="tooltip">Nail Shapes</div>
   </button>
 
   <button id="authorBtn" class="control-btn" aria-label="Shop premium designs">
     🛍️ Shop
-    <div class="tooltip">Shop Premium Designs</div>
   </button>
 
   <div id="modeToggle">
-    <div class="mode-option active" id="applyAllOpt" title="Apply design to all fingers">
-      💅 All Fingers
-      <div class="tooltip">Apply to All Fingers</div>
+    <div class="mode-option active" id="applyAllOpt">
+      💅 All
     </div>
-    <div class="mode-option" id="selectFingerOpt" title="Select individual finger">
-      👆 Single Finger
-      <div class="tooltip">Select Single Finger</div>
+    <div class="mode-option" id="selectFingerOpt">
+      👆 Single
     </div>
   </div>
 
@@ -504,10 +355,15 @@
       Choose an image to create your custom nail design.<br>
       For best results, use PNG images with transparent background.
     </p>
-    <input type="file" id="imageUpload" accept="image/*">
+    <input type="file" id="imageUpload" accept="image/*" style="display: none;">
+    <div style="margin: 25px 0; padding: 25px; border: 3px dashed rgba(212, 175, 55, 0.5); border-radius: 20px; background: rgba(40, 40, 40, 0.8); cursor: pointer;" onclick="document.getElementById('imageUpload').click()">
+      <div style="font-size: 48px; margin-bottom: 10px;">📁</div>
+      <div style="color: #d4af37; font-weight: 600;">Click to Choose File</div>
+      <div style="color: #888; font-size: 14px; margin-top: 8px;">PNG, JPG, WebP up to 5MB</div>
+    </div>
     <div style="margin-top: 28px;">
-      <button id="saveDesign" class="modal-btn">Save Design</button>
-      <button id="closeModal" class="modal-btn">Cancel</button>
+      <button id="saveDesign" class="modal-btn" style="padding: 16px 32px; margin: 12px; border: none; border-radius: 22px; font-weight: 600; cursor: pointer; background: linear-gradient(135deg, #d4af37, #b8941f); color: #0a0a0a; min-width: 120px;">Save Design</button>
+      <button id="closeModal" class="modal-btn" style="padding: 16px 32px; margin: 12px; border: none; border-radius: 22px; font-weight: 600; cursor: pointer; background: rgba(45, 45, 45, 0.95); color: #d4af37; border: 2px solid rgba(212, 175, 55, 0.5); min-width: 120px;">Cancel</button>
     </div>
   </div>
 
@@ -527,23 +383,11 @@
     import * as THREE from 'three';
     import { FilesetResolver, HandLandmarker } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/+esm";
 
-    // Configuration
     const CONFIG = {
       SMOOTHING_FACTOR: 0.75,
       HAND_NOT_DETECTED_THRESHOLD: 12,
       NAIL_SCALE_FACTORS: { 
-        thumb: 0.42, 
-        index: 0.53, 
-        middle: 0.55, 
-        ring: 0.53, 
-        pinky: 0.41 
-      },
-      NAIL_ASPECT_RATIOS: { 
-        thumb: 0.78, 
-        index: 0.72, 
-        middle: 0.70, 
-        ring: 0.74, 
-        pinky: 0.80 
+        thumb: 0.42, index: 0.53, middle: 0.55, ring: 0.53, pinky: 0.41 
       },
       NAIL_OFFSETS: {
         thumb: { x: -0.015, y: -0.025 },
@@ -560,7 +404,6 @@
       MIN_SCALE_FACTOR: 0.55
     };
 
-    // Finger indices for hand landmarks
     const FINGER_INDICES = {
       thumb: { tip: 4, mcp: 2, pip: 3 },
       index: { tip: 8, mcp: 5, pip: 6 },
@@ -570,17 +413,15 @@
     };
     const FINGER_KEYS = Object.keys(FINGER_INDICES);
 
-    // Nail shapes with realistic names
     const NAIL_SHAPES = [
-      { id: 'oval', name: 'Oval', icon: 'Oval' },
-      { id: 'almond', name: 'Almond', icon: 'Almond' },
-      { id: 'squoval', name: 'Squoval', icon: 'Squoval' },
-      { id: 'coffin', name: 'Coffin', icon: 'Coffin' },
-      { id: 'stiletto', name: 'Stiletto', icon: 'Stiletto' },
-      { id: 'square', name: 'Square', icon: 'Square' }
+      { id: 'oval', name: 'Oval' },
+      { id: 'almond', name: 'Almond' },
+      { id: 'squoval', name: 'Squoval' },
+      { id: 'coffin', name: 'Coffin' },
+      { id: 'stiletto', name: 'Stiletto' },
+      { id: 'square', name: 'Square' }
     ];
 
-    // Application state
     const state = {
       currentDesign: "luxury_gold",
       currentShape: 'oval',
@@ -596,7 +437,6 @@
       customDesigns: []
     };
 
-    // DOM elements
     const el = {
       video: document.getElementById("video"),
       canvas: document.getElementById("canvas"),
@@ -615,25 +455,27 @@
       handIndicator: document.getElementById("handIndicator")
     };
 
-    // Resources
     const nailTextures = {};
-    const DESIGNS = ["luxury_gold", "french_manicure", "glitter_pink"];
+    const DESIGNS = ["luxury_gold", "french_manicure", "glitter_pink", "marble_effect", "galaxy", "floral_gold"];
     let scene, camera, renderer;
     const nails = {};
     let handLandmarker;
 
-    // Advanced nail shader for realistic effects
-    const NAIL_SHADER = {
+    // Advanced Professional Shader with Gel-like Effects
+    const PROFESSIONAL_NAIL_SHADER = {
       vertexShader: `
         varying vec2 vUv;
         varying vec3 vNormal;
         varying vec3 vViewPosition;
+        varying vec3 vWorldPosition;
         
         void main() {
           vUv = uv;
+          vNormal = normalize(normalMatrix * normal);
+          vec4 worldPosition = modelMatrix * vec4(position, 1.0);
+          vWorldPosition = worldPosition.xyz;
           vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
           vViewPosition = -mvPosition.xyz;
-          vNormal = normalize(normalMatrix * normal);
           gl_Position = projectionMatrix * mvPosition;
         }
       `,
@@ -641,9 +483,11 @@
         uniform sampler2D map;
         uniform float time;
         uniform float shine;
+        uniform vec3 lightPosition;
         varying vec2 vUv;
         varying vec3 vNormal;
         varying vec3 vViewPosition;
+        varying vec3 vWorldPosition;
 
         void main() {
           vec4 tex = texture2D(map, vUv);
@@ -651,25 +495,37 @@
 
           vec3 color = tex.rgb;
 
-          // Realistic gel shine effect
-          float highlight = pow(smoothstep(0.3, 0.7, vUv.y + sin(vUv.y * 10.0 - time) * 0.08), 2.0) * shine;
-          color += vec3(1.0) * highlight * 0.6;
+          // Professional gel lacquer shine
+          vec3 viewDir = normalize(vViewPosition);
+          vec3 normal = normalize(vNormal);
+          
+          // Realistic specular reflection
+          vec3 lightDir = normalize(lightPosition - vWorldPosition);
+          float spec = pow(max(dot(viewDir, reflect(-lightDir, normal)), 0.0), 32.0);
+          color += vec3(1.0) * spec * 0.3 * shine;
 
-          // Rim lighting for 3D effect
-          float rim = pow(1.0 - dot(normalize(vViewPosition), vNormal), 2.5) * 0.3;
+          // Smooth gradient shine from cuticle to tip
+          float gradientShine = smoothstep(0.1, 0.8, vUv.y) * 0.4;
+          color += vec3(1.0) * gradientShine * shine;
+
+          // Subtle internal reflection
+          float internalReflection = sin(vUv.y * 15.0 - time * 2.0) * 0.1 + 0.1;
+          color += vec3(1.0, 0.98, 0.95) * internalReflection * shine;
+
+          // Soft shadow at the base
+          float baseShadow = smoothstep(0.0, 0.3, vUv.y) * 0.8 + 0.2;
+          color *= baseShadow;
+
+          // Enhanced rim lighting for 3D depth
+          float rim = pow(1.0 - max(dot(viewDir, normal), 0.0), 3.0) * 0.4;
           color += vec3(1.0, 0.95, 0.9) * rim;
-
-          // Subtle shadow at the base
-          float shadow = smoothstep(0.0, 0.3, vUv.y);
-          color *= (1.0 - shadow * 0.15);
 
           gl_FragColor = vec4(color, tex.a);
         }
       `
     };
 
-    // Realistic nail mask generator
-    class RealisticNailMask {
+    class ProfessionalNailMask {
       constructor() {
         this.masks = {};
         this.init();
@@ -677,68 +533,66 @@
       
       init() {
         NAIL_SHAPES.forEach(shape => {
-          this.masks[shape.id] = this.createMask(shape.id);
+          this.masks[shape.id] = this.createSmoothMask(shape.id);
         });
       }
       
-      createMask(shape) {
+      createSmoothMask(shape) {
         const canvas = document.createElement('canvas');
-        canvas.width = 256;
-        canvas.height = 384;
+        canvas.width = 512;
+        canvas.height = 768;
         const ctx = canvas.getContext('2d');
         ctx.fillStyle = 'white';
+        
+        // Enhanced smoothing for all shapes
         ctx.beginPath();
-
-        const width = 256;
-        const height = 384;
+        
+        const width = 512;
+        const height = 768;
         const centerX = width / 2;
         const centerY = height / 2;
 
         switch (shape) {
           case 'oval':
-            // Natural oval shape
-            ctx.ellipse(centerX, centerY - 20, 100, 150, 0, 0, Math.PI * 2);
+            // Ultra-smooth oval with perfect curves
+            ctx.ellipse(centerX, centerY, 200, 300, 0, 0, Math.PI * 2);
             break;
             
           case 'almond':
-            // Elegant almond shape
-            ctx.moveTo(centerX, 50);
-            ctx.bezierCurveTo(centerX + 90, 80, centerX + 110, 160, centerX, 340);
-            ctx.bezierCurveTo(centerX - 110, 160, centerX - 90, 80, centerX, 50);
+            // Elegant almond with smooth bezier curves
+            ctx.moveTo(centerX, 80);
+            ctx.bezierCurveTo(centerX + 180, 120, centerX + 200, 320, centerX, 650);
+            ctx.bezierCurveTo(centerX - 200, 320, centerX - 180, 120, centerX, 80);
+            ctx.closePath();
             break;
             
           case 'squoval':
-            // Square with rounded corners
-            const radius = 50;
-            ctx.roundRect(60, 60, 136, 264, radius);
+            // Square-oval hybrid with generous rounding
+            const squovalRadius = 80;
+            this.drawRoundedRect(ctx, 100, 100, 312, 568, squovalRadius);
             break;
             
           case 'coffin':
-            // Coffin/Ballerina shape
-            ctx.moveTo(60, 60);
-            ctx.lineTo(196, 60);
-            ctx.lineTo(216, 180);
-            ctx.lineTo(196, 300);
-            ctx.lineTo(60, 300);
-            ctx.lineTo(40, 180);
+            // Soft coffin shape with rounded edges
+            ctx.moveTo(150, 100);
+            ctx.lineTo(362, 100);
+            ctx.bezierCurveTo(390, 150, 390, 600, 362, 668);
+            ctx.lineTo(150, 668);
+            ctx.bezierCurveTo(122, 600, 122, 150, 150, 100);
             ctx.closePath();
             break;
             
           case 'stiletto':
-            // Sharp stiletto shape
-            ctx.moveTo(centerX, 40);
-            ctx.lineTo(centerX + 100, 320);
-            ctx.lineTo(centerX - 100, 320);
+            // Sharp but smooth stiletto
+            ctx.moveTo(centerX, 60);
+            ctx.bezierCurveTo(centerX + 180, 200, centerX + 160, 600, centerX, 700);
+            ctx.bezierCurveTo(centerX - 160, 600, centerX - 180, 200, centerX, 60);
             ctx.closePath();
             break;
             
           case 'square':
-            // Classic square shape
-            ctx.moveTo(50, 50);
-            ctx.lineTo(206, 50);
-            ctx.lineTo(206, 334);
-            ctx.lineTo(50, 334);
-            ctx.closePath();
+            // Square with softened corners
+            this.drawRoundedRect(ctx, 120, 120, 272, 528, 40);
             break;
         }
         
@@ -746,87 +600,39 @@
         return canvas;
       }
       
+      drawRoundedRect(ctx, x, y, width, height, radius) {
+        ctx.moveTo(x + radius, y);
+        ctx.lineTo(x + width - radius, y);
+        ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+        ctx.lineTo(x + width, y + height - radius);
+        ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+        ctx.lineTo(x + radius, y + height);
+        ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+        ctx.lineTo(x, y + radius);
+        ctx.quadraticCurveTo(x, y, x + radius, y);
+      }
+      
       async applyImage(img, shape = 'oval') {
         const canvas = document.createElement('canvas');
-        canvas.width = 256;
-        canvas.height = 384;
+        canvas.width = 512;
+        canvas.height = 768;
         const ctx = canvas.getContext('2d');
         
-        // Apply nail shape mask
+        // Apply high-quality nail shape mask
         ctx.drawImage(this.masks[shape], 0, 0);
         ctx.globalCompositeOperation = 'source-in';
         
-        // Draw user image
-        ctx.drawImage(img, 0, 0, 256, 384);
+        // Draw user image with smoothing
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        ctx.drawImage(img, 0, 0, 512, 768);
         
         return new THREE.CanvasTexture(canvas);
       }
-      
-      // Create preview for design picker
-      createPreview(imageData, shape = 'oval', size = 70) {
-        return new Promise((resolve) => {
-          const canvas = document.createElement('canvas');
-          canvas.width = size;
-          canvas.height = size;
-          const ctx = canvas.getContext('2d');
-          
-          // Create preview mask
-          ctx.fillStyle = 'white';
-          ctx.beginPath();
-          
-          const center = size / 2;
-          
-          switch(shape) {
-            case 'oval':
-              ctx.ellipse(center, center, size/3, size/2.3, 0, 0, 2 * Math.PI);
-              break;
-            case 'almond':
-              ctx.moveTo(center, 8);
-              ctx.bezierCurveTo(size-10, 15, size-8, size-12, center, size-10);
-              ctx.bezierCurveTo(10, size-12, 8, 15, center, 8);
-              ctx.closePath();
-              break;
-            case 'squoval':
-              ctx.roundRect(10, 10, size-20, size-20, 8);
-              break;
-            case 'coffin':
-              ctx.moveTo(15, 12);
-              ctx.lineTo(size-15, 12);
-              ctx.lineTo(size-10, size/2);
-              ctx.lineTo(size-15, size-12);
-              ctx.lineTo(15, size-12);
-              ctx.lineTo(10, size/2);
-              ctx.closePath();
-              break;
-            case 'stiletto':
-              ctx.moveTo(center, 8);
-              ctx.lineTo(size-15, size/2);
-              ctx.lineTo(size-20, size-12);
-              ctx.lineTo(20, size-12);
-              ctx.lineTo(15, size/2);
-              ctx.closePath();
-              break;
-            case 'square':
-              ctx.rect(12, 12, size-24, size-24);
-              break;
-          }
-          
-          ctx.fill();
-          ctx.globalCompositeOperation = 'source-in';
-          
-          const previewImg = new Image();
-          previewImg.onload = () => {
-            ctx.drawImage(previewImg, 0, 0, size, size);
-            resolve(canvas.toDataURL());
-          };
-          previewImg.src = imageData;
-        });
-      }
     }
 
-    const nailMasker = new RealisticNailMask();
+    const nailMasker = new ProfessionalNailMask();
 
-    // Main application class
     class LuxeNailsAR {
       async init() {
         try {
@@ -834,13 +640,13 @@
           await this.setupCamera();
           await this.initWebGL();
           await this.setupHandTracking();
-          await this.loadDefaultDesigns();
+          await this.loadProfessionalDesigns();
           this.buildUserInterface();
           this.hideLoadingScreen();
           this.startRenderLoop();
         } catch (error) {
           console.error('Initialization error:', error);
-          this.showError("Camera access required. Please allow camera permissions and use Chrome or Safari on a mobile device for the best experience.");
+          this.showError("Camera access required. Please allow camera permissions.");
         }
       }
 
@@ -871,17 +677,8 @@
         
         window.addEventListener('resize', () => this.handleResize());
         
-        // Close shape picker when clicking outside
         document.addEventListener('click', (event) => {
           if (!el.shapePicker.contains(event.target) && event.target !== el.shapeBtn) {
-            this.hideShapePicker();
-          }
-        });
-
-        // Handle escape key to close modals
-        document.addEventListener('keydown', (event) => {
-          if (event.key === 'Escape') {
-            el.uploadModal.classList.remove('show');
             this.hideShapePicker();
           }
         });
@@ -896,13 +693,6 @@
         state.isApplyAll = applyToAll;
         el.applyAllOpt.classList.toggle('active', applyToAll);
         el.selectFingerOpt.classList.toggle('active', !applyToAll);
-        
-        // Show visual feedback
-        if (applyToAll) {
-          this.showTemporaryMessage("All fingers mode activated");
-        } else {
-          this.showTemporaryMessage("Single finger mode - tap on a finger to select");
-        }
       }
 
       async setupCamera() {
@@ -920,15 +710,13 @@
           });
           el.video.play();
         } catch (error) {
-          throw new Error("Camera access denied. Please allow camera permissions to use the AR features.");
+          throw new Error("Camera access denied.");
         }
       }
 
       async initWebGL() {
-        // Initialize Three.js scene
         scene = new THREE.Scene();
         
-        // Orthographic camera for 2D overlay
         camera = new THREE.OrthographicCamera(
           -window.innerWidth / 2,
           window.innerWidth / 2,
@@ -939,7 +727,6 @@
         );
         camera.position.z = 10;
         
-        // WebGL renderer
         renderer = new THREE.WebGLRenderer({ 
           canvas: el.canvas, 
           alpha: true, 
@@ -952,23 +739,21 @@
       }
 
       createNailMeshes() {
-        // Create shader material for realistic nail effects
         const nailMaterial = new THREE.ShaderMaterial({
           uniforms: { 
             map: { value: null },
             time: { value: 0 },
-            shine: { value: 1.0 }
+            shine: { value: 1.0 },
+            lightPosition: { value: new THREE.Vector3(0, 10, 10) }
           },
-          vertexShader: NAIL_SHADER.vertexShader,
-          fragmentShader: NAIL_SHADER.fragmentShader,
+          vertexShader: PROFESSIONAL_NAIL_SHADER.vertexShader,
+          fragmentShader: PROFESSIONAL_NAIL_SHADER.fragmentShader,
           transparent: true,
           side: THREE.DoubleSide
         });
 
-        // Create mesh for each finger
         FINGER_KEYS.forEach(finger => {
-          const aspectRatio = CONFIG.NAIL_ASPECT_RATIOS[finger];
-          const geometry = new THREE.PlaneGeometry(aspectRatio, 1);
+          const geometry = new THREE.PlaneGeometry(0.7, 1);
           const material = nailMaterial.clone();
           const mesh = new THREE.Mesh(geometry, material);
           
@@ -994,95 +779,221 @@
         });
       }
 
-      async loadDefaultDesigns() {
-        // Create luxury gold design
-        const goldCanvas = document.createElement('canvas');
-        goldCanvas.width = 256;
-        goldCanvas.height = 384;
-        const goldCtx = goldCanvas.getContext('2d');
-        
-        // Gold gradient background
-        const goldGradient = goldCtx.createLinearGradient(0, 0, 0, 384);
-        goldGradient.addColorStop(0, '#d4af37');
-        goldGradient.addColorStop(0.5, '#b8941f');
-        goldGradient.addColorStop(1, '#9a7c1a');
-        goldCtx.fillStyle = goldGradient;
-        goldCtx.fillRect(0, 0, 256, 384);
-        
-        // Add sparkle effect
-        goldCtx.fillStyle = '#ffffff';
-        for (let i = 0; i < 80; i++) {
-          goldCtx.globalAlpha = Math.random() * 0.4 + 0.1;
-          const x = Math.random() * 256;
-          const y = Math.random() * 384;
-          const size = Math.random() * 2 + 1;
-          goldCtx.fillRect(x, y, size, size);
-        }
-        
-        nailTextures["luxury_gold"] = new THREE.CanvasTexture(goldCanvas);
-
-        // Create additional default designs
+      async loadProfessionalDesigns() {
+        // Luxury Gold with enhanced shine
+        await this.createLuxuryGold();
+        // French Manicure with natural look
         await this.createFrenchManicure();
+        // Glitter Pink with depth
         await this.createGlitterPink();
+        // Marble Effect
+        await this.createMarbleEffect();
+        // Galaxy Design
+        await this.createGalaxyDesign();
+        // Floral Gold
+        await this.createFloralGold();
       }
       
-      async createFrenchManicure() {
+      async createLuxuryGold() {
         const canvas = document.createElement('canvas');
-        canvas.width = 256;
-        canvas.height = 384;
+        canvas.width = 512;
+        canvas.height = 768;
         const ctx = canvas.getContext('2d');
         
-        // Natural nail color
-        ctx.fillStyle = '#fff5e6';
-        ctx.fillRect(0, 0, 256, 384);
+        const gradient = ctx.createLinearGradient(0, 0, 0, 768);
+        gradient.addColorStop(0, '#ffd700');
+        gradient.addColorStop(0.3, '#d4af37');
+        gradient.addColorStop(0.7, '#b8941f');
+        gradient.addColorStop(1, '#9a7c1a');
         
-        // French tip
-        ctx.fillStyle = '#ffffff';
-        ctx.beginPath();
-        ctx.moveTo(30, 300);
-        ctx.bezierCurveTo(60, 280, 196, 280, 226, 300);
-        ctx.lineTo(226, 384);
-        ctx.lineTo(30, 384);
-        ctx.closePath();
-        ctx.fill();
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, 512, 768);
         
-        // Subtle shine
-        const shine = ctx.createLinearGradient(0, 0, 256, 0);
-        shine.addColorStop(0, 'rgba(255,255,255,0.3)');
-        shine.addColorStop(0.5, 'rgba(255,255,255,0)');
-        shine.addColorStop(1, 'rgba(255,255,255,0.3)');
-        ctx.fillStyle = shine;
-        ctx.fillRect(0, 0, 256, 384);
-        
-        nailTextures["french_manicure"] = new THREE.CanvasTexture(canvas);
-      }
-      
-      async createGlitterPink() {
-        const canvas = document.createElement('canvas');
-        canvas.width = 256;
-        canvas.height = 384;
-        const ctx = canvas.getContext('2d');
-        
-        // Pink base
-        const pinkGradient = ctx.createLinearGradient(0, 0, 0, 384);
-        pinkGradient.addColorStop(0, '#ff9ed8');
-        pinkGradient.addColorStop(1, '#ff66b2');
-        ctx.fillStyle = pinkGradient;
-        ctx.fillRect(0, 0, 256, 384);
-        
-        // Glitter effect
-        ctx.fillStyle = '#ffffff';
-        for (let i = 0; i < 120; i++) {
-          ctx.globalAlpha = Math.random() * 0.6 + 0.2;
-          const x = Math.random() * 256;
-          const y = Math.random() * 384;
+        // Enhanced sparkle effect
+        for (let i = 0; i < 150; i++) {
+          ctx.fillStyle = `rgba(255, 255, 255, ${Math.random() * 0.5 + 0.2})`;
+          const x = Math.random() * 512;
+          const y = Math.random() * 768;
           const size = Math.random() * 3 + 1;
           ctx.beginPath();
           ctx.arc(x, y, size, 0, Math.PI * 2);
           ctx.fill();
         }
         
+        nailTextures["luxury_gold"] = new THREE.CanvasTexture(canvas);
+      }
+      
+      async createFrenchManicure() {
+        const canvas = document.createElement('canvas');
+        canvas.width = 512;
+        canvas.height = 768;
+        const ctx = canvas.getContext('2d');
+        
+        // Natural nail base
+        const baseGradient = ctx.createLinearGradient(0, 0, 0, 768);
+        baseGradient.addColorStop(0, '#fff8f0');
+        baseGradient.addColorStop(1, '#ffe8cc');
+        ctx.fillStyle = baseGradient;
+        ctx.fillRect(0, 0, 512, 768);
+        
+        // French tip with smooth curve
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.moveTo(80, 600);
+        ctx.bezierCurveTo(150, 550, 362, 550, 432, 600);
+        ctx.lineTo(432, 768);
+        ctx.lineTo(80, 768);
+        ctx.closePath();
+        ctx.fill();
+        
+        // Subtle shine line
+        const shine = ctx.createLinearGradient(0, 0, 512, 0);
+        shine.addColorStop(0, 'rgba(255,255,255,0.4)');
+        shine.addColorStop(0.5, 'rgba(255,255,255,0)');
+        shine.addColorStop(1, 'rgba(255,255,255,0.4)');
+        ctx.fillStyle = shine;
+        ctx.fillRect(0, 0, 512, 768);
+        
+        nailTextures["french_manicure"] = new THREE.CanvasTexture(canvas);
+      }
+      
+      async createGlitterPink() {
+        const canvas = document.createElement('canvas');
+        canvas.width = 512;
+        canvas.height = 768;
+        const ctx = canvas.getContext('2d');
+        
+        const pinkGradient = ctx.createLinearGradient(0, 0, 0, 768);
+        pinkGradient.addColorStop(0, '#ffb6e1');
+        pinkGradient.addColorStop(0.5, '#ff85c8');
+        pinkGradient.addColorStop(1, '#ff66b2');
+        ctx.fillStyle = pinkGradient;
+        ctx.fillRect(0, 0, 512, 768);
+        
+        // Multi-colored glitter effect
+        const glitterColors = ['#ff99cc', '#ff66aa', '#ffffff', '#ffccdd'];
+        for (let i = 0; i < 200; i++) {
+          ctx.fillStyle = glitterColors[Math.floor(Math.random() * glitterColors.length)];
+          ctx.globalAlpha = Math.random() * 0.6 + 0.2;
+          const x = Math.random() * 512;
+          const y = Math.random() * 768;
+          const size = Math.random() * 4 + 1;
+          ctx.beginPath();
+          ctx.arc(x, y, size, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        
         nailTextures["glitter_pink"] = new THREE.CanvasTexture(canvas);
+      }
+      
+      async createMarbleEffect() {
+        const canvas = document.createElement('canvas');
+        canvas.width = 512;
+        canvas.height = 768;
+        const ctx = canvas.getContext('2d');
+        
+        // Marble base
+        ctx.fillStyle = '#f8f8f8';
+        ctx.fillRect(0, 0, 512, 768);
+        
+        // Marble veins
+        ctx.strokeStyle = '#e0e0e0';
+        ctx.lineWidth = 8;
+        ctx.beginPath();
+        for (let i = 0; i < 20; i++) {
+          ctx.moveTo(Math.random() * 512, Math.random() * 768);
+          ctx.bezierCurveTo(
+            Math.random() * 512, Math.random() * 768,
+            Math.random() * 512, Math.random() * 768,
+            Math.random() * 512, Math.random() * 768
+          );
+        }
+        ctx.stroke();
+        
+        nailTextures["marble_effect"] = new THREE.CanvasTexture(canvas);
+      }
+      
+      async createGalaxyDesign() {
+        const canvas = document.createElement('canvas');
+        canvas.width = 512;
+        canvas.height = 768;
+        const ctx = canvas.getContext('2d');
+        
+        // Galaxy background
+        const galaxy = ctx.createRadialGradient(256, 384, 0, 256, 384, 500);
+        galaxy.addColorStop(0, '#1a0b2e');
+        galaxy.addColorStop(0.5, '#2d1b69');
+        galaxy.addColorStop(1, '#4a2a95');
+        ctx.fillStyle = galaxy;
+        ctx.fillRect(0, 0, 512, 768);
+        
+        // Stars
+        ctx.fillStyle = '#ffffff';
+        for (let i = 0; i < 100; i++) {
+          ctx.globalAlpha = Math.random() * 0.8 + 0.2;
+          const x = Math.random() * 512;
+          const y = Math.random() * 768;
+          const size = Math.random() * 2 + 0.5;
+          ctx.beginPath();
+          ctx.arc(x, y, size, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        
+        // Nebula effects
+        ctx.fillStyle = '#9d4edd';
+        ctx.globalAlpha = 0.3;
+        ctx.beginPath();
+        ctx.arc(150, 200, 80, 0, Math.PI * 2);
+        ctx.fill();
+        
+        ctx.fillStyle = '#ff6d00';
+        ctx.globalAlpha = 0.2;
+        ctx.beginPath();
+        ctx.arc(400, 500, 120, 0, Math.PI * 2);
+        ctx.fill();
+        
+        nailTextures["galaxy"] = new THREE.CanvasTexture(canvas);
+      }
+      
+      async createFloralGold() {
+        const canvas = document.createElement('canvas');
+        canvas.width = 512;
+        canvas.height = 768;
+        const ctx = canvas.getContext('2d');
+        
+        // Gold base
+        const goldGradient = ctx.createLinearGradient(0, 0, 0, 768);
+        goldGradient.addColorStop(0, '#d4af37');
+        goldGradient.addColorStop(1, '#b8941f');
+        ctx.fillStyle = goldGradient;
+        ctx.fillRect(0, 0, 512, 768);
+        
+        // Floral pattern in contrasting color
+        ctx.fillStyle = '#7a5c1f';
+        ctx.globalAlpha = 0.6;
+        
+        // Draw simple floral elements
+        for (let i = 0; i < 8; i++) {
+          const x = 100 + (i % 3) * 150;
+          const y = 150 + Math.floor(i / 3) * 200;
+          
+          // Flower
+          ctx.beginPath();
+          ctx.arc(x, y, 30, 0, Math.PI * 2);
+          ctx.fill();
+          
+          // Petals
+          for (let j = 0; j < 6; j++) {
+            const angle = (j / 6) * Math.PI * 2;
+            const petalX = x + Math.cos(angle) * 50;
+            const petalY = y + Math.sin(angle) * 50;
+            ctx.beginPath();
+            ctx.arc(petalX, petalY, 20, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+        
+        nailTextures["floral_gold"] = new THREE.CanvasTexture(canvas);
       }
 
       buildUserInterface() {
@@ -1097,25 +1008,20 @@
           const button = document.createElement('div');
           button.className = `design-btn ${designName === state.currentDesign ? 'selected' : ''}`;
           
-          // Set background based on design
+          // Set preview background based on design
           if (designName === "luxury_gold") {
-            button.style.background = 'linear-gradient(135deg, #d4af37, #b8941f)';
+            button.style.background = 'linear-gradient(135deg, #ffd700, #b8941f)';
           } else if (designName === "french_manicure") {
-            button.style.background = 'linear-gradient(135deg, #fff5e6, #ffebcc)';
+            button.style.background = 'linear-gradient(135deg, #fff8f0, #ffe8cc)';
           } else if (designName === "glitter_pink") {
-            button.style.background = 'linear-gradient(135deg, #ff9ed8, #ff66b2)';
+            button.style.background = 'linear-gradient(135deg, #ffb6e1, #ff66b2)';
+          } else if (designName === "marble_effect") {
+            button.style.background = 'linear-gradient(135deg, #f8f8f8, #e0e0e0)';
+          } else if (designName === "galaxy") {
+            button.style.background = 'linear-gradient(135deg, #2d1b69, #1a0b2e)';
+          } else if (designName === "floral_gold") {
+            button.style.background = 'linear-gradient(135deg, #d4af37, #7a5c1f)';
           }
-          
-          // Add sparkle overlay for premium look
-          const overlay = document.createElement('div');
-          overlay.style.position = 'absolute';
-          overlay.style.top = '0';
-          overlay.style.left = '0';
-          overlay.style.right = '0';
-          overlay.style.bottom = '0';
-          overlay.style.background = 'radial-gradient(circle at 30% 30%, rgba(255,255,255,0.3), transparent 70%)';
-          overlay.style.pointerEvents = 'none';
-          button.appendChild(overlay);
           
           button.onclick = () => {
             state.currentDesign = designName;
@@ -1123,7 +1029,6 @@
               btn.classList.remove('selected');
             });
             button.classList.add('selected');
-            this.showTemporaryMessage(`${designName.replace('_', ' ')} design selected`);
           };
           
           el.designPicker.appendChild(button);
@@ -1145,7 +1050,6 @@
               btn.classList.remove('selected');
             });
             button.classList.add('selected');
-            this.showTemporaryMessage(`${shape.name} shape selected`);
           };
           
           el.shapePicker.appendChild(button);
@@ -1155,20 +1059,7 @@
       async handleDesignUpload() {
         const file = el.imageUpload.files[0];
         if (!file) {
-          this.showTemporaryMessage("Please select an image file", true);
-          return;
-        }
-        
-        // Check file size (max 5MB)
-        if (file.size > 5 * 1024 * 1024) {
-          this.showTemporaryMessage("Please select an image smaller than 5MB", true);
-          return;
-        }
-        
-        // Check file type
-        const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
-        if (!validTypes.includes(file.type)) {
-          this.showTemporaryMessage("Please select a JPEG, PNG, or WebP image", true);
+          alert("Please select an image file.");
           return;
         }
         
@@ -1183,18 +1074,15 @@
             img.src = URL.createObjectURL(file);
           });
           
-          // Process image with selected nail shape
           const texture = await nailMasker.applyImage(img, state.currentShape);
           const designId = `custom_${Date.now()}`;
           nailTextures[designId] = texture;
           state.currentDesign = designId;
 
-          // Create preview for the design picker
-          const previewUrl = await nailMasker.createPreview(img.src, state.currentShape);
-          
+          // Create and add custom design button
           const button = document.createElement('div');
           button.className = 'design-btn custom-design selected';
-          button.style.backgroundImage = `url(${previewUrl})`;
+          button.style.backgroundImage = `url(${img.src})`;
           button.style.backgroundSize = 'cover';
           button.onclick = () => {
             state.currentDesign = designId;
@@ -1202,50 +1090,18 @@
               btn.classList.remove('selected');
             });
             button.classList.add('selected');
-            this.showTemporaryMessage("Custom design selected");
           };
           
           el.designPicker.appendChild(button);
           el.uploadModal.classList.remove('show');
           el.imageUpload.value = '';
           
-          // Show success message
-          this.showTemporaryMessage('Custom design added successfully!');
-          
         } catch (error) {
-          this.showTemporaryMessage("Failed to process image. Please try a different file.", true);
+          alert("Failed to process image. Please try a different image file.");
         } finally {
           el.saveDesign.textContent = 'Save Design';
           el.saveDesign.disabled = false;
         }
-      }
-      
-      showTemporaryMessage(message, isError = false) {
-        const messageEl = document.createElement('div');
-        messageEl.textContent = message;
-        messageEl.style.cssText = `
-          position: fixed;
-          top: 100px;
-          left: 50%;
-          transform: translateX(-50%);
-          background: ${isError ? 'rgba(220, 53, 69, 0.95)' : 'rgba(212, 175, 55, 0.95)'};
-          color: ${isError ? 'white' : '#0a0a0a'};
-          padding: 16px 28px;
-          border-radius: 22px;
-          font-weight: 600;
-          z-index: 1000;
-          animation: messageFade 3s forwards;
-          text-align: center;
-          max-width: 80vw;
-          backdrop-filter: blur(20px);
-          border: 2px solid ${isError ? 'rgba(220, 53, 69, 0.3)' : 'rgba(212, 175, 55, 0.3)'};
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        `;
-        document.body.appendChild(messageEl);
-        setTimeout(() => {
-          messageEl.style.animation = 'messageFadeOut 0.5s forwards';
-          setTimeout(() => messageEl.remove(), 500);
-        }, 2500);
       }
 
       startRenderLoop() {
@@ -1346,11 +1202,9 @@
         const pipLandmark = landmarks[pip];
         const offset = CONFIG.NAIL_OFFSETS[fingerKey];
         
-        // Calculate position
         const x = (tipLandmark.x + offset.x * flipFactor) * window.innerWidth;
         const y = (1 - (tipLandmark.y + offset.y)) * window.innerHeight;
         
-        // Calculate size based on finger length
         const fingerLength = Math.hypot(
           (tipLandmark.x - pipLandmark.x) * window.innerWidth,
           (tipLandmark.y - pipLandmark.y) * window.innerHeight
@@ -1359,7 +1213,6 @@
         let size = fingerLength * CONFIG.NAIL_SCALE_FACTORS[fingerKey] * state.currentHandSize;
         size = Math.max(CONFIG.MIN_SIZE, Math.min(CONFIG.MAX_SIZE, size));
         
-        // Calculate rotation
         const angle = Math.atan2(
           tipLandmark.y - pipLandmark.y,
           (tipLandmark.x - pipLandmark.x) * flipFactor
@@ -1370,11 +1223,10 @@
         nail.scale.set(size * flipFactor, size, 1);
         nail.rotation.z = angle;
         
-        // Update texture and shader uniforms - CRITICAL FIX: uniforms instead of neiforms
         if (nailTextures[state.currentDesign]) {
           nail.material.uniforms.map.value = nailTextures[state.currentDesign];
           nail.material.uniforms.time.value = performance.now() * 0.001;
-          nail.material.uniforms.shine.value = 1.0; // Fixed typo: uniforms instead of neiforms
+          nail.material.uniforms.shine.value = 1.0;
           nail.material.needsUpdate = true;
         }
       }
@@ -1388,7 +1240,6 @@
         
         let minDistance = Infinity;
         let selectedIndex = -1;
-        let selectedFinger = '';
         
         FINGER_KEYS.forEach((fingerKey, index) => {
           const tipIndex = FINGER_INDICES[fingerKey].tip;
@@ -1401,14 +1252,10 @@
           if (distance < minDistance && distance < window.innerWidth * 0.12) {
             minDistance = distance;
             selectedIndex = index;
-            selectedFinger = fingerKey;
           }
         });
         
-        if (selectedIndex !== -1) {
-          state.selectedFingerIndex = selectedIndex;
-          this.showTemporaryMessage(`${selectedFinger} finger selected`);
-        }
+        state.selectedFingerIndex = selectedIndex;
       }
 
       hideAllNails() {
@@ -1438,47 +1285,12 @@
           <div style="color:#d4af37; font-size:32px; margin-bottom:20px;">⚠️</div>
           <div style="color:#d4af37; font-size:22px; margin-bottom:20px; font-weight:600">LuxeNails AR Studio</div>
           <p style="color:#aaa; font-size:16px; line-height:1.5; max-width:320px; margin-bottom:25px;">${message}</p>
-          <button onclick="location.reload()" style="padding:14px 28px; background:#d4af37; color:#0a0a0a; border:none; border-radius:20px; font-weight:600; cursor:pointer; transition:all 0.3s ease;">Try Again</button>
+          <button onclick="location.reload()" style="padding:14px 28px; background:#d4af37; color:#0a0a0a; border:none; border-radius:20px; font-weight:600; cursor:pointer;">Try Again</button>
         `;
       }
     }
 
-    // Add enhanced CSS animations
-    const style = document.createElement('style');
-    style.textContent = `
-      @keyframes messageFade {
-        0% { 
-          opacity: 0; 
-          transform: translateX(-50%) translateY(-20px); 
-        }
-        15% { 
-          opacity: 1; 
-          transform: translateX(-50%) translateY(0); 
-        }
-        85% { 
-          opacity: 1; 
-          transform: translateX(-50%) translateY(0); 
-        }
-        100% { 
-          opacity: 0; 
-          transform: translateX(-50%) translateY(-20px); 
-        }
-      }
-      @keyframes messageFadeOut {
-        to { 
-          opacity: 0; 
-          transform: translateX(-50%) translateY(-20px); 
-        }
-      }
-      @keyframes fadeOut {
-        0% { opacity: 1; }
-        70% { opacity: 1; }
-        100% { opacity: 0; }
-      }
-    `;
-    document.head.appendChild(style);
-
-    // Initialize application when DOM is loaded
+    // Initialize application
     window.addEventListener('DOMContentLoaded', () => {
       new LuxeNailsAR().init();
     });
