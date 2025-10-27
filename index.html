@@ -37,6 +37,7 @@
       height: 60px;
       border-radius: 30px;
       background: rgba(25, 25, 25, 0.95);
+      -webkit-backdrop-filter: blur(30px);
       backdrop-filter: blur(30px);
       border: 2px solid rgba(212, 175, 55, 0.5);
       color: #d4af37;
@@ -53,7 +54,7 @@
       gap: 8px;
     }
     
-    #uploadBtn { top: 25px; left: 25px; }
+    #uploadBtn { top: 25px; left: 25px; opacity: 0.6; pointer-events: none; }
     #shapeBtn { top: 25px; right: 25px; }
     #authorBtn {
       bottom: 25px;
@@ -65,7 +66,7 @@
       z-index: 101;
     }
 
-    /* Enhanced Mode Toggle - Better positioning */
+    /* Enhanced Mode Toggle */
     #modeToggle {
       position: fixed;
       top: 100px;
@@ -73,6 +74,7 @@
       transform: translateX(-50%);
       z-index: 100;
       background: rgba(25, 25, 25, 0.95);
+      -webkit-backdrop-filter: blur(30px);
       backdrop-filter: blur(30px);
       padding: 12px;
       border-radius: 30px;
@@ -106,7 +108,7 @@
       box-shadow: 0 0 25px rgba(212, 175, 55, 0.5);
     }
 
-    /* Enhanced Design & Shape Pickers - Side positioning */
+    /* Design & Shape Pickers */
     #designPicker {
       position: fixed;
       left: 25px;
@@ -117,6 +119,7 @@
       gap: 15px;
       z-index: 100;
       background: rgba(25, 25, 25, 0.95);
+      -webkit-backdrop-filter: blur(35px);
       backdrop-filter: blur(35px);
       padding: 20px;
       border-radius: 25px;
@@ -131,19 +134,20 @@
       right: 25px;
       top: 50%;
       transform: translateY(-50%);
-      display: flex;
+      display: none;
       flex-direction: column;
       gap: 12px;
       z-index: 100;
       background: rgba(25, 25, 25, 0.95);
+      -webkit-backdrop-filter: blur(35px);
       backdrop-filter: blur(35px);
       padding: 20px;
       border-radius: 25px;
       border: 2px solid rgba(212, 175, 55, 0.25);
-      display: none;
     }
     
-    #designPicker::-webkit-scrollbar, #shapePicker::-webkit-scrollbar { 
+    #designPicker::-webkit-scrollbar,
+    #shapePicker::-webkit-scrollbar { 
       display: none; 
     }
 
@@ -191,26 +195,28 @@
       box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
     }
 
-    /* Status Message - Fixed positioning */
+    /* Status Message */
     #statusMessage {
       position: fixed;
       top: 160px;
       left: 50%;
       transform: translateX(-50%);
       background: rgba(25, 25, 25, 0.95);
+      -webkit-backdrop-filter: blur(25px);
+      backdrop-filter: blur(25px);
       color: #d4af37;
       padding: 12px 24px;
       border-radius: 20px;
       z-index: 99;
       font-size: 14px;
       border: 2px solid rgba(212, 175, 55, 0.3);
-      backdrop-filter: blur(25px);
       display: none;
       text-align: center;
       max-width: 80vw;
+      animation: fadeIn 0.3s ease;
     }
 
-    /* Enhanced Loading & Indicators */
+    /* Loading Screen */
     #loading {
       position: fixed;
       top: 0; left: 0;
@@ -281,9 +287,17 @@
     }
 
     @media (max-width: 480px) {
-      #designPicker, #shapePicker {
+      #designPicker {
         left: 15px;
+        right: auto;
+        width: calc(100% - 30px);
+        max-width: 300px;
+      }
+      #shapePicker {
         right: 15px;
+        left: auto;
+        width: calc(100% - 30px);
+        max-width: 300px;
       }
       
       .control-btn {
@@ -306,25 +320,25 @@
   <div id="loading">
     <div class="loader"></div>
     <div style="font-weight: 700; margin-bottom: 10px; font-size: 24px;">LuxeNails AR Studio</div>
-    <p style="color: #bbb; font-size: 16px; line-height: 1.5;">Покажіть руку перед камерою<br>Дозвольте доступ до камери</p>
+    <p style="color: #bbb; font-size: 16px; line-height: 1.5;">Покладіть руку перед задньою камерою<br>Дозвольте доступ до камери</p>
   </div>
 
   <video id="video" playsinline muted></video>
   <canvas id="canvas"></canvas>
 
-  <button id="uploadBtn" class="control-btn">
+  <button id="uploadBtn" class="control-btn" aria-label="Функція завантаження тимчасово недоступна">
     📤 Завантажити
   </button>
   
-  <button id="shapeBtn" class="control-btn">
+  <button id="shapeBtn" class="control-btn" aria-label="Вибрати форму нігтя">
     ✨ Форми
   </button>
 
-  <button id="authorBtn" class="control-btn">
+  <button id="authorBtn" class="control-btn" aria-label="Відвідати магазин">
     🛍️ Магазин
   </button>
 
-  <div id="modeToggle">
+  <div id="modeToggle" aria-label="Режим нанесення дизайну">
     <div class="mode-option active" id="applyAllOpt">
       💅 Всі пальці
     </div>
@@ -336,7 +350,7 @@
   <div id="shapePicker"></div>
   <div id="designPicker"></div>
 
-  <div id="statusMessage"></div>
+  <div id="statusMessage" role="status" aria-live="polite"></div>
 
   <script type="importmap">
     {
@@ -423,7 +437,6 @@
     const nails = {};
     let handLandmarker;
 
-    // Professional Nail Shader
     const PROFESSIONAL_NAIL_SHADER = {
       vertexShader: `
         varying vec2 vUv;
@@ -452,11 +465,9 @@
 
           vec3 color = tex.rgb;
 
-          // Professional gel shine effect
           float highlight = pow(smoothstep(0.3, 0.7, vUv.y + sin(vUv.y * 10.0 - time) * 0.08), 2.0) * shine;
           color += vec3(1.0) * highlight * 0.6;
 
-          // Rim lighting for 3D effect
           float rim = pow(1.0 - dot(normalize(vViewPosition), vNormal), 2.5) * 0.3;
           color += vec3(1.0, 0.95, 0.9) * rim;
 
@@ -476,7 +487,7 @@
           this.buildUserInterface();
           this.hideLoadingScreen();
           this.startRenderLoop();
-          this.showStatusMessage("Покажіть руку камері для початку");
+          this.showStatusMessage("Покладіть руку перед задньою камерою", 5000);
         } catch (error) {
           console.error('Initialization error:', error);
           this.showError("Потрібен доступ до камери. Дозвольте доступ та оновіть сторінку.");
@@ -485,7 +496,7 @@
 
       setupEventListeners() {
         el.uploadBtn.onclick = () => {
-          this.showStatusMessage("Функція завантаження скоро буде доступна");
+          this.showStatusMessage("Функція завантаження тимчасово недоступна", 3000);
         };
         
         el.shapeBtn.onclick = () => {
@@ -512,8 +523,10 @@
       }
       
       hideShapePicker() {
-        state.showShapePicker = false;
-        el.shapePicker.style.display = 'none';
+        if (state.showShapePicker) {
+          state.showShapePicker = false;
+          el.shapePicker.style.display = 'none';
+        }
       }
 
       setApplicationMode(applyToAll) {
@@ -523,7 +536,7 @@
         
         this.showStatusMessage(applyToAll ? 
           "Режим: всі пальці" : 
-          "Режим: один палець - торкайтеся пальців для вибору");
+          "Режим: один палець — торкніться пальця на екрані", 4000);
       }
 
       async setupCamera() {
@@ -537,7 +550,7 @@
           });
           el.video.srcObject = stream;
           await new Promise(resolve => {
-            el.video.onloadedmetadata = resolve;
+            el.video.onloadedmetadata = () => resolve();
           });
           el.video.play();
         } catch (error) {
@@ -570,23 +583,21 @@
       }
 
       createNailMeshes() {
-        const nailMaterial = new THREE.ShaderMaterial({
-          uniforms: { 
-            map: { value: null },
-            time: { value: 0 },
-            shine: { value: 1.0 }
-          },
-          vertexShader: PROFESSIONAL_NAIL_SHADER.vertexShader,
-          fragmentShader: PROFESSIONAL_NAIL_SHADER.fragmentShader,
-          transparent: true,
-          side: THREE.DoubleSide
-        });
-
         FINGER_KEYS.forEach(finger => {
           const geometry = new THREE.PlaneGeometry(0.7, 1);
-          const material = nailMaterial.clone();
-          const mesh = new THREE.Mesh(geometry, material);
+          const material = new THREE.ShaderMaterial({
+            uniforms: { 
+              map: { value: nailTextures[state.currentDesign] || null },
+              time: { value: 0 },
+              shine: { value: 1.0 }
+            },
+            vertexShader: PROFESSIONAL_NAIL_SHADER.vertexShader,
+            fragmentShader: PROFESSIONAL_NAIL_SHADER.fragmentShader,
+            transparent: true,
+            side: THREE.DoubleSide
+          });
           
+          const mesh = new THREE.Mesh(geometry, material);
           mesh.visible = false;
           mesh.frustumCulled = false;
           nails[finger] = mesh;
@@ -610,180 +621,214 @@
       }
 
       async loadProfessionalDesigns() {
-        await this.createLuxuryGold();
-        await this.createFrenchManicure();
-        await this.createGlitterPink();
-        await this.createMarbleEffect();
-        await this.createGalaxyDesign();
-        await this.createFloralGold();
+        const designs = [
+          this.createLuxuryGold(),
+          this.createFrenchManicure(),
+          this.createGlitterPink(),
+          this.createMarbleEffect(),
+          this.createGalaxyDesign(),
+          this.createFloralGold()
+        ];
+        await Promise.all(designs);
+        this.buildUserInterface();
       }
       
-      async createLuxuryGold() {
-        const canvas = document.createElement('canvas');
-        canvas.width = 512;
-        canvas.height = 768;
-        const ctx = canvas.getContext('2d');
-        
-        const gradient = ctx.createLinearGradient(0, 0, 0, 768);
-        gradient.addColorStop(0, '#ffd700');
-        gradient.addColorStop(0.3, '#d4af37');
-        gradient.addColorStop(0.7, '#b8941f');
-        gradient.addColorStop(1, '#9a7c1a');
-        
-        ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, 512, 768);
-        
-        for (let i = 0; i < 150; i++) {
-          ctx.fillStyle = `rgba(255, 255, 255, ${Math.random() * 0.5 + 0.2})`;
-          const x = Math.random() * 512;
-          const y = Math.random() * 768;
-          const size = Math.random() * 3 + 1;
-          ctx.beginPath();
-          ctx.arc(x, y, size, 0, Math.PI * 2);
-          ctx.fill();
-        }
-        
-        nailTextures["luxury_gold"] = new THREE.CanvasTexture(canvas);
+      createLuxuryGold() {
+        return new Promise(resolve => {
+          setTimeout(() => {
+            const canvas = document.createElement('canvas');
+            canvas.width = 512;
+            canvas.height = 768;
+            const ctx = canvas.getContext('2d');
+            
+            const gradient = ctx.createLinearGradient(0, 0, 0, 768);
+            gradient.addColorStop(0, '#ffd700');
+            gradient.addColorStop(0.3, '#d4af37');
+            gradient.addColorStop(0.7, '#b8941f');
+            gradient.addColorStop(1, '#9a7c1a');
+            
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, 512, 768);
+            
+            for (let i = 0; i < 150; i++) {
+              ctx.fillStyle = `rgba(255, 255, 255, ${Math.random() * 0.5 + 0.2})`;
+              const x = Math.random() * 512;
+              const y = Math.random() * 768;
+              const size = Math.random() * 3 + 1;
+              ctx.beginPath();
+              ctx.arc(x, y, size, 0, Math.PI * 2);
+              ctx.fill();
+            }
+            
+            nailTextures["luxury_gold"] = new THREE.CanvasTexture(canvas);
+            resolve();
+          }, 0);
+        });
       }
       
-      async createFrenchManicure() {
-        const canvas = document.createElement('canvas');
-        canvas.width = 512;
-        canvas.height = 768;
-        const ctx = canvas.getContext('2d');
-        
-        const baseGradient = ctx.createLinearGradient(0, 0, 0, 768);
-        baseGradient.addColorStop(0, '#fff8f0');
-        baseGradient.addColorStop(1, '#ffe8cc');
-        ctx.fillStyle = baseGradient;
-        ctx.fillRect(0, 0, 512, 768);
-        
-        ctx.fillStyle = '#ffffff';
-        ctx.beginPath();
-        ctx.moveTo(80, 600);
-        ctx.bezierCurveTo(150, 550, 362, 550, 432, 600);
-        ctx.lineTo(432, 768);
-        ctx.lineTo(80, 768);
-        ctx.closePath();
-        ctx.fill();
-        
-        nailTextures["french_manicure"] = new THREE.CanvasTexture(canvas);
-      }
-      
-      async createGlitterPink() {
-        const canvas = document.createElement('canvas');
-        canvas.width = 512;
-        canvas.height = 768;
-        const ctx = canvas.getContext('2d');
-        
-        const pinkGradient = ctx.createLinearGradient(0, 0, 0, 768);
-        pinkGradient.addColorStop(0, '#ffb6e1');
-        pinkGradient.addColorStop(0.5, '#ff85c8');
-        pinkGradient.addColorStop(1, '#ff66b2');
-        ctx.fillStyle = pinkGradient;
-        ctx.fillRect(0, 0, 512, 768);
-        
-        const glitterColors = ['#ff99cc', '#ff66aa', '#ffffff', '#ffccdd'];
-        for (let i = 0; i < 200; i++) {
-          ctx.fillStyle = glitterColors[Math.floor(Math.random() * glitterColors.length)];
-          ctx.globalAlpha = Math.random() * 0.6 + 0.2;
-          const x = Math.random() * 512;
-          const y = Math.random() * 768;
-          const size = Math.random() * 4 + 1;
-          ctx.beginPath();
-          ctx.arc(x, y, size, 0, Math.PI * 2);
-          ctx.fill();
-        }
-        
-        nailTextures["glitter_pink"] = new THREE.CanvasTexture(canvas);
-      }
-      
-      async createMarbleEffect() {
-        const canvas = document.createElement('canvas');
-        canvas.width = 512;
-        canvas.height = 768;
-        const ctx = canvas.getContext('2d');
-        
-        ctx.fillStyle = '#f8f8f8';
-        ctx.fillRect(0, 0, 512, 768);
-        
-        ctx.strokeStyle = '#e0e0e0';
-        ctx.lineWidth = 8;
-        ctx.beginPath();
-        for (let i = 0; i < 20; i++) {
-          ctx.moveTo(Math.random() * 512, Math.random() * 768);
-          ctx.bezierCurveTo(
-            Math.random() * 512, Math.random() * 768,
-            Math.random() * 512, Math.random() * 768,
-            Math.random() * 512, Math.random() * 768
-          );
-        }
-        ctx.stroke();
-        
-        nailTextures["marble_effect"] = new THREE.CanvasTexture(canvas);
-      }
-      
-      async createGalaxyDesign() {
-        const canvas = document.createElement('canvas');
-        canvas.width = 512;
-        canvas.height = 768;
-        const ctx = canvas.getContext('2d');
-        
-        const galaxy = ctx.createRadialGradient(256, 384, 0, 256, 384, 500);
-        galaxy.addColorStop(0, '#1a0b2e');
-        galaxy.addColorStop(0.5, '#2d1b69');
-        galaxy.addColorStop(1, '#4a2a95');
-        ctx.fillStyle = galaxy;
-        ctx.fillRect(0, 0, 512, 768);
-        
-        ctx.fillStyle = '#ffffff';
-        for (let i = 0; i < 100; i++) {
-          ctx.globalAlpha = Math.random() * 0.8 + 0.2;
-          const x = Math.random() * 512;
-          const y = Math.random() * 768;
-          const size = Math.random() * 2 + 0.5;
-          ctx.beginPath();
-          ctx.arc(x, y, size, 0, Math.PI * 2);
-          ctx.fill();
-        }
-        
-        nailTextures["galaxy"] = new THREE.CanvasTexture(canvas);
-      }
-      
-      async createFloralGold() {
-        const canvas = document.createElement('canvas');
-        canvas.width = 512;
-        canvas.height = 768;
-        const ctx = canvas.getContext('2d');
-        
-        const goldGradient = ctx.createLinearGradient(0, 0, 0, 768);
-        goldGradient.addColorStop(0, '#d4af37');
-        goldGradient.addColorStop(1, '#b8941f');
-        ctx.fillStyle = goldGradient;
-        ctx.fillRect(0, 0, 512, 768);
-        
-        ctx.fillStyle = '#7a5c1f';
-        ctx.globalAlpha = 0.6;
-        
-        for (let i = 0; i < 8; i++) {
-          const x = 100 + (i % 3) * 150;
-          const y = 150 + Math.floor(i / 3) * 200;
-          
-          ctx.beginPath();
-          ctx.arc(x, y, 30, 0, Math.PI * 2);
-          ctx.fill();
-          
-          for (let j = 0; j < 6; j++) {
-            const angle = (j / 6) * Math.PI * 2;
-            const petalX = x + Math.cos(angle) * 50;
-            const petalY = y + Math.sin(angle) * 50;
+      createFrenchManicure() {
+        return new Promise(resolve => {
+          setTimeout(() => {
+            const canvas = document.createElement('canvas');
+            canvas.width = 512;
+            canvas.height = 768;
+            const ctx = canvas.getContext('2d');
+            
+            const baseGradient = ctx.createLinearGradient(0, 0, 0, 768);
+            baseGradient.addColorStop(0, '#fff8f0');
+            baseGradient.addColorStop(1, '#ffe8cc');
+            ctx.fillStyle = baseGradient;
+            ctx.fillRect(0, 0, 512, 768);
+            
+            ctx.fillStyle = '#ffffff';
             ctx.beginPath();
-            ctx.arc(petalX, petalY, 20, 0, Math.PI * 2);
+            ctx.moveTo(80, 600);
+            ctx.bezierCurveTo(150, 550, 362, 550, 432, 600);
+            ctx.lineTo(432, 768);
+            ctx.lineTo(80, 768);
+            ctx.closePath();
             ctx.fill();
-          }
-        }
-        
-        nailTextures["floral_gold"] = new THREE.CanvasTexture(canvas);
+            
+            nailTextures["french_manicure"] = new THREE.CanvasTexture(canvas);
+            resolve();
+          }, 0);
+        });
+      }
+      
+      createGlitterPink() {
+        return new Promise(resolve => {
+          setTimeout(() => {
+            const canvas = document.createElement('canvas');
+            canvas.width = 512;
+            canvas.height = 768;
+            const ctx = canvas.getContext('2d');
+            
+            const pinkGradient = ctx.createLinearGradient(0, 0, 0, 768);
+            pinkGradient.addColorStop(0, '#ffb6e1');
+            pinkGradient.addColorStop(0.5, '#ff85c8');
+            pinkGradient.addColorStop(1, '#ff66b2');
+            ctx.fillStyle = pinkGradient;
+            ctx.fillRect(0, 0, 512, 768);
+            
+            const glitterColors = ['#ff99cc', '#ff66aa', '#ffffff', '#ffccdd'];
+            for (let i = 0; i < 200; i++) {
+              ctx.fillStyle = glitterColors[Math.floor(Math.random() * glitterColors.length)];
+              ctx.globalAlpha = Math.random() * 0.6 + 0.2;
+              const x = Math.random() * 512;
+              const y = Math.random() * 768;
+              const size = Math.random() * 4 + 1;
+              ctx.beginPath();
+              ctx.arc(x, y, size, 0, Math.PI * 2);
+              ctx.fill();
+            }
+            
+            nailTextures["glitter_pink"] = new THREE.CanvasTexture(canvas);
+            resolve();
+          }, 0);
+        });
+      }
+      
+      createMarbleEffect() {
+        return new Promise(resolve => {
+          setTimeout(() => {
+            const canvas = document.createElement('canvas');
+            canvas.width = 512;
+            canvas.height = 768;
+            const ctx = canvas.getContext('2d');
+            
+            ctx.fillStyle = '#f8f8f8';
+            ctx.fillRect(0, 0, 512, 768);
+            
+            ctx.strokeStyle = '#e0e0e0';
+            ctx.lineWidth = 8;
+            ctx.beginPath();
+            for (let i = 0; i < 20; i++) {
+              ctx.moveTo(Math.random() * 512, Math.random() * 768);
+              ctx.bezierCurveTo(
+                Math.random() * 512, Math.random() * 768,
+                Math.random() * 512, Math.random() * 768,
+                Math.random() * 512, Math.random() * 768
+              );
+            }
+            ctx.stroke();
+            
+            nailTextures["marble_effect"] = new THREE.CanvasTexture(canvas);
+            resolve();
+          }, 0);
+        });
+      }
+      
+      createGalaxyDesign() {
+        return new Promise(resolve => {
+          setTimeout(() => {
+            const canvas = document.createElement('canvas');
+            canvas.width = 512;
+            canvas.height = 768;
+            const ctx = canvas.getContext('2d');
+            
+            const galaxy = ctx.createRadialGradient(256, 384, 0, 256, 384, 500);
+            galaxy.addColorStop(0, '#1a0b2e');
+            galaxy.addColorStop(0.5, '#2d1b69');
+            galaxy.addColorStop(1, '#4a2a95');
+            ctx.fillStyle = galaxy;
+            ctx.fillRect(0, 0, 512, 768);
+            
+            ctx.fillStyle = '#ffffff';
+            for (let i = 0; i < 100; i++) {
+              ctx.globalAlpha = Math.random() * 0.8 + 0.2;
+              const x = Math.random() * 512;
+              const y = Math.random() * 768;
+              const size = Math.random() * 2 + 0.5;
+              ctx.beginPath();
+              ctx.arc(x, y, size, 0, Math.PI * 2);
+              ctx.fill();
+            }
+            
+            nailTextures["galaxy"] = new THREE.CanvasTexture(canvas);
+            resolve();
+          }, 0);
+        });
+      }
+      
+      createFloralGold() {
+        return new Promise(resolve => {
+          setTimeout(() => {
+            const canvas = document.createElement('canvas');
+            canvas.width = 512;
+            canvas.height = 768;
+            const ctx = canvas.getContext('2d');
+            
+            const goldGradient = ctx.createLinearGradient(0, 0, 0, 768);
+            goldGradient.addColorStop(0, '#d4af37');
+            goldGradient.addColorStop(1, '#b8941f');
+            ctx.fillStyle = goldGradient;
+            ctx.fillRect(0, 0, 512, 768);
+            
+            ctx.fillStyle = '#7a5c1f';
+            ctx.globalAlpha = 0.6;
+            
+            for (let i = 0; i < 8; i++) {
+              const x = 100 + (i % 3) * 150;
+              const y = 150 + Math.floor(i / 3) * 200;
+              
+              ctx.beginPath();
+              ctx.arc(x, y, 30, 0, Math.PI * 2);
+              ctx.fill();
+              
+              for (let j = 0; j < 6; j++) {
+                const angle = (j / 6) * Math.PI * 2;
+                const petalX = x + Math.cos(angle) * 50;
+                const petalY = y + Math.sin(angle) * 50;
+                ctx.beginPath();
+                ctx.arc(petalX, petalY, 20, 0, Math.PI * 2);
+                ctx.fill();
+              }
+            }
+            
+            nailTextures["floral_gold"] = new THREE.CanvasTexture(canvas);
+            resolve();
+          }, 0);
+        });
       }
 
       buildUserInterface() {
@@ -818,7 +863,7 @@
               btn.classList.remove('selected');
             });
             button.classList.add('selected');
-            this.showStatusMessage(`Обрано дизайн: ${designName.replace('_', ' ')}`);
+            this.showStatusMessage(`Обрано дизайн: ${designName.replace('_', ' ')}`, 4000);
           };
           
           el.designPicker.appendChild(button);
@@ -839,14 +884,14 @@
               btn.classList.remove('selected');
             });
             button.classList.add('selected');
-            this.showStatusMessage(`Обрано форму: ${shape.name}`);
+            this.showStatusMessage(`Обрано форму: ${shape.name}`, 4000);
           };
           
           el.shapePicker.appendChild(button);
         });
       }
 
-      showStatusMessage(message, duration = 3000) {
+      showStatusMessage(message, duration = 5000) {
         if (!message) {
           el.statusMessage.style.display = 'none';
           return;
@@ -854,10 +899,13 @@
         
         el.statusMessage.textContent = message;
         el.statusMessage.style.display = 'block';
+        el.statusMessage.style.animation = 'none';
+        void el.statusMessage.offsetWidth; // trigger reflow
         el.statusMessage.style.animation = 'fadeIn 0.3s ease';
         
         if (duration > 0) {
-          setTimeout(() => {
+          clearTimeout(this.statusTimeout);
+          this.statusTimeout = setTimeout(() => {
             el.statusMessage.style.display = 'none';
           }, duration);
         }
@@ -887,7 +935,7 @@
             this.updateHandSize(landmarks);
           } else {
             if (++state.handNotDetectedCount > CONFIG.HAND_NOT_DETECTED_THRESHOLD) {
-              this.showStatusMessage("Покажіть руку камері");
+              this.showStatusMessage("Покладіть руку перед камерою", 4000);
               this.hideAllNails();
             }
           }
@@ -948,6 +996,10 @@
           
           this.updateNailPosition(fingerKey, flipFactor);
           nail.visible = true;
+          
+          if (nail.material.uniforms.map.value !== nailTextures[state.currentDesign]) {
+            nail.material.uniforms.map.value = nailTextures[state.currentDesign];
+          }
         });
         
         renderer.render(scene, camera);
@@ -960,12 +1012,13 @@
         const pipLandmark = landmarks[pip];
         const offset = CONFIG.NAIL_OFFSETS[fingerKey];
         
-        const x = (tipLandmark.x + offset.x * flipFactor) * window.innerWidth;
-        const y = (1 - (tipLandmark.y + offset.y)) * window.innerHeight;
+        const rect = el.canvas.getBoundingClientRect();
+        const x = (tipLandmark.x + offset.x * flipFactor) * rect.width;
+        const y = (1 - (tipLandmark.y + offset.y)) * rect.height;
         
         const fingerLength = Math.hypot(
-          (tipLandmark.x - pipLandmark.x) * window.innerWidth,
-          (tipLandmark.y - pipLandmark.y) * window.innerHeight
+          (tipLandmark.x - pipLandmark.x) * rect.width,
+          (tipLandmark.y - pipLandmark.y) * rect.height
         );
         
         let size = fingerLength * CONFIG.NAIL_SCALE_FACTORS[fingerKey] * state.currentHandSize;
@@ -977,16 +1030,11 @@
         );
         
         const nail = nails[fingerKey];
-        nail.position.set(x - window.innerWidth / 2, y - window.innerHeight / 2, 0);
+        nail.position.set(x - rect.width / 2, y - rect.height / 2, 0);
         nail.scale.set(size * flipFactor, size, 1);
         nail.rotation.z = angle;
-        
-        if (nailTextures[state.currentDesign]) {
-          nail.material.uniforms.map.value = nailTextures[state.currentDesign];
-          nail.material.uniforms.time.value = performance.now() * 0.001;
-          nail.material.uniforms.shine.value = 1.0;
-          nail.material.needsUpdate = true;
-        }
+        nail.material.uniforms.time.value = performance.now() * 0.001;
+        nail.material.uniforms.shine.value = 1.0;
       }
 
       handleCanvasClick(event) {
@@ -998,26 +1046,25 @@
         
         let minDistance = Infinity;
         let selectedIndex = -1;
-        let selectedFinger = '';
         
         FINGER_KEYS.forEach((fingerKey, index) => {
           const tipIndex = FINGER_INDICES[fingerKey].tip;
           const tipLandmark = state.lastLandmarks[tipIndex];
-          const screenX = tipLandmark.x * window.innerWidth;
-          const screenY = tipLandmark.y * window.innerHeight;
+          const screenX = tipLandmark.x * rect.width;
+          const screenY = tipLandmark.y * rect.height;
           
           const distance = Math.hypot(clickX - screenX, clickY - screenY);
           
-          if (distance < minDistance && distance < window.innerWidth * 0.12) {
+          if (distance < minDistance && distance < rect.width * 0.12) {
             minDistance = distance;
             selectedIndex = index;
-            selectedFinger = fingerKey;
           }
         });
         
         if (selectedIndex !== -1) {
           state.selectedFingerIndex = selectedIndex;
-          this.showStatusMessage(`Обрано палець: ${selectedFinger}`);
+          const fingerName = FINGER_KEYS[selectedIndex];
+          this.showStatusMessage(`Обрано палець: ${fingerName}`, 3000);
         }
       }
 
@@ -1029,12 +1076,13 @@
       }
 
       handleResize() {
-        camera.left = -window.innerWidth / 2;
-        camera.right = window.innerWidth / 2;
-        camera.top = window.innerHeight / 2;
-        camera.bottom = -window.innerHeight / 2;
+        const rect = el.canvas.getBoundingClientRect();
+        camera.left = -rect.width / 2;
+        camera.right = rect.width / 2;
+        camera.top = rect.height / 2;
+        camera.bottom = -rect.height / 2;
         camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setSize(rect.width, rect.height);
       }
 
       hideLoadingScreen() {
@@ -1053,7 +1101,6 @@
       }
     }
 
-    // Initialize application
     window.addEventListener('DOMContentLoaded', () => {
       new LuxeNailsAR().init();
     });
