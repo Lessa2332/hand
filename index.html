@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="en"> <!-- Змінити на en -->
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#d4af37">
-  <meta name="description" content="Elite Nail AR Studio - реалістичний віртуальний манікюр з доповненою реальністю">
+  <meta name="description" content="Elite Nail AR Studio - realistic virtual manicure with augmented reality">
   
   <title>💅 Elite Nail AR Studio</title>
   
@@ -16,6 +16,7 @@
   <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💅</text></svg>">
 
   <style>
+    /* Весь CSS залишається без змін */
     * {
       margin: 0;
       padding: 0;
@@ -580,7 +581,7 @@
   <div id="loading">
     <div class="loader"></div>
     <div style="font-weight: 700; margin-bottom: 12px; font-size: 28px;">Elite Nail AR Studio</div>
-    <p style="color: #aaa; font-size: 17px; line-height: 1.5; max-width: 300px;">Покладіть руку перед камерою<br>Дозвольте доступ до камери</p>
+    <p style="color: #aaa; font-size: 17px; line-height: 1.5; max-width: 300px;">Position your hand in front of the camera<br>Allow camera access</p>
     <div id="platformInfo" style="margin-top: 20px; font-size: 14px; color: #666;"></div>
   </div>
 
@@ -589,64 +590,64 @@
   <canvas id="confettiCanvas"></canvas>
 
   <button id="langBtn" class="control-btn" aria-label="Switch language">
-    EN
-    <div class="tooltip">Мова / Language</div>
+    UK <!-- Змінити на UK -->
+    <div class="tooltip">Language / Мова</div> <!-- Змінити порядок -->
   </button>
   
   <button id="soundBtn" class="control-btn" aria-label="Toggle sound">
     🔊
-    <div class="tooltip">Звук / Sound</div>
+    <div class="tooltip">Sound / Звук</div> <!-- Змінити порядок -->
   </button>
   
   <button id="uploadBtn" class="control-btn" aria-label="Upload design">
     📤
-    <div class="tooltip">Завантажити / Upload</div>
+    <div class="tooltip">Upload / Завантажити</div> <!-- Змінити порядок -->
   </button>
   
   <button id="shapeBtn" class="control-btn" aria-label="Nail shapes">
     ✨
-    <div class="tooltip">Форми / Shapes</div>
+    <div class="tooltip">Shapes / Форми</div> <!-- Змінити порядок -->
   </button>
 
   <button id="screenshotBtn" class="control-btn" aria-label="Take screenshot">
     📸
-    <div class="tooltip">Знімок / Screenshot</div>
+    <div class="tooltip">Screenshot / Знімок</div> <!-- Змінити порядок -->
   </button>
 
   <div id="modeToggle">
     <div class="mode-option active" id="applyAllOpt" title="All fingers">
       💅
-      <div class="tooltip">Усі пальці / All</div>
+      <div class="tooltip">All / Усі пальці</div> <!-- Змінити порядок -->
     </div>
     <div class="mode-option" id="selectFingerOpt" title="Select finger">
       👆
-      <div class="tooltip">Обрати палець / Select</div>
+      <div class="tooltip">Select / Обрати палець</div> <!-- Змінити порядок -->
     </div>
   </div>
 
   <!-- Shape Picker - Крок 1 -->
   <div id="shapePicker">
-    <div class="step-indicator">Крок 1: Обрати форму</div>
+    <div class="step-indicator">Step 1: Choose shape</div> <!-- Англійська за замовчуванням -->
   </div>
 
   <!-- Design Picker - Крок 2 -->
   <div id="designPicker">
-    <div class="step-indicator">Крок 2: Обрати дизайн</div>
+    <div class="step-indicator">Step 2: Choose design</div> <!-- Англійська за замовчуванням -->
   </div>
 
   <div id="uploadModal">
-    <h3 style="margin:0;font-weight:700;color:#d4af37;font-size:22px;">🎨 Завантажте свій дизайн</h3>
-    <p style="margin:16px 0;color:#aaa;font-size:15px;line-height:1.5">Оберіть зображення для створення унікального дизайну нігтів. Для найкращих результатів використовуйте PNG з прозорим фоном.</p>
+    <h3 style="margin:0;font-weight:700;color:#d4af37;font-size:22px;">🎨 Upload Your Design</h3> <!-- Англійська за замовчуванням -->
+    <p style="margin:16px 0;color:#aaa;font-size:15px;line-height:1.5">Choose an image to create a unique nail design. For best results use PNG with transparent background.</p> <!-- Англійська за замовчуванням -->
     <input type="file" id="imageUpload" accept="image/*">
     <div style="margin-top: 24px;">
-      <button id="saveDesign" class="modal-btn">💾 Зберегти</button>
-      <button id="closeModal" class="modal-btn">❌ Скасувати</button>
+      <button id="saveDesign" class="modal-btn">💾 Save</button> <!-- Англійська за замовчуванням -->
+      <button id="closeModal" class="modal-btn">❌ Cancel</button> <!-- Англійська за замовчуванням -->
     </div>
   </div>
 
   <div id="handIndicator" class="indicator">
     <span>👋</span>
-    <span>Покажіть руку камері</span>
+    <span>Show your hand to the camera</span> <!-- Англійська за замовчуванням -->
   </div>
 
   <div class="status-message" id="statusMessage"></div>
@@ -773,9 +774,9 @@
       }
     ];
 
-    // === TRANSLATIONS ===
+    // === TRANSLATIONS - ЗМІНИТИ ПОРЯДОК, АНГЛІЙСЬКА ПЕРША ===
     const translations = {
-      en: {
+      en: { // Основна мова - англійська
         title: "💅 Elite Nail AR Studio",
         loading: "Loading AR Experience...",
         cameraPrompt: "Position your hand in front of the camera",
@@ -788,7 +789,7 @@
         cancel: "❌ Cancel",
         designSaved: "🎉 Design saved successfully!",
         screenshotSaved: "📸 Screenshot saved!",
-        shapeChanged: "Form changed to: ",
+        shapeChanged: "Shape changed to: ",
         modeAll: "Mode: All fingers",
         modeSingle: "Mode: Single finger - tap on screen",
         step1: "Step 1: Choose shape",
@@ -797,7 +798,7 @@
         platformAndroid: "📱 Android • Chrome • ARCore Ready",
         platformDesktop: "💻 Desktop • WebXR Ready"
       },
-      uk: {
+      uk: { // Друга мова - українська
         title: "💅 Elite Nail AR Studio",
         loading: "Завантаження AR досвіду...",
         cameraPrompt: "Покладіть руку перед камерою",
@@ -821,9 +822,9 @@
       }
     };
 
-    // === STATE MANAGEMENT ===
+    // === STATE MANAGEMENT - ЗМІНИТИ ПОЧАТКОВУ МОВУ ===
     const state = {
-      currentLang: 'uk',
+      currentLang: 'en', // Змінити на 'en' за замовчуванням
       currentDesign: "luxury_gold",
       currentShape: 'oval',
       isApplyAll: true,
@@ -1238,7 +1239,7 @@
           this.showStatus(this.t('cameraPrompt'));
         } catch (error) {
           console.error('Initialization error:', error);
-          this.showError('Помилка ініціалізації. Перевірте доступ до камери та оновіть сторінку.');
+          this.showError('Initialization error. Check camera access and refresh the page.');
         }
       }
 
@@ -1366,23 +1367,23 @@
       async handleImageUpload() {
         const file = el.imageUpload.files[0];
         if (!file) {
-          alert("Будь ласка, оберіть файл зображення.");
+          alert("Please select an image file.");
           return;
         }
 
         if (file.size > 8 * 1024 * 1024) {
-          alert("Будь ласка, оберіть зображення менше 8MB.");
+          alert("Please select an image smaller than 8MB.");
           return;
         }
 
         try {
-          el.saveDesign.textContent = 'Обробка...';
+          el.saveDesign.textContent = 'Processing...';
           el.saveDesign.disabled = true;
 
           const img = new Image();
           await new Promise((resolve, reject) => {
             img.onload = resolve;
-            img.onerror = () => reject(new Error("Не вдалося завантажити зображення"));
+            img.onerror = () => reject(new Error("Failed to load image"));
             img.src = URL.createObjectURL(file);
           });
 
@@ -1415,7 +1416,7 @@
           audio.play(audio.success);
           
         } catch (error) {
-          alert("Не вдалося обробити зображення. Спробуйте інший файл.");
+          alert("Failed to process image. Please try a different file.");
         } finally {
           el.saveDesign.textContent = this.t('save');
           el.saveDesign.disabled = false;
@@ -1470,7 +1471,7 @@
           
           el.video.play();
         } catch (error) {
-          throw new Error("Доступ до камери відхилено або не підтримується");
+          throw new Error("Camera access denied or not supported");
         }
       }
 
@@ -1568,7 +1569,7 @@
           });
         } catch (error) {
           console.error('Hand tracking initialization failed:', error);
-          throw new Error("Помилка ініціалізації трекінгу рук");
+          throw new Error("Hand tracking initialization error");
         }
       }
 
@@ -1950,7 +1951,7 @@
         el.uploadModal.querySelector('p').textContent = this.t('uploadHint');
         el.saveDesign.textContent = this.t('save');
         el.closeModal.textContent = this.t('cancel');
-        el.langBtn.textContent = state.currentLang === 'en' ? 'UK' : 'EN';
+        el.langBtn.textContent = state.currentLang === 'en' ? 'UK' : 'EN'; // Тепер UK показується коли мова англійська
         
         // Update platform info
         const platformInfo = document.getElementById('platformInfo');
@@ -2157,7 +2158,7 @@
             en: ['Thumb', 'Index', 'Middle', 'Ring', 'Pinky'],
             uk: ['Великий', 'Вказівний', 'Середній', 'Безіменний', 'Мізинець']
           };
-          this.showStatus(`Обрано: ${fingerNames[state.currentLang][selectedIndex]}`);
+          this.showStatus(`Selected: ${fingerNames[state.currentLang][selectedIndex]}`);
           audio.play(audio.click);
         }
       }
@@ -2199,7 +2200,7 @@
           
         } catch (error) {
           console.error('Screenshot failed:', error);
-          this.showStatus('Помилка знімка');
+          this.showStatus('Screenshot error');
         }
       }
 
@@ -2268,7 +2269,7 @@
           <div style="color:#d4af37; font-size:32px; margin-bottom:20px;">⚠️</div>
           <div style="color:#d4af37; font-size:22px; margin-bottom:20px; font-weight:700">Elite Nail AR Studio</div>
           <p style="color:#aaa; font-size:17px; line-height:1.5; max-width:320px; margin-bottom:25px;">${message}</p>
-          <button onclick="location.reload()" style="padding:14px 28px; background:#d4af37; color:#1c1c1e; border:none; border-radius:20px; font-weight:600; cursor:pointer; font-size:16px;">Спробувати знову</button>
+          <button onclick="location.reload()" style="padding:14px 28px; background:#d4af37; color:#1c1c1e; border:none; border-radius:20px; font-weight:600; cursor:pointer; font-size:16px;">Try Again</button>
         `;
       }
     }
@@ -2354,7 +2355,7 @@
       
       // Show install button (you can add this to your UI)
       setTimeout(() => {
-        if (deferredPrompt && confirm('Хочете встановити додаток на свій пристрій?')) {
+        if (deferredPrompt && confirm('Would you like to install the app on your device?')) {
           deferredPrompt.prompt();
           deferredPrompt.userChoice.then((choiceResult) => {
             deferredPrompt = null;
