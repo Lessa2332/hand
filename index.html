@@ -121,11 +121,6 @@
       color: #4a90e2;
     }
 
-    .control-btn.danger {
-      background: rgba(226, 74, 74, 0.9);
-      border-color: rgba(226, 74, 74, 0.6);
-    }
-
     .btn-label {
       position: absolute;
       bottom: -25px;
@@ -182,20 +177,8 @@
       width: 50px;
       height: 65px;
       border-radius: 8px;
-      background: linear-gradient(135deg, #8B4513, #A0522D);
       position: relative;
       overflow: hidden;
-    }
-
-    .nail-preview::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.2));
-      border-radius: 8px;
     }
 
     /* Shape Selector */
@@ -273,7 +256,6 @@
     .shape-option[data-shape="almond"] .shape-preview {
       border-radius: 45% 45% 0 0 / 80% 80% 0 0;
       transform: rotate(-5deg) scale(0.9);
-      clip-path: polygon(50% 0%, 100% 30%, 100% 100%, 0% 100%, 0% 30%);
     }
 
     .shape-option[data-shape="squoval"] .shape-preview {
@@ -282,12 +264,10 @@
 
     .shape-option[data-shape="coffin"] .shape-preview {
       border-radius: 10% 10% 0 0;
-      clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 100%, 0% 100%, 0% 30%);
     }
 
     .shape-option[data-shape="stiletto"] .shape-preview {
       border-radius: 40% 40% 0 0;
-      clip-path: polygon(50% 0%, 100% 30%, 80% 100%, 20% 100%, 0% 30%);
     }
 
     .shape-option[data-shape="square"] .shape-preview {
@@ -370,14 +350,6 @@
       #topPanel { padding: 8px 14px; }
       .control-btn { min-width: 45px; height: 45px; font-size: 18px; }
       .btn-label { font-size: 10px; bottom: -22px; }
-    }
-
-    /* Safe Areas Support */
-    @supports(padding: max(0px)) {
-      #topPanel { top: max(15px, env(safe-area-inset-top)); }
-      #bottomPanel { bottom: max(15px, env(safe-area-inset-bottom)); }
-      #leftPanel { left: max(12px, env(safe-area-inset-left)); }
-      #rightPanel { right: max(12px, env(safe-area-inset-right)); }
     }
   </style>
 </head>
@@ -507,72 +479,6 @@
     };
 
     const FINGER_KEYS = Object.keys(FINGER_INDICES);
-
-    // === REALISTIC NAIL SHAPES ===
-    class RealisticNailGeometry {
-      static createShape(shapeType, aspectRatio = 0.7) {
-        const shape = new THREE.Shape();
-        const width = 0.7;
-        const height = width / aspectRatio;
-
-        switch(shapeType) {
-          case 'oval':
-            shape.ellipse(0, 0, width * 0.5, height * 0.5, 0, 0, Math.PI * 2);
-            break;
-            
-          case 'almond':
-            shape.moveTo(0, -height * 0.4);
-            shape.bezierCurveTo(
-              width * 0.4, -height * 0.45,
-              width * 0.45, height * 0.1,
-              0, height * 0.45
-            );
-            shape.bezierCurveTo(
-              -width * 0.45, height * 0.1,
-              -width * 0.4, -height * 0.45,
-              0, -height * 0.4
-            );
-            break;
-            
-          case 'squoval':
-            shape.moveTo(-width * 0.4, -height * 0.4);
-            shape.lineTo(width * 0.4, -height * 0.4);
-            shape.lineTo(width * 0.4, height * 0.4);
-            shape.lineTo(-width * 0.4, height * 0.4);
-            shape.lineTo(-width * 0.4, -height * 0.4);
-            break;
-            
-          case 'coffin':
-            shape.moveTo(-width * 0.3, -height * 0.4);
-            shape.lineTo(width * 0.3, -height * 0.4);
-            shape.lineTo(width * 0.45, height * 0.1);
-            shape.lineTo(width * 0.3, height * 0.4);
-            shape.lineTo(-width * 0.3, height * 0.4);
-            shape.lineTo(-width * 0.45, height * 0.1);
-            shape.lineTo(-width * 0.3, -height * 0.4);
-            break;
-            
-          case 'stiletto':
-            shape.moveTo(0, -height * 0.45);
-            shape.lineTo(width * 0.35, height * 0.1);
-            shape.lineTo(width * 0.2, height * 0.45);
-            shape.lineTo(-width * 0.2, height * 0.45);
-            shape.lineTo(-width * 0.35, height * 0.1);
-            shape.lineTo(0, -height * 0.45);
-            break;
-            
-          case 'square':
-            shape.moveTo(-width * 0.45, -height * 0.4);
-            shape.lineTo(width * 0.45, -height * 0.4);
-            shape.lineTo(width * 0.45, height * 0.4);
-            shape.lineTo(-width * 0.45, height * 0.4);
-            shape.lineTo(-width * 0.45, -height * 0.4);
-            break;
-        }
-
-        return new THREE.ShapeGeometry(shape);
-      }
-    }
 
     // === STATE MANAGEMENT ===
     const state = {
@@ -738,15 +644,6 @@
           opt.classList.toggle('selected', opt.dataset.shape === shape);
         });
         
-        // Update nail geometries
-        FINGER_KEYS.forEach(finger => {
-          const nail = nails[finger];
-          const aspectRatio = this.getFingerAspectRatio(finger);
-          const newGeometry = RealisticNailGeometry.createShape(shape, aspectRatio);
-          nail.geometry.dispose();
-          nail.geometry = newGeometry;
-        });
-        
         this.showStatus(`Форма змінена на: ${this.getShapeName(shape)}`);
       }
 
@@ -762,28 +659,23 @@
         return names[shape] || shape;
       }
 
-      getFingerAspectRatio(finger) {
-        const ratios = {
-          thumb: 0.75,
-          index: 0.72,
-          middle: 0.68,
-          ring: 0.72,
-          pinky: 0.78
-        };
-        return ratios[finger] || 0.7;
-      }
-
       async setupCamera() {
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: { 
-            facingMode: "environment",
-            width: { ideal: 1920 },
-            height: { ideal: 1080 }
-          }
-        });
-        el.video.srcObject = stream;
-        await new Promise(resolve => el.video.onloadedmetadata = resolve);
-        el.video.play();
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({
+            video: { 
+              facingMode: "environment",
+              width: { ideal: 1280 },
+              height: { ideal: 720 }
+            }
+          });
+          el.video.srcObject = stream;
+          await new Promise(resolve => {
+            el.video.onloadedmetadata = () => resolve();
+          });
+          el.video.play();
+        } catch (error) {
+          throw new Error("Доступ до камери заборонено.");
+        }
       }
 
       async initWebGL() {
@@ -827,8 +719,7 @@
         });
 
         FINGER_KEYS.forEach(finger => {
-          const aspectRatio = this.getFingerAspectRatio(finger);
-          const geometry = RealisticNailGeometry.createShape(state.currentShape, aspectRatio);
+          const geometry = new THREE.PlaneGeometry(0.7, 1);
           const material = nailMaterial.clone();
           
           const mesh = new THREE.Mesh(geometry, material);
@@ -960,14 +851,93 @@
         });
       }
 
+      createGlitterGold() {
+        return new Promise(resolve => {
+          const canvas = document.createElement('canvas');
+          canvas.width = 512;
+          canvas.height = 512;
+          const ctx = canvas.getContext('2d');
+          
+          const goldGrad = ctx.createLinearGradient(0, 0, 0, 512);
+          goldGrad.addColorStop(0, '#FFD700');
+          goldGrad.addColorStop(1, '#D4AF37');
+          ctx.fillStyle = goldGrad;
+          ctx.fillRect(0, 0, 512, 512);
+          
+          // Glitter effect
+          for (let i = 0; i < 200; i++) {
+            ctx.fillStyle = `rgba(255, 255, 255, ${Math.random() * 0.6 + 0.2})`;
+            const x = Math.random() * 512;
+            const y = Math.random() * 512;
+            const size = Math.random() * 3 + 1;
+            ctx.beginPath();
+            ctx.arc(x, y, size, 0, Math.PI * 2);
+            ctx.fill();
+          }
+          
+          nailTextures["glitter_gold"] = new THREE.CanvasTexture(canvas);
+          resolve();
+        });
+      }
+
+      createMarble() {
+        return new Promise(resolve => {
+          const canvas = document.createElement('canvas');
+          canvas.width = 512;
+          canvas.height = 512;
+          const ctx = canvas.getContext('2d');
+          
+          // Marble base
+          ctx.fillStyle = '#F8F8FF';
+          ctx.fillRect(0, 0, 512, 512);
+          
+          // Marble veins
+          ctx.strokeStyle = '#E0E0E0';
+          ctx.lineWidth = 8;
+          for (let i = 0; i < 15; i++) {
+            ctx.beginPath();
+            ctx.moveTo(Math.random() * 512, Math.random() * 512);
+            ctx.bezierCurveTo(
+              Math.random() * 512, Math.random() * 512,
+              Math.random() * 512, Math.random() * 512,
+              Math.random() * 512, Math.random() * 512
+            );
+            ctx.stroke();
+          }
+          
+          nailTextures["marble"] = new THREE.CanvasTexture(canvas);
+          resolve();
+        });
+      }
+
+      createOmbre() {
+        return new Promise(resolve => {
+          const canvas = document.createElement('canvas');
+          canvas.width = 512;
+          canvas.height = 512;
+          const ctx = canvas.getContext('2d');
+          
+          // Ombre gradient
+          const ombreGrad = ctx.createLinearGradient(0, 0, 0, 512);
+          ombreGrad.addColorStop(0, '#FF69B4');
+          ombreGrad.addColorStop(0.5, '#FF1493');
+          ombreGrad.addColorStop(1, '#DC143C');
+          ctx.fillStyle = ombreGrad;
+          ctx.fillRect(0, 0, 512, 512);
+          
+          nailTextures["ombre"] = new THREE.CanvasTexture(canvas);
+          resolve();
+        });
+      }
+
       buildDesignPicker() {
         const designs = [
-          { id: "classic_french", name: "Френч", color: "#FFF8F0" },
-          { id: "classic_red", name: "Класичний червоний", color: "#C41E3A" },
-          { id: "nude", name: "Нюд", color: "#F5E6D3" },
-          { id: "glitter_gold", name: "Гліттер золото", color: "#FFD700" },
-          { id: "marble", name: "Мармур", color: "#F8F8FF" },
-          { id: "ombre", name: "Омбре", color: "#FF69B4" }
+          { id: "classic_french", name: "Френч", color: "linear-gradient(135deg, #FFF8F0, #FFE8CC)" },
+          { id: "classic_red", name: "Класичний червоний", color: "linear-gradient(135deg, #C41E3A, #8B0000)" },
+          { id: "nude", name: "Нюд", color: "linear-gradient(135deg, #F5E6D3, #E8D5C4)" },
+          { id: "glitter_gold", name: "Гліттер золото", color: "linear-gradient(135deg, #FFD700, #D4AF37)" },
+          { id: "marble", name: "Мармур", color: "linear-gradient(135deg, #F8F8FF, #E0E0E0)" },
+          { id: "ombre", name: "Омбре", color: "linear-gradient(135deg, #FF69B4, #DC143C)" }
         ];
 
         designs.forEach(design => {
