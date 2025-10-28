@@ -3,8 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-  <title>LuxeNails AR Studio</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💅</text></svg>">
+  <title>Halloween LuxeNails AR</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎃</text></svg>">
+
+  <!-- ВБУДОВАНИЙ MANIFEST -->
+  <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkhhbGxvd2VlbiBMdXhlTmFpbHMgQVIiLAogICJzaG9ydF9uYW1lIjogIkhhbGxvd2VlbiBOYWlscyIsCiAgInN0YXJ0X3VybCI6ICIuIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjZmY5YTllIiwKICAidGhlbWVfY29sb3IiOiAiI2ZmNGI1NyIsCiAiaWNvbnMiOiBbCiAgICB7CiAgICAgICJzcmMiOiAiZGF0YTppbWFnZS9zdmcreG1sLDxzdmcgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyB2aWV3Qm94PScwIDAgMTAwIDEwMCc+PHRleHQgeT0nLjllbScgZm9udC1zaXplPSc5MCc+8J+HgTwvdGV4dD48L3N2Zz4iLAogICAgICAic2l6ZXMiOiAiMTkyeDE5MiIsCiAgICAgICJ0eXBlIjogImltYWdlL3N2Zyt4bWwiCiAgICB9CiAgXSwKICAic2NvcGUiOiAiLi8iLAogICJvcmllbnRhdGlvbiI6ICJwb3J0cmFpdC1wcmltYXJ5Igp9">
+
+  <meta name="theme-color" content="#ff4b57">
   <style>
     * {
       margin: 0;
@@ -14,12 +19,12 @@
       -webkit-tap-highlight-color: transparent;
     }
     body {
-      background: #0a0a0a;
+      background: linear-gradient(135deg, #ff9a9e, #fecfef, #fecfef);
       overflow: hidden;
       font-family: 'Helvetica Neue', Arial, sans-serif;
       color: white;
     }
-    #video, #canvas {
+    #video, #canvas, #confettiCanvas {
       position: absolute;
       top: 0;
       left: 0;
@@ -29,8 +34,9 @@
     }
     #video { z-index: 1; display: none; }
     #canvas { z-index: 2; display: none; }
+    #confettiCanvas { z-index: 60; pointer-events: none; }
 
-    /* Luxury Controls - OPTIMIZED FOR MOBILE */
+    /* Halloween Luxury Controls */
     .control-btn {
       position: fixed;
       min-width: 60px;
@@ -38,8 +44,8 @@
       border-radius: 26px;
       background: rgba(20, 20, 20, 0.95);
       backdrop-filter: blur(25px);
-      border: 1.5px solid rgba(212, 175, 55, 0.4);
-      color: #d4af37;
+      border: 1.5px solid rgba(255, 107, 107, 0.4);
+      color: #ff6b6b;
       font-size: 14px;
       display: flex;
       align-items: center;
@@ -54,24 +60,22 @@
     }
     .control-btn:hover {
       transform: scale(1.08);
-      border-color: #d4af37;
-      box-shadow: 0 8px 30px rgba(212, 175, 55, 0.3);
+      border-color: #ff6b6b;
+      box-shadow: 0 8px 30px rgba(255, 107, 107, 0.3);
     }
 
     /* TOP ROW: Primary actions */
     #uploadBtn { top: 20px; left: 20px; }
     #authorBtn { top: 20px; right: 20px; }
+    #langBtn { top: 80px; left: 20px; }
 
-    /* BOTTOM ROW: Secondary actions - REARRANGED */
-    #shapeBtn { 
-      bottom: 90px;
-      right: 20px; 
-    }
+    /* BOTTOM ROW: Secondary actions */
+    #shapeBtn { bottom: 90px; right: 20px; }
     #screenshotBtn {
       bottom: 90px;
       left: 20px;
-      background: linear-gradient(135deg, #d4af37, #b8941f);
-      color: #0a0a0a;
+      background: linear-gradient(135deg, #ff6b6b, #ff4757);
+      color: white;
       border: none;
     }
 
@@ -86,7 +90,7 @@
       backdrop-filter: blur(25px);
       padding: 8px;
       border-radius: 24px;
-      border: 1px solid rgba(212, 175, 55, 0.25);
+      border: 1px solid rgba(255, 107, 107, 0.25);
       display: flex;
       gap: 8px;
       max-width: 90vw;
@@ -109,10 +113,10 @@
       flex-shrink: 0;
     }
     .mode-option.active {
-      background: #d4af37;
-      color: #0a0a0a;
+      background: #ff6b6b;
+      color: white;
       transform: scale(1.05);
-      box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+      box-shadow: 0 0 15px rgba(255, 107, 107, 0.4);
     }
 
     /* Design & Shape Pickers - BOTTOM CENTERED */
@@ -128,16 +132,13 @@
       backdrop-filter: blur(30px);
       padding: 16px 20px;
       border-radius: 28px;
-      border: 1px solid rgba(212, 175, 55, 0.2);
+      border: 1px solid rgba(255, 107, 107, 0.2);
       max-width: 95vw;
       overflow-x: auto;
       scrollbar-width: none;
     }
     #designPicker::-webkit-scrollbar, #shapePicker::-webkit-scrollbar { display: none; }
-    #shapePicker { 
-      bottom: 150px;
-      display: none; 
-    }
+    #shapePicker { bottom: 150px; display: none; }
 
     .design-btn {
       width: 64px;
@@ -155,15 +156,15 @@
       content: '';
       position: absolute;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: linear-gradient(135deg, transparent, rgba(212, 175, 55, 0.15));
+      background: linear-gradient(135deg, transparent, rgba(255, 107, 107, 0.15));
       opacity: 0;
       transition: opacity 0.3s ease;
     }
     .design-btn:hover::before { opacity: 1; }
-    .design-btn:hover { transform: scale(1.1); border-color: rgba(212, 175, 55, 0.6); }
+    .design-btn:hover { transform: scale(1.1); border-color: rgba(255, 107, 107, 0.6); }
     .design-btn.selected {
-      border-color: #d4af37;
-      box-shadow: 0 0 0 3px #d4af37, 0 8px 25px rgba(212, 175, 55, 0.4);
+      border-color: #ff6b6b;
+      box-shadow: 0 0 0 3px #ff6b6b, 0 8px 25px rgba(255, 107, 107, 0.4);
       transform: scale(1.12);
     }
 
@@ -182,25 +183,25 @@
       position: relative;
       padding: 0 16px;
       font-weight: 600;
-      color: #d4af37;
+      color: #ff6b6b;
       flex-shrink: 0;
     }
     .shape-btn::before {
       content: '';
       position: absolute;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: linear-gradient(135deg, transparent, rgba(212, 175, 55, 0.1));
+      background: linear-gradient(135deg, transparent, rgba(255, 107, 107, 0.1));
       border-radius: 17px;
       opacity: 0;
       transition: opacity 0.3s ease;
     }
     .shape-btn:hover::before { opacity: 1; }
-    .shape-btn:hover { transform: scale(1.05); border-color: rgba(212, 175, 55, 0.5); }
+    .shape-btn:hover { transform: scale(1.05); border-color: rgba(255, 107, 107, 0.5); }
     .shape-btn.selected {
-      border-color: #d4af37;
-      background: rgba(212, 175, 55, 0.15);
+      border-color: #ff6b6b;
+      background: rgba(255, 107, 107, 0.15);
       transform: scale(1.08);
-      box-shadow: 0 0 12px rgba(212, 175, 55, 0.3);
+      box-shadow: 0 0 12px rgba(255, 107, 107, 0.3);
     }
 
     /* Upload Modal */
@@ -212,7 +213,7 @@
       backdrop-filter: blur(35px);
       padding: 28px;
       border-radius: 24px;
-      border: 1.5px solid rgba(212, 175, 55, 0.3);
+      border: 1.5px solid rgba(255, 107, 107, 0.3);
       z-index: 1000;
       display: none;
       color: white;
@@ -228,7 +229,7 @@
     #imageUpload {
       margin: 20px 0;
       padding: 16px;
-      border: 2.5px dashed rgba(212, 175, 55, 0.4);
+      border: 2.5px dashed rgba(255, 107, 107, 0.4);
       border-radius: 16px;
       background: rgba(35, 35, 35, 0.7);
       color: white;
@@ -238,7 +239,7 @@
       transition: all 0.3s ease;
     }
     #imageUpload:hover { 
-      border-color: #d4af37; 
+      border-color: #ff6b6b; 
       background: rgba(45, 45, 45, 0.7); 
     }
     .modal-btn {
@@ -252,22 +253,22 @@
       font-size: 14px;
     }
     #saveDesign { 
-      background: linear-gradient(135deg, #d4af37, #b8941f); 
-      color: #0a0a0a; 
-      box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+      background: linear-gradient(135deg, #ff6b6b, #ff4757); 
+      color: white; 
+      box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
     }
     #saveDesign:hover { 
       transform: translateY(-2px); 
-      box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4); 
+      box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4); 
     }
     #closeModal { 
       background: rgba(40, 40, 40, 0.9); 
-      color: #d4af37; 
-      border: 1.5px solid rgba(212, 175, 55, 0.4); 
+      color: #ff6b6b; 
+      border: 1.5px solid rgba(255, 107, 107, 0.4); 
     }
     #closeModal:hover { 
       background: rgba(50, 50, 50, 0.9); 
-      border-color: rgba(212, 175, 55, 0.6); 
+      border-color: rgba(255, 107, 107, 0.6); 
     }
 
     /* Loading & Indicators */
@@ -275,13 +276,13 @@
       position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
-      background: #0a0a0a;
+      background: linear-gradient(135deg, #ff9a9e, #fecfef);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       z-index: 1000;
-      color: #d4af37;
+      color: #ff6b6b;
       font-size: 24px;
       text-align: center;
       padding: 30px;
@@ -289,18 +290,18 @@
     }
     .loader {
       width: 60px; height: 60px;
-      border: 4px solid rgba(212, 175, 55, 0.3);
-      border-top: 4px solid #d4af37;
+      border: 4px solid rgba(255, 107, 107, 0.3);
+      border-top: 4px solid #ff6b6b;
       border-radius: 50%;
       animation: spin 1.2s linear infinite;
-      box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+      box-shadow: 0 0 20px rgba(255, 107, 107, 0.3);
     }
     .indicator {
       position: fixed;
       left: 50%;
       transform: translateX(-50%);
       background: rgba(20, 20, 20, 0.95);
-      color: #d4af37;
+      color: #ff6b6b;
       padding: 12px 20px;
       border-radius: 20px;
       display: none;
@@ -308,7 +309,7 @@
       gap: 10px;
       z-index: 99;
       font-size: 14px;
-      border: 1.5px solid rgba(212, 175, 55, 0.3);
+      border: 1.5px solid rgba(255, 107, 107, 0.3);
       backdrop-filter: blur(25px);
     }
     #handIndicator { top: 120px; }
@@ -318,92 +319,37 @@
     }
 
     /* Tooltips - Hidden on mobile */
-    .tooltip {
-      display: none;
-    }
+    .tooltip { display: none; }
 
     /* Animations */
-    @keyframes spin { 
-      to { transform: rotate(360deg); } 
-    }
+    @keyframes spin { to { transform: rotate(360deg); } }
     @keyframes modalAppear { 
-      from { 
-        opacity: 0; 
-        transform: translate(-50%, -48%); 
-      } to { 
-        opacity: 1; 
-        transform: translate(-50%, -50%); 
-      } 
+      from { opacity: 0; transform: translate(-50%, -48%); } 
+      to { opacity: 1; transform: translate(-50%, -50%); } 
     }
     @keyframes indicatorAppear { 
-      from { 
-        opacity: 0; 
-        transform: translateX(-50%) translateY(-12px); 
-      } to { 
-        opacity: 1; 
-        transform: translateX(-50%) translateY(0); 
-      } 
+      from { opacity: 0; transform: translateX(-50%) translateY(-12px); } 
+      to { opacity: 1; transform: translateX(-50%) translateY(0); } 
     }
 
     /* Mobile Optimizations */
     @media (max-width: 768px) {
-      .control-btn {
-        min-width: 50px;
-        height: 46px;
-        font-size: 12px;
-        padding: 0 12px;
-        border-radius: 23px;
-      }
-      
-      #uploadBtn, #authorBtn { 
-        top: 15px; 
-      }
+      .control-btn { min-width: 50px; height: 46px; font-size: 12px; padding: 0 12px; border-radius: 23px; }
+      #uploadBtn, #authorBtn, #langBtn { top: 15px; }
       #uploadBtn { left: 15px; }
       #authorBtn { right: 15px; }
-      
-      #shapeBtn, #screenshotBtn { 
-        bottom: 80px; 
-      }
+      #langBtn { top: 65px; left: 15px; }
+      #shapeBtn, #screenshotBtn { bottom: 80px; }
       #shapeBtn { right: 15px; }
       #screenshotBtn { left: 15px; }
-
-      #modeToggle { 
-        top: 15px; 
-        padding: 6px; 
-        gap: 6px; 
-        border-radius: 20px;
-      }
-      .mode-option {
-        min-width: 100px;
-        height: 32px;
-        font-size: 12px;
-        padding: 0 12px;
-        border-radius: 16px;
-      }
-
-      .design-btn { 
-        width: 56px; 
-        height: 56px; 
-        border-radius: 16px;
-      }
-      .shape-btn { 
-        min-width: 70px; 
-        height: 32px; 
-        font-size: 11px; 
-        padding: 0 14px;
-        border-radius: 16px;
-      }
-      
-      #designPicker, #shapePicker { 
-        bottom: 15px; 
-        padding: 14px 16px; 
-        border-radius: 24px;
-        gap: 10px;
-      }
+      #modeToggle { top: 15px; padding: 6px; gap: 6px; border-radius: 20px; }
+      .mode-option { min-width: 100px; height: 32px; font-size: 12px; padding: 0 12px; border-radius: 16px; }
+      .design-btn { width: 56px; height: 56px; border-radius: 16px; }
+      .shape-btn { min-width: 70px; height: 32px; font-size: 11px; padding: 0 14px; border-radius: 16px; }
+      #designPicker, #shapePicker { bottom: 15px; padding: 14px 16px; border-radius: 24px; gap: 10px; }
       #shapePicker { bottom: 140px; }
     }
 
-    /* Large mobile devices */
     @media (min-width: 769px) and (max-width: 1024px) {
       .tooltip {
         display: block;
@@ -412,7 +358,7 @@
         left: 50%;
         transform: translateX(-50%);
         background: rgba(20, 20, 20, 0.95);
-        color: #d4af37;
+        color: #ff6b6b;
         padding: 6px 12px;
         border-radius: 10px;
         font-size: 11px;
@@ -420,52 +366,38 @@
         opacity: 0;
         pointer-events: none;
         transition: opacity 0.3s ease;
-        border: 1px solid rgba(212, 175, 55, 0.2);
+        border: 1px solid rgba(255, 107, 107, 0.2);
       }
-      .control-btn:hover .tooltip,
-      .mode-option:hover .tooltip {
-        opacity: 1;
-      }
+      .control-btn:hover .tooltip, .mode-option:hover .tooltip { opacity: 1; }
     }
 
-    /* Desktop */
-    @media (min-width: 1025px) {
-      .tooltip {
-        display: block;
-      }
-    }
+    @media (min-width: 1025px) { .tooltip { display: block; } }
 
-    /* Safe area insets for notch phones */
     @supports(padding: max(0px)) {
-      #uploadBtn, #shapeBtn, #screenshotBtn, #authorBtn {
+      #uploadBtn, #shapeBtn, #screenshotBtn, #authorBtn, #langBtn {
         left: max(15px, env(safe-area-inset-left));
         right: max(15px, env(safe-area-inset-right));
       }
-      #uploadBtn, #authorBtn {
-        top: max(15px, env(safe-area-inset-top));
-      }
-      #shapeBtn, #screenshotBtn {
-        bottom: max(80px, env(safe-area-inset-bottom));
-      }
-      #designPicker, #shapePicker {
-        bottom: max(15px, env(safe-area-inset-bottom));
-      }
+      #uploadBtn, #authorBtn, #langBtn { top: max(15px, env(safe-area-inset-top)); }
+      #shapeBtn, #screenshotBtn { bottom: max(80px, env(safe-area-inset-bottom)); }
+      #designPicker, #shapePicker { bottom: max(15px, env(safe-area-inset-bottom)); }
     }
   </style>
 </head>
 <body>
   <div id="loading">
     <div class="loader"></div>
-    <div style="font-weight: 700; margin-bottom: 8px;">LuxeNails AR Studio</div>
+    <div style="font-weight: 700; margin-bottom: 8px;">Halloween LuxeNails AR</div>
     <p style="color: #bbb; font-size: 16px; line-height: 1.4;">Position your hand in front of the camera<br>Allow camera access when prompted</p>
   </div>
 
   <video id="video" playsinline muted></video>
   <canvas id="canvas"></canvas>
+  <canvas id="confettiCanvas"></canvas>
 
   <!-- TOP ROW: Primary Actions -->
   <button id="uploadBtn" class="control-btn" aria-label="Upload design">
-    📤 Upload
+    🎃 Upload
     <div class="tooltip">Upload Custom Design</div>
   </button>
   
@@ -474,9 +406,12 @@
     <div class="tooltip">Shop Designs</div>
   </button>
 
+  <!-- LANGUAGE BUTTON -->
+  <button id="langBtn" class="control-btn">🇺🇦 UK</button>
+
   <!-- BOTTOM ROW: Secondary Actions -->
   <button id="shapeBtn" class="control-btn" aria-label="Nail shapes">
-    ✨ Shapes
+    👻 Shapes
     <div class="tooltip">Nail Shapes</div>
   </button>
 
@@ -502,9 +437,9 @@
   <div id="designPicker"></div>
 
   <div id="uploadModal">
-    <h3 style="margin:0; color:#d4af37; font-weight:600; font-size: 18px;">Upload Your Design</h3>
+    <h3 style="margin:0; color:#ff6b6b; font-weight:600; font-size: 18px;">Upload Your Halloween Design</h3>
     <p style="margin:14px 0; color:#ccc; font-size:13px; line-height:1.5;">
-      Choose an image to create your custom nail design.<br>
+      Choose an image to create your custom Halloween nail design.<br>
       For best results, use PNG images with transparent background.
     </p>
     <input type="file" id="imageUpload" accept="image/*">
@@ -515,7 +450,7 @@
   </div>
 
   <div id="handIndicator" class="indicator">
-    <span>👋</span>
+    <span>👻</span>
     <span>Show your hand to the camera</span>
   </div>
 
@@ -530,24 +465,57 @@
     import * as THREE from 'three';
     import { FilesetResolver, HandLandmarker } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/+esm";
 
-    // Configuration
+    // === ПЕРЕКЛАДИ ===
+    const translations = {
+      en: {
+        title: "Halloween LuxeNails AR",
+        loading: "Halloween LuxeNails AR",
+        camera: "Position your hand in front of the camera<br>Allow camera access when prompted",
+        upload: "Upload",
+        shop: "Shop",
+        shapes: "Shapes",
+        capture: "Capture",
+        all: "All",
+        single: "Single",
+        upload_title: "Upload Your Halloween Design",
+        upload_hint: "Choose an image to create your custom Halloween nail design.<br>For best results, use PNG images with transparent background.",
+        save: "Save Design",
+        cancel: "Cancel",
+        show_hand: "Show your hand to the camera",
+        screenshot_saved: "Screenshot saved!",
+        screenshot_failed: "Screenshot failed. Try again.",
+        design_added: "Design added successfully!"
+      },
+      uk: {
+        title: "Геловін Люкс Нейлз AR",
+        loading: "Геловін Люкс Нейлз AR",
+        camera: "Поставте руку перед камерою<br>Дозвольте доступ до камери",
+        upload: "Завантажити",
+        shop: "Магазин",
+        shapes: "Форми",
+        capture: "Знімок",
+        all: "Всі",
+        single: "Один",
+        upload_title: "Завантажити Геловін Дизайн",
+        upload_hint: "Оберіть зображення для створення власного геловін дизайну нігтів.<br>Для найкращого результату використовуйте PNG з прозорим фоном.",
+        save: "Зберегти Дизайн",
+        cancel: "Скасувати",
+        show_hand: "Покажіть руку камері",
+        screenshot_saved: "Скріншот збережено!",
+        screenshot_failed: "Помилка скріншота. Спробуйте ще раз.",
+        design_added: "Дизайн додано успішно!"
+      }
+    };
+
+    let currentLang = 'en';
+    const t = (key) => translations[currentLang][key] || key;
+
+    // === КОНФІГ ===
     const CONFIG = {
       SMOOTHING_FACTOR: 0.75,
       HAND_NOT_DETECTED_THRESHOLD: 12,
-      NAIL_SCALE_FACTORS: { 
-        thumb: 0.42, 
-        index: 0.53, 
-        middle: 0.55, 
-        ring: 0.53, 
-        pinky: 0.41 
-      },
-      NAIL_ASPECT_RATIOS: { 
-        thumb: 0.78, 
-        index: 0.72, 
-        middle: 0.70, 
-        ring: 0.74, 
-        pinky: 0.80 
-      },
+      NAIL_SCALE_FACTORS: { thumb: 0.42, index: 0.53, middle: 0.55, ring: 0.53, pinky: 0.41 },
+      NAIL_ASPECT_RATIOS: { thumb: 0.78, index: 0.72, middle: 0.70, ring: 0.74, pinky: 0.80 },
       NAIL_OFFSETS: {
         thumb: { x: -0.015, y: -0.025 },
         index: { x: 0, y: -0.022 },
@@ -555,15 +523,11 @@
         ring: { x: 0, y: -0.022 },
         pinky: { x: 0.006, y: -0.018 }
       },
-      MIN_SIZE: 28,
-      MAX_SIZE: 92,
-      WRIST_DISTANCE_REF: 0.1,
-      SCALE_SENSITIVITY: 1.9,
-      MAX_SCALE_FACTOR: 2.1,
-      MIN_SCALE_FACTOR: 0.55
+      MIN_SIZE: 28, MAX_SIZE: 92,
+      WRIST_DISTANCE_REF: 0.1, SCALE_SENSITIVITY: 1.9,
+      MAX_SCALE_FACTOR: 2.1, MIN_SCALE_FACTOR: 0.55
     };
 
-    // Finger indices for hand landmarks
     const FINGER_INDICES = {
       thumb: { tip: 4, mcp: 2, pip: 3 },
       index: { tip: 8, mcp: 5, pip: 6 },
@@ -573,7 +537,6 @@
     };
     const FINGER_KEYS = Object.keys(FINGER_INDICES);
 
-    // Nail shapes with realistic names
     const NAIL_SHAPES = [
       { id: 'oval', name: 'Oval', icon: 'Oval' },
       { id: 'almond', name: 'Almond', icon: 'Almond' },
@@ -583,9 +546,9 @@
       { id: 'square', name: 'Square', icon: 'Square' }
     ];
 
-    // Application state
+    // === СТАН ===
     const state = {
-      currentDesign: "luxury_gold",
+      currentDesign: "halloween_pumpkin",
       currentShape: 'oval',
       isApplyAll: true,
       selectedFingerIndex: -1,
@@ -600,15 +563,17 @@
       isTakingScreenshot: false
     };
 
-    // DOM elements
+    // === DOM ===
     const el = {
       video: document.getElementById("video"),
       canvas: document.getElementById("canvas"),
+      confettiCanvas: document.getElementById("confettiCanvas"),
       loading: document.getElementById("loading"),
       uploadBtn: document.getElementById("uploadBtn"),
       shapeBtn: document.getElementById("shapeBtn"),
       authorBtn: document.getElementById("authorBtn"),
       screenshotBtn: document.getElementById("screenshotBtn"),
+      langBtn: document.getElementById("langBtn"),
       applyAllOpt: document.getElementById("applyAllOpt"),
       selectFingerOpt: document.getElementById("selectFingerOpt"),
       designPicker: document.getElementById("designPicker"),
@@ -620,20 +585,44 @@
       handIndicator: document.getElementById("handIndicator")
     };
 
-    // Resources
+    // === РЕСУРСИ ===
     const nailTextures = {};
-    const DESIGNS = ["luxury_gold", "french_manicure", "glitter_pink"];
+    const DESIGNS = ["halloween_pumpkin", "ghost", "spider_web"];
     let scene, camera, renderer;
     const nails = {};
     let handLandmarker;
+    const confettiCtx = el.confettiCanvas.getContext("2d");
+    let confetti = [];
 
-    // Advanced nail shader for realistic effects
+    // === КОНФЕТТІ ===
+    class ConfettiParticle {
+      constructor(x, y) {
+        this.x = x; this.y = y;
+        this.vx = (Math.random() - 0.5) * 8;
+        this.vy = Math.random() * -15 - 5;
+        this.size = Math.random() * 6 + 4;
+        this.color = ['#ff6b6b', '#ff9a9e', '#fecfef', '#fff'][Math.floor(Math.random() * 4)];
+        this.life = 1.0;
+        this.gravity = 0.4;
+      }
+      update() { this.vy += this.gravity; this.x += this.vx; this.y += this.vy; this.life -= 0.015; }
+      draw(ctx) {
+        if (this.life <= 0) return;
+        ctx.save();
+        ctx.globalAlpha = this.life;
+        ctx.translate(this.x, this.y);
+        ctx.fillStyle = this.color;
+        ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size);
+        ctx.restore();
+      }
+    }
+
+    // === ШЕЙДЕР ===
     const NAIL_SHADER = {
       vertexShader: `
         varying vec2 vUv;
         varying vec3 vNormal;
         varying vec3 vViewPosition;
-        
         void main() {
           vUv = uv;
           vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
@@ -649,31 +638,22 @@
         varying vec2 vUv;
         varying vec3 vNormal;
         varying vec3 vViewPosition;
-
         void main() {
           vec4 tex = texture2D(map, vUv);
           if (tex.a < 0.1) discard;
-
           vec3 color = tex.rgb;
-
-          // Realistic gel shine effect
           float highlight = pow(smoothstep(0.3, 0.7, vUv.y + sin(vUv.y * 10.0 - time) * 0.08), 2.0) * shine;
           color += vec3(1.0) * highlight * 0.6;
-
-          // Rim lighting for 3D effect
           float rim = pow(1.0 - dot(normalize(vViewPosition), vNormal), 2.5) * 0.3;
           color += vec3(1.0, 0.95, 0.9) * rim;
-
-          // Subtle shadow at the base
           float shadow = smoothstep(0.0, 0.3, vUv.y);
           color *= (1.0 - shadow * 0.15);
-
           gl_FragColor = vec4(color, tex.a);
         }
       `
     };
 
-    // Realistic nail mask generator
+    // === МАСКА НІГТЯ ===
     class RealisticNailMask {
       constructor() {
         this.masks = {};
@@ -693,132 +673,66 @@
         const ctx = canvas.getContext('2d');
         ctx.fillStyle = 'white';
         ctx.beginPath();
-
-        const width = 256;
-        const height = 384;
-        const centerX = width / 2;
-        const centerY = height / 2;
-
+        const centerX = 128, centerY = 192;
         switch (shape) {
-          case 'oval':
-            // Natural oval shape
-            ctx.ellipse(centerX, centerY - 20, 100, 150, 0, 0, Math.PI * 2);
-            break;
-            
-          case 'almond':
-            // Elegant almond shape
+          case 'oval': ctx.ellipse(centerX, centerY - 20, 100, 150, 0, 0, Math.PI * 2); break;
+          case 'almond': 
             ctx.moveTo(centerX, 50);
             ctx.bezierCurveTo(centerX + 90, 80, centerX + 110, 160, centerX, 340);
             ctx.bezierCurveTo(centerX - 110, 160, centerX - 90, 80, centerX, 50);
             break;
-            
-          case 'squoval':
-            // Square with rounded corners
-            const radius = 50;
-            ctx.roundRect(60, 60, 136, 264, radius);
+          case 'squoval': ctx.roundRect(60, 60, 136, 264, 50); break;
+          case 'coffin': 
+            ctx.moveTo(60, 60); ctx.lineTo(196, 60); ctx.lineTo(216, 180); 
+            ctx.lineTo(196, 300); ctx.lineTo(60, 300); ctx.lineTo(40, 180); ctx.closePath();
             break;
-            
-          case 'coffin':
-            // Coffin/Ballerina shape
-            ctx.moveTo(60, 60);
-            ctx.lineTo(196, 60);
-            ctx.lineTo(216, 180);
-            ctx.lineTo(196, 300);
-            ctx.lineTo(60, 300);
-            ctx.lineTo(40, 180);
-            ctx.closePath();
+          case 'stiletto': 
+            ctx.moveTo(centerX, 40); ctx.lineTo(centerX + 100, 320); 
+            ctx.lineTo(centerX - 100, 320); ctx.closePath();
             break;
-            
-          case 'stiletto':
-            // Sharp stiletto shape
-            ctx.moveTo(centerX, 40);
-            ctx.lineTo(centerX + 100, 320);
-            ctx.lineTo(centerX - 100, 320);
-            ctx.closePath();
-            break;
-            
-          case 'square':
-            // Classic square shape
-            ctx.moveTo(50, 50);
-            ctx.lineTo(206, 50);
-            ctx.lineTo(206, 334);
-            ctx.lineTo(50, 334);
-            ctx.closePath();
+          case 'square': 
+            ctx.moveTo(50, 50); ctx.lineTo(206, 50); ctx.lineTo(206, 334); 
+            ctx.lineTo(50, 334); ctx.closePath();
             break;
         }
-        
         ctx.fill();
         return canvas;
       }
       
       async applyImage(img, shape = 'oval') {
         const canvas = document.createElement('canvas');
-        canvas.width = 256;
-        canvas.height = 384;
+        canvas.width = 256; canvas.height = 384;
         const ctx = canvas.getContext('2d');
-        
-        // Apply nail shape mask
         ctx.drawImage(this.masks[shape], 0, 0);
         ctx.globalCompositeOperation = 'source-in';
-        
-        // Draw user image
         ctx.drawImage(img, 0, 0, 256, 384);
-        
         return new THREE.CanvasTexture(canvas);
       }
       
-      // Create preview for design picker
       createPreview(imageData, shape = 'oval', size = 70) {
         return new Promise((resolve) => {
           const canvas = document.createElement('canvas');
-          canvas.width = size;
-          canvas.height = size;
+          canvas.width = size; canvas.height = size;
           const ctx = canvas.getContext('2d');
-          
-          // Create preview mask
-          ctx.fillStyle = 'white';
-          ctx.beginPath();
-          
+          ctx.fillStyle = 'white'; ctx.beginPath();
           const center = size / 2;
-          
           switch(shape) {
-            case 'oval':
-              ctx.ellipse(center, center, size/3, size/2.3, 0, 0, 2 * Math.PI);
+            case 'oval': ctx.ellipse(center, center, size/3, size/2.3, 0, 0, 2 * Math.PI); break;
+            case 'almond': 
+              ctx.moveTo(center, 8); ctx.bezierCurveTo(size-10, 15, size-8, size-12, center, size-10);
+              ctx.bezierCurveTo(10, size-12, 8, 15, center, 8); ctx.closePath(); break;
+            case 'squoval': ctx.roundRect(10, 10, size-20, size-20, 8); break;
+            case 'coffin': 
+              ctx.moveTo(15, 12); ctx.lineTo(size-15, 12); ctx.lineTo(size-10, size/2);
+              ctx.lineTo(size-15, size-12); ctx.lineTo(15, size-12); ctx.lineTo(10, size/2); ctx.closePath();
               break;
-            case 'almond':
-              ctx.moveTo(center, 8);
-              ctx.bezierCurveTo(size-10, 15, size-8, size-12, center, size-10);
-              ctx.bezierCurveTo(10, size-12, 8, 15, center, 8);
-              ctx.closePath();
-              break;
-            case 'squoval':
-              ctx.roundRect(10, 10, size-20, size-20, 8);
-              break;
-            case 'coffin':
-              ctx.moveTo(15, 12);
-              ctx.lineTo(size-15, 12);
-              ctx.lineTo(size-10, size/2);
-              ctx.lineTo(size-15, size-12);
-              ctx.lineTo(15, size-12);
-              ctx.lineTo(10, size/2);
-              ctx.closePath();
-              break;
-            case 'stiletto':
-              ctx.moveTo(center, 8);
-              ctx.lineTo(size-15, size/2);
-              ctx.lineTo(size-20, size-12);
-              ctx.lineTo(20, size-12);
-              ctx.lineTo(15, size/2);
-              ctx.closePath();
-              break;
-            case 'square':
-              ctx.rect(12, 12, size-24, size-24);
-              break;
+            case 'stiletto': 
+              ctx.moveTo(center, 8); ctx.lineTo(size-15, size/2); ctx.lineTo(size-20, size-12);
+              ctx.lineTo(20, size-12); ctx.lineTo(15, size/2); ctx.closePath(); break;
+            case 'square': ctx.rect(12, 12, size-24, size-24); break;
           }
-          
           ctx.fill();
           ctx.globalCompositeOperation = 'source-in';
-          
           const previewImg = new Image();
           previewImg.onload = () => {
             ctx.drawImage(previewImg, 0, 0, size, size);
@@ -831,8 +745,98 @@
 
     const nailMasker = new RealisticNailMask();
 
-    // Main application class
-    class LuxeNailsAR {
+    // === ГОТОВІ ДИЗАЙНИ ===
+    function createHalloweenPumpkin() {
+      const canvas = document.createElement('canvas');
+      canvas.width = 256; canvas.height = 384;
+      const ctx = canvas.getContext('2d');
+      
+      // Orange pumpkin base
+      const pumpkinGrad = ctx.createLinearGradient(0, 0, 0, 384);
+      pumpkinGrad.addColorStop(0, '#ff8c00'); pumpkinGrad.addColorStop(1, '#ff4500');
+      ctx.fillStyle = pumpkinGrad; ctx.fillRect(0, 0, 256, 384);
+      
+      // Pumpkin face
+      ctx.fillStyle = '#000';
+      ctx.beginPath();
+      ctx.arc(80, 150, 20, 0, Math.PI * 2); // eye 1
+      ctx.arc(176, 150, 20, 0, Math.PI * 2); // eye 2
+      ctx.arc(128, 200, 15, 0, Math.PI * 2); // nose
+      ctx.moveTo(60, 240); ctx.lineTo(196, 240); ctx.lineTo(128, 280); ctx.closePath(); // mouth
+      ctx.fill();
+      
+      // Shine
+      const shine = ctx.createLinearGradient(0, 100, 256, 100);
+      shine.addColorStop(0, 'rgba(255,255,255,0.4)'); shine.addColorStop(0.5, 'rgba(255,255,255,0)');
+      shine.addColorStop(1, 'rgba(255,255,255,0.4)');
+      ctx.fillStyle = shine; ctx.fillRect(0, 0, 256, 384);
+      
+      return new THREE.CanvasTexture(canvas);
+    }
+
+    function createGhost() {
+      const canvas = document.createElement('canvas');
+      canvas.width = 256; canvas.height = 384;
+      const ctx = canvas.getContext('2d');
+      
+      // Ghost white base
+      ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, 256, 384);
+      
+      // Ghost shape
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.beginPath();
+      ctx.ellipse(128, 192, 100, 150, 0, 0, Math.PI * 2);
+      ctx.fill();
+      
+      // Eyes
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.fillStyle = '#000';
+      ctx.beginPath();
+      ctx.arc(90, 160, 15, 0, Math.PI * 2); ctx.arc(166, 160, 15, 0, Math.PI * 2); ctx.fill();
+      
+      // Mouth
+      ctx.beginPath();
+      ctx.arc(128, 200, 20, 0, Math.PI); ctx.stroke();
+      
+      return new THREE.CanvasTexture(canvas);
+    }
+
+    function createSpiderWeb() {
+      const canvas = document.createElement('canvas');
+      canvas.width = 256; canvas.height = 384;
+      const ctx = canvas.getContext('2d');
+      
+      // Black background
+      ctx.fillStyle = '#000'; ctx.fillRect(0, 0, 256, 384);
+      
+      // Web lines
+      ctx.strokeStyle = '#fff'; ctx.lineWidth = 2;
+      for (let i = 0; i < 8; i++) {
+        const angle = (i / 8) * Math.PI * 2;
+        ctx.beginPath();
+        ctx.moveTo(128, 192);
+        ctx.lineTo(128 + Math.cos(angle) * 120, 192 + Math.sin(angle) * 120);
+        ctx.stroke();
+      }
+      
+      // Circular webs
+      for (let r = 20; r < 120; r += 20) {
+        ctx.beginPath();
+        ctx.arc(128, 192, r, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+      
+      // Spider
+      ctx.fillStyle = '#fff';
+      ctx.beginPath();
+      ctx.arc(200, 100, 8, 0, Math.PI * 2);
+      ctx.fill();
+      
+      return new THREE.CanvasTexture(canvas);
+    }
+
+    // === ОСНОВНИЙ КЛАС ===
+    class HalloweenLuxeNailsAR {
       async init() {
         try {
           this.setupEventListeners();
@@ -845,7 +849,7 @@
           this.startRenderLoop();
         } catch (error) {
           console.error('Initialization error:', error);
-          this.showError("Camera access required. Please allow camera permissions and use Chrome or Safari on a mobile device for the best experience.");
+          this.showError("Camera access required. Please allow camera permissions and use Chrome or Safari on a mobile device.");
         }
       }
 
@@ -860,11 +864,12 @@
           el.shapePicker.style.display = state.showShapePicker ? 'flex' : 'none';
         };
         
-        el.authorBtn.onclick = () => {
-          window.open('https://smartlessa.etsy.com', '_blank');
-        };
-
+        el.authorBtn.onclick = () => window.open('https://smartlessa.etsy.com', '_blank');
         el.screenshotBtn.onclick = () => this.takeScreenshot();
+        el.langBtn.onclick = () => {
+          currentLang = currentLang === 'en' ? 'uk' : 'en';
+          this.updateUI();
+        };
         
         el.closeModal.onclick = () => {
           el.uploadModal.classList.remove('show');
@@ -878,7 +883,6 @@
         
         window.addEventListener('resize', () => this.handleResize());
         
-        // Close shape picker when clicking outside
         document.addEventListener('click', (event) => {
           if (!el.shapePicker.contains(event.target) && event.target !== el.shapeBtn) {
             this.hideShapePicker();
@@ -886,56 +890,63 @@
         });
       }
 
+      updateUI() {
+        document.title = t('title');
+        el.loading.querySelector('div').textContent = t('loading');
+        el.loading.querySelector('p').innerHTML = t('camera');
+        el.uploadBtn.innerHTML = `🎃 ${t('upload')}`;
+        el.authorBtn.innerHTML = `🛍️ ${t('shop')}`;
+        el.shapeBtn.innerHTML = `👻 ${t('shapes')}`;
+        el.screenshotBtn.innerHTML = `📸 ${t('capture')}`;
+        el.applyAllOpt.innerHTML = `💅 ${t('all')}`;
+        el.selectFingerOpt.innerHTML = `👆 ${t('single')}`;
+        el.uploadModal.querySelector('h3').textContent = t('upload_title');
+        el.uploadModal.querySelector('p').innerHTML = t('upload_hint');
+        el.saveDesign.textContent = t('save');
+        el.closeModal.textContent = t('cancel');
+        el.handIndicator.querySelector('span:last-child').textContent = t('show_hand');
+        el.langBtn.textContent = currentLang === 'en' ? '🇺🇦 UK' : '🇬🇧 EN';
+      }
+
       takeScreenshot() {
         if (state.isTakingScreenshot) return;
-        
         state.isTakingScreenshot = true;
         const button = el.screenshotBtn;
         const originalText = button.innerHTML;
-        
-        // Візуальний фідбек
         button.innerHTML = '📸 Saving...';
         button.style.background = 'linear-gradient(135deg, #4CAF50, #45a049)';
         
         try {
-          // Створюємо тимчасовий canvas для скріншоту
           const tempCanvas = document.createElement('canvas');
           tempCanvas.width = el.canvas.width;
           tempCanvas.height = el.canvas.height;
           const tempCtx = tempCanvas.getContext('2d');
-          
-          // Копіюємо контент
+          tempCtx.drawImage(el.video, 0, 0);
           tempCtx.drawImage(el.canvas, 0, 0);
           
-          // Конвертуємо в blob та зберігаємо
           tempCanvas.toBlob((blob) => {
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
-            a.download = `luxenails-design-${new Date().getTime()}.png`;
+            a.download = `halloween-nails-${new Date().getTime()}.png`;
             a.href = url;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
             
-            // Повертаємо вигляд кнопки
             setTimeout(() => {
               button.innerHTML = originalText;
-              button.style.background = 'linear-gradient(135deg, #d4af37, #b8941f)';
+              button.style.background = 'linear-gradient(135deg, #ff6b6b, #ff4757)';
               state.isTakingScreenshot = false;
-              
-              // Показуємо підтвердження
-              this.showSuccessMessage('Screenshot saved!');
+              this.showSuccessMessage(t('screenshot_saved'));
             }, 1000);
-            
           }, 'image/png');
-          
         } catch (error) {
           console.error('Screenshot failed:', error);
           button.innerHTML = originalText;
-          button.style.background = 'linear-gradient(135deg, #d4af37, #b8941f)';
+          button.style.background = 'linear-gradient(135deg, #ff6b6b, #ff4757)';
           state.isTakingScreenshot = false;
-          this.showSuccessMessage('Screenshot failed. Try again.');
+          this.showSuccessMessage(t('screenshot_failed'));
         }
       }
       
@@ -951,72 +962,41 @@
       }
 
       async setupCamera() {
-        try {
-          const stream = await navigator.mediaDevices.getUserMedia({
-            video: { 
-              facingMode: "environment", 
-              width: { ideal: 1280 }, 
-              height: { ideal: 720 } 
-            }
-          });
-          el.video.srcObject = stream;
-          await new Promise(resolve => {
-            el.video.onloadedmetadata = resolve;
-          });
-          el.video.play();
-        } catch (error) {
-          throw new Error("Camera access denied. Please allow camera permissions to use the AR features.");
-        }
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: "environment", width: { ideal: 1280 }, height: { ideal: 720 } }
+        });
+        el.video.srcObject = stream;
+        await new Promise(resolve => el.video.onloadedmetadata = resolve);
+        el.video.play();
       }
 
       async initWebGL() {
-        // Initialize Three.js scene
         scene = new THREE.Scene();
-        
-        // Orthographic camera for 2D overlay
         camera = new THREE.OrthographicCamera(
-          -window.innerWidth / 2,
-          window.innerWidth / 2,
-          window.innerHeight / 2,
-          -window.innerHeight / 2,
-          0.1,
-          1000
+          -window.innerWidth / 2, window.innerWidth / 2,
+          window.innerHeight / 2, -window.innerHeight / 2, 0.1, 1000
         );
         camera.position.z = 10;
-        
-        // WebGL renderer
-        renderer = new THREE.WebGLRenderer({ 
-          canvas: el.canvas, 
-          alpha: true, 
-          antialias: true 
-        });
+        renderer = new THREE.WebGLRenderer({ canvas: el.canvas, alpha: true, antialias: true });
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         renderer.setSize(window.innerWidth, window.innerHeight);
-        
         this.createNailMeshes();
       }
 
       createNailMeshes() {
-        // Create shader material for realistic nail effects
         const nailMaterial = new THREE.ShaderMaterial({
-          uniforms: { 
-            map: { value: null },
-            time: { value: 0 },
-            shine: { value: 1.0 }
-          },
+          uniforms: { map: { value: null }, time: { value: 0 }, shine: { value: 1.0 } },
           vertexShader: NAIL_SHADER.vertexShader,
           fragmentShader: NAIL_SHADER.fragmentShader,
           transparent: true,
           side: THREE.DoubleSide
         });
 
-        // Create mesh for each finger
         FINGER_KEYS.forEach(finger => {
           const aspectRatio = CONFIG.NAIL_ASPECT_RATIOS[finger];
           const geometry = new THREE.PlaneGeometry(aspectRatio, 1);
           const material = nailMaterial.clone();
           const mesh = new THREE.Mesh(geometry, material);
-          
           mesh.visible = false;
           mesh.frustumCulled = false;
           nails[finger] = mesh;
@@ -1025,154 +1005,55 @@
       }
 
       async setupHandTracking() {
-        try {
-          const vision = await FilesetResolver.forVisionTasks(
-            "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/wasm"
-          );
-          
-          handLandmarker = await HandLandmarker.createFromOptions(vision, {
-            baseOptions: {
-              modelAssetPath: "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task",
-              delegate: "GPU"
-            },
-            runningMode: "VIDEO",
-            numHands: 1
-          });
-        } catch (error) {
-          console.error('Hand tracking initialization failed:', error);
-          this.showError("Hand tracking failed to initialize. Please refresh the page.");
-        }
+        const vision = await FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/wasm");
+        handLandmarker = await HandLandmarker.createFromOptions(vision, {
+          baseOptions: {
+            modelAssetPath: "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task",
+            delegate: "GPU"
+          },
+          runningMode: "VIDEO",
+          numHands: 1
+        });
       }
 
       async loadDefaultDesigns() {
-        // Create luxury gold design
-        const goldCanvas = document.createElement('canvas');
-        goldCanvas.width = 256;
-        goldCanvas.height = 384;
-        const goldCtx = goldCanvas.getContext('2d');
-        
-        // Gold gradient background
-        const goldGradient = goldCtx.createLinearGradient(0, 0, 0, 384);
-        goldGradient.addColorStop(0, '#d4af37');
-        goldGradient.addColorStop(0.5, '#b8941f');
-        goldGradient.addColorStop(1, '#9a7c1a');
-        goldCtx.fillStyle = goldGradient;
-        goldCtx.fillRect(0, 0, 256, 384);
-        
-        // Add sparkle effect
-        goldCtx.fillStyle = '#ffffff';
-        for (let i = 0; i < 80; i++) {
-          goldCtx.globalAlpha = Math.random() * 0.4 + 0.1;
-          const x = Math.random() * 256;
-          const y = Math.random() * 384;
-          const size = Math.random() * 2 + 1;
-          goldCtx.fillRect(x, y, size, size);
-        }
-        
-        nailTextures["luxury_gold"] = new THREE.CanvasTexture(goldCanvas);
-
-        // Create additional default designs
-        await this.createFrenchManicure();
-        await this.createGlitterPink();
-      }
-      
-      async createFrenchManicure() {
-        const canvas = document.createElement('canvas');
-        canvas.width = 256;
-        canvas.height = 384;
-        const ctx = canvas.getContext('2d');
-        
-        // Natural nail color
-        ctx.fillStyle = '#fff5e6';
-        ctx.fillRect(0, 0, 256, 384);
-        
-        // French tip
-        ctx.fillStyle = '#ffffff';
-        ctx.beginPath();
-        ctx.moveTo(30, 300);
-        ctx.bezierCurveTo(60, 280, 196, 280, 226, 300);
-        ctx.lineTo(226, 384);
-        ctx.lineTo(30, 384);
-        ctx.closePath();
-        ctx.fill();
-        
-        // Subtle shine
-        const shine = ctx.createLinearGradient(0, 0, 256, 0);
-        shine.addColorStop(0, 'rgba(255,255,255,0.3)');
-        shine.addColorStop(0.5, 'rgba(255,255,255,0)');
-        shine.addColorStop(1, 'rgba(255,255,255,0.3)');
-        ctx.fillStyle = shine;
-        ctx.fillRect(0, 0, 256, 384);
-        
-        nailTextures["french_manicure"] = new THREE.CanvasTexture(canvas);
-      }
-      
-      async createGlitterPink() {
-        const canvas = document.createElement('canvas');
-        canvas.width = 256;
-        canvas.height = 384;
-        const ctx = canvas.getContext('2d');
-        
-        // Pink base
-        const pinkGradient = ctx.createLinearGradient(0, 0, 0, 384);
-        pinkGradient.addColorStop(0, '#ff9ed8');
-        pinkGradient.addColorStop(1, '#ff66b2');
-        ctx.fillStyle = pinkGradient;
-        ctx.fillRect(0, 0, 256, 384);
-        
-        // Glitter effect
-        ctx.fillStyle = '#ffffff';
-        for (let i = 0; i < 120; i++) {
-          ctx.globalAlpha = Math.random() * 0.6 + 0.2;
-          const x = Math.random() * 256;
-          const y = Math.random() * 384;
-          const size = Math.random() * 3 + 1;
-          ctx.beginPath();
-          ctx.arc(x, y, size, 0, Math.PI * 2);
-          ctx.fill();
-        }
-        
-        nailTextures["glitter_pink"] = new THREE.CanvasTexture(canvas);
+        nailTextures["halloween_pumpkin"] = createHalloweenPumpkin();
+        nailTextures["ghost"] = createGhost();
+        nailTextures["spider_web"] = createSpiderWeb();
       }
 
       buildUserInterface() {
         this.buildDesignPicker();
         this.buildShapePicker();
+        this.updateUI();
       }
       
       buildDesignPicker() {
         el.designPicker.innerHTML = '';
-        
         DESIGNS.forEach(designName => {
           const button = document.createElement('div');
           button.className = `design-btn ${designName === state.currentDesign ? 'selected' : ''}`;
           
-          // Set background based on design
-          if (designName === "luxury_gold") {
-            button.style.background = 'linear-gradient(135deg, #d4af37, #b8941f)';
-          } else if (designName === "french_manicure") {
-            button.style.background = 'linear-gradient(135deg, #fff5e6, #ffebcc)';
-          } else if (designName === "glitter_pink") {
-            button.style.background = 'linear-gradient(135deg, #ff9ed8, #ff66b2)';
+          if (designName === "halloween_pumpkin") {
+            button.style.background = 'linear-gradient(135deg, #ff8c00, #ff4500)';
+          } else if (designName === "ghost") {
+            button.style.background = '#fff';
+          } else if (designName === "spider_web") {
+            button.style.background = '#000';
           }
           
-          // Add sparkle overlay for premium look
           const overlay = document.createElement('div');
           overlay.style.position = 'absolute';
-          overlay.style.top = '0';
-          overlay.style.left = '0';
-          overlay.style.right = '0';
-          overlay.style.bottom = '0';
+          overlay.style.top = '0'; overlay.style.left = '0'; overlay.style.right = '0'; overlay.style.bottom = '0';
           overlay.style.background = 'radial-gradient(circle at 30% 30%, rgba(255,255,255,0.3), transparent 70%)';
           overlay.style.pointerEvents = 'none';
           button.appendChild(overlay);
           
           button.onclick = () => {
             state.currentDesign = designName;
-            document.querySelectorAll('.design-btn').forEach(btn => {
-              btn.classList.remove('selected');
-            });
+            document.querySelectorAll('.design-btn').forEach(btn => btn.classList.remove('selected'));
             button.classList.add('selected');
+            this.triggerConfetti();
           };
           
           el.designPicker.appendChild(button);
@@ -1181,21 +1062,15 @@
       
       buildShapePicker() {
         el.shapePicker.innerHTML = '';
-        
         NAIL_SHAPES.forEach(shape => {
           const button = document.createElement('div');
           button.className = `shape-btn ${shape.id === state.currentShape ? 'selected' : ''}`;
           button.textContent = shape.name;
-          button.title = shape.name;
-          
           button.onclick = () => {
             state.currentShape = shape.id;
-            document.querySelectorAll('.shape-btn').forEach(btn => {
-              btn.classList.remove('selected');
-            });
+            document.querySelectorAll('.shape-btn').forEach(btn => btn.classList.remove('selected'));
             button.classList.add('selected');
           };
-          
           el.shapePicker.appendChild(button);
         });
       }
@@ -1206,8 +1081,6 @@
           alert("Please select an image file.");
           return;
         }
-        
-        // Check file size (max 5MB)
         if (file.size > 5 * 1024 * 1024) {
           alert("Please select an image smaller than 5MB.");
           return;
@@ -1224,13 +1097,11 @@
             img.src = URL.createObjectURL(file);
           });
           
-          // Process image with selected nail shape
           const texture = await nailMasker.applyImage(img, state.currentShape);
           const designId = `custom_${Date.now()}`;
           nailTextures[designId] = texture;
           state.currentDesign = designId;
 
-          // Create preview for the design picker
           const previewUrl = await nailMasker.createPreview(img.src, state.currentShape);
           
           const button = document.createElement('div');
@@ -1239,23 +1110,20 @@
           button.style.backgroundSize = 'cover';
           button.onclick = () => {
             state.currentDesign = designId;
-            document.querySelectorAll('.design-btn').forEach(btn => {
-              btn.classList.remove('selected');
-            });
+            document.querySelectorAll('.design-btn').forEach(btn => btn.classList.remove('selected'));
             button.classList.add('selected');
+            this.triggerConfetti();
           };
           
           el.designPicker.appendChild(button);
           el.uploadModal.classList.remove('show');
           el.imageUpload.value = '';
-          
-          // Show success message
-          this.showSuccessMessage('Design added successfully!');
+          this.showSuccessMessage(t('design_added'));
           
         } catch (error) {
           alert("Failed to process image. Please try a different image file (PNG or JPG recommended).");
         } finally {
-          el.saveDesign.textContent = 'Save Design';
+          el.saveDesign.textContent = t('save');
           el.saveDesign.disabled = false;
         }
       }
@@ -1264,26 +1132,34 @@
         const successMsg = document.createElement('div');
         successMsg.textContent = message;
         successMsg.style.cssText = `
-          position: fixed;
-          top: 100px;
-          left: 50%;
-          transform: translateX(-50%);
-          background: rgba(212, 175, 55, 0.95);
-          color: #0a0a0a;
-          padding: 14px 24px;
-          border-radius: 20px;
-          font-weight: 600;
-          z-index: 1000;
-          animation: fadeOut 3s forwards;
+          position: fixed; top: 100px; left: 50%; transform: translateX(-50%);
+          background: rgba(255, 107, 107, 0.95); color: white;
+          padding: 14px 24px; border-radius: 20px; font-weight: 600;
+          z-index: 1000; animation: fadeOut 3s forwards;
         `;
         document.body.appendChild(successMsg);
         setTimeout(() => successMsg.remove(), 3000);
+      }
+
+      triggerConfetti() {
+        const rect = el.designPicker.getBoundingClientRect();
+        for (let i = 0; i < 50; i++) {
+          confetti.push(new ConfettiParticle(rect.left + rect.width / 2, rect.top + rect.height / 2));
+        }
+      }
+
+      updateConfetti() {
+        confetti = confetti.filter(p => p.life > 0);
+        confetti.forEach(p => p.update());
+        confettiCtx.clearRect(0, 0, el.confettiCanvas.width, el.confettiCanvas.height);
+        confetti.forEach(p => p.draw(confettiCtx));
       }
 
       startRenderLoop() {
         const renderLoop = () => {
           this.detectHands();
           this.renderAR();
+          this.updateConfetti();
           state.animationFrameId = requestAnimationFrame(renderLoop);
         };
         renderLoop();
@@ -1291,14 +1167,11 @@
 
       detectHands() {
         if (!handLandmarker || el.video.readyState < 2) return;
-        
         try {
           const results = handLandmarker.detectForVideo(el.video, performance.now());
-          
           if (results.landmarks && results.landmarks.length > 0) {
             state.handNotDetectedCount = 0;
             el.handIndicator.classList.remove('show');
-            
             const landmarks = results.landmarks[0];
             state.isLeftHand = results.handednesses[0][0].displayName === "Left";
             state.lastLandmarks = this.smoothLandmarks(landmarks);
@@ -1319,20 +1192,14 @@
           state.smoothedLandmarks = newLandmarks.map(point => ({...point}));
           return state.smoothedLandmarks;
         }
-        
         for (let i = 0; i < newLandmarks.length; i++) {
           state.smoothedLandmarks[i].x = this.linearInterpolation(
-            state.smoothedLandmarks[i].x, 
-            newLandmarks[i].x, 
-            CONFIG.SMOOTHING_FACTOR
+            state.smoothedLandmarks[i].x, newLandmarks[i].x, CONFIG.SMOOTHING_FACTOR
           );
           state.smoothedLandmarks[i].y = this.linearInterpolation(
-            state.smoothedLandmarks[i].y, 
-            newLandmarks[i].y, 
-            CONFIG.SMOOTHING_FACTOR
+            state.smoothedLandmarks[i].y, newLandmarks[i].y, CONFIG.SMOOTHING_FACTOR
           );
         }
-        
         return state.smoothedLandmarks;
       }
 
@@ -1345,7 +1212,6 @@
           (landmarks[0].x - landmarks[1].x) * window.innerWidth,
           (landmarks[0].y - landmarks[1].y) * window.innerHeight
         );
-        
         let scale = wristDistance / CONFIG.WRIST_DISTANCE_REF * CONFIG.SCALE_SENSITIVITY;
         scale = Math.max(CONFIG.MIN_SCALE_FACTOR, Math.min(CONFIG.MAX_SCALE_FACTOR, scale));
         state.currentHandSize = scale;
@@ -1353,21 +1219,16 @@
 
       renderAR() {
         if (!state.lastLandmarks) return;
-        
         const flipFactor = state.isLeftHand ? -1 : 1;
-        
         FINGER_KEYS.forEach((fingerKey, index) => {
           const nail = nails[fingerKey];
-          
           if (!state.isApplyAll && index !== state.selectedFingerIndex) {
             nail.visible = false;
             return;
           }
-          
           this.updateNailPosition(fingerKey, flipFactor);
           nail.visible = true;
         });
-        
         renderer.render(scene, camera);
       }
 
@@ -1378,11 +1239,9 @@
         const pipLandmark = landmarks[pip];
         const offset = CONFIG.NAIL_OFFSETS[fingerKey];
         
-        // Calculate position
         const x = (tipLandmark.x + offset.x * flipFactor) * window.innerWidth;
         const y = (1 - (tipLandmark.y + offset.y)) * window.innerHeight;
         
-        // Calculate size based on finger length
         const fingerLength = Math.hypot(
           (tipLandmark.x - pipLandmark.x) * window.innerWidth,
           (tipLandmark.y - pipLandmark.y) * window.innerHeight
@@ -1391,7 +1250,6 @@
         let size = fingerLength * CONFIG.NAIL_SCALE_FACTORS[fingerKey] * state.currentHandSize;
         size = Math.max(CONFIG.MIN_SIZE, Math.min(CONFIG.MAX_SIZE, size));
         
-        // Calculate rotation
         const angle = Math.atan2(
           tipLandmark.y - pipLandmark.y,
           (tipLandmark.x - pipLandmark.x) * flipFactor
@@ -1402,7 +1260,6 @@
         nail.scale.set(size * flipFactor, size, 1);
         nail.rotation.z = angle;
         
-        // Update texture and shader uniforms
         if (nailTextures[state.currentDesign]) {
           nail.material.uniforms.map.value = nailTextures[state.currentDesign];
           nail.material.uniforms.time.value = performance.now() * 0.001;
@@ -1413,41 +1270,32 @@
 
       handleCanvasClick(event) {
         if (state.isApplyAll || !state.lastLandmarks) return;
-        
         const rect = el.canvas.getBoundingClientRect();
         const clickX = event.clientX - rect.left;
         const clickY = event.clientY - rect.top;
-        
         let minDistance = Infinity;
         let selectedIndex = -1;
-        
         FINGER_KEYS.forEach((fingerKey, index) => {
           const tipIndex = FINGER_INDICES[fingerKey].tip;
           const tipLandmark = state.lastLandmarks[tipIndex];
           const screenX = tipLandmark.x * window.innerWidth;
           const screenY = tipLandmark.y * window.innerHeight;
-          
           const distance = Math.hypot(clickX - screenX, clickY - screenY);
-          
           if (distance < minDistance && distance < window.innerWidth * 0.12) {
             minDistance = distance;
             selectedIndex = index;
           }
         });
-        
         state.selectedFingerIndex = selectedIndex;
       }
 
       hideAllNails() {
-        FINGER_KEYS.forEach(fingerKey => {
-          nails[fingerKey].visible = false;
-        });
+        FINGER_KEYS.forEach(fingerKey => nails[fingerKey].visible = false);
         renderer.render(scene, camera);
       }
 
       handleResize() {
         if (!camera || !renderer) return;
-        
         camera.left = -window.innerWidth / 2;
         camera.right = window.innerWidth / 2;
         camera.top = window.innerHeight / 2;
@@ -1461,32 +1309,31 @@
         el.loading.style.display = 'none';
         el.video.style.display = 'block';
         el.canvas.style.display = 'block';
+        el.confettiCanvas.style.display = 'block';
       }
 
       showError(message) {
         el.loading.innerHTML = `
-          <div style="color:#d4af37; font-size:28px; margin-bottom:15px;">⚠️</div>
-          <div style="color:#d4af37; font-size:20px; margin-bottom:15px; font-weight:600">LuxeNails AR Studio</div>
+          <div style="color:#ff6b6b; font-size:28px; margin-bottom:15px;">⚠️</div>
+          <div style="color:#ff6b6b; font-size:20px; margin-bottom:15px; font-weight:600">${t('loading')}</div>
           <p style="color:#aaa; font-size:16px; line-height:1.5; max-width:300px;">${message}</p>
-          <button onclick="location.reload()" style="margin-top:20px; padding:12px 24px; background:#d4af37; color:#0a0a0a; border:none; border-radius:18px; font-weight:600; cursor:pointer;">Try Again</button>
+          <button onclick="location.reload()" style="margin-top:20px; padding:12px 24px; background:#ff6b6b; color:white; border:none; border-radius:18px; font-weight:600; cursor:pointer;">Try Again</button>
         `;
       }
     }
 
-    // Add CSS for fadeOut animation
+    // === СТИЛІ ДЛЯ АНІМАЦІЇ ===
     const style = document.createElement('style');
     style.textContent = `
       @keyframes fadeOut {
-        0% { opacity: 1; }
-        70% { opacity: 1; }
-        100% { opacity: 0; }
+        0% { opacity: 1; } 70% { opacity: 1; } 100% { opacity: 0; }
       }
     `;
     document.head.appendChild(style);
 
-    // Initialize application when DOM is loaded
+    // === СТАРТ ===
     window.addEventListener('DOMContentLoaded', () => {
-      new LuxeNailsAR().init();
+      new HalloweenLuxeNailsAR().init();
     });
   </script>
 </body>
