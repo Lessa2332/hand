@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-  <title>Pro Nail AR Studio</title>
+  <title>💅 Elite Nail AR Studio</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💅</text></svg>">
 
   <style>
@@ -22,7 +22,7 @@
       color: white;
     }
     
-    #video, #canvas {
+    #video, #canvas, #confettiCanvas {
       position: absolute;
       top: 0;
       left: 0;
@@ -32,118 +32,183 @@
     }
     #video { z-index: 1; display: none; }
     #canvas { z-index: 2; display: none; }
+    #confettiCanvas { z-index: 60; pointer-events: none; display: none; }
 
-    /* === PROFESSIONAL CONTROL SYSTEM === */
-    .control-panel {
-      position: fixed;
-      z-index: 100;
-      display: flex;
-      gap: 12px;
-    }
-
-    /* Top Panel - Main Actions */
-    #topPanel {
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(15, 15, 15, 0.95);
-      backdrop-filter: blur(30px);
-      padding: 12px 20px;
-      border-radius: 25px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    /* Bottom Panel - Design Selection */
-    #bottomPanel {
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(15, 15, 15, 0.98);
-      backdrop-filter: blur(30px);
-      padding: 16px 24px;
-      border-radius: 28px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      max-width: 95vw;
-      overflow-x: auto;
-      scrollbar-width: none;
-    }
-    #bottomPanel::-webkit-scrollbar { display: none; }
-
-    /* Side Panels - Secondary Actions */
-    #leftPanel {
-      left: 20px;
-      top: 50%;
-      transform: translateY(-50%);
-      flex-direction: column;
-      gap: 15px;
-    }
-
-    #rightPanel {
-      right: 20px;
-      top: 50%;
-      transform: translateY(-50%);
-      flex-direction: column;
-      gap: 15px;
-    }
-
+    /* === LUXURY CONTROL SYSTEM === */
     .control-btn {
-      min-width: 55px;
-      height: 55px;
-      border-radius: 18px;
-      background: rgba(30, 30, 30, 0.9);
+      position: fixed;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: rgba(20, 20, 20, 0.9);
       backdrop-filter: blur(20px);
-      border: 1.5px solid rgba(255, 255, 255, 0.15);
-      color: #fff;
-      font-size: 22px;
+      border: 1.5px solid rgba(212, 175, 55, 0.4);
+      color: #d4af37;
+      font-size: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
+      z-index: 100;
       transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      position: relative;
-      font-weight: 500;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
     }
 
     .control-btn:hover {
-      background: rgba(45, 45, 45, 0.95);
-      border-color: rgba(255, 255, 255, 0.3);
-      transform: scale(1.08);
+      transform: scale(1.12);
+      border-color: rgba(212, 175, 55, 0.8);
+      box-shadow: 0 6px 25px rgba(212, 175, 55, 0.3);
     }
 
-    .control-btn.active {
-      background: rgba(74, 144, 226, 0.9);
-      border-color: rgba(74, 144, 226, 0.6);
-      box-shadow: 0 0 20px rgba(74, 144, 226, 0.4);
+    #langBtn {
+      top: 20px;
+      right: 20px;
+      font-weight: bold;
+      font-size: 14px;
     }
 
-    .control-btn.secondary {
-      background: rgba(40, 40, 40, 0.9);
-      color: #4a90e2;
+    #soundBtn {
+      top: 20px;
+      left: 20px;
     }
 
-    .btn-label {
-      position: absolute;
-      bottom: -25px;
+    #uploadBtn {
+      top: 85px;
+      left: 20px;
+    }
+
+    #shapeBtn {
+      top: 150px;
+      left: 20px;
+      background: rgba(212, 175, 55, 0.9);
+      color: #0a0a0a;
+      border-color: #d4af37;
+    }
+
+    /* Mode Toggle - Luxury */
+    #modeToggle {
+      position: fixed;
+      top: 20px;
       left: 50%;
       transform: translateX(-50%);
-      font-size: 11px;
-      color: rgba(255, 255, 255, 0.7);
-      white-space: nowrap;
-      font-weight: 500;
+      z-index: 100;
+      background: rgba(20, 20, 20, 0.9);
+      backdrop-filter: blur(20px);
+      padding: 8px;
+      border-radius: 25px;
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      display: flex;
+      gap: 8px;
     }
 
-    /* Design Selection */
+    .mode-option {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(40, 40, 40, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 1.5px solid transparent;
+    }
+
+    .mode-option.active {
+      background: #d4af37;
+      color: #0a0a0a;
+      transform: scale(1.15);
+      box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+    }
+
+    /* Shape Picker - Professional (ПЕРШЕ МІСЦЕ) */
+    #shapePicker {
+      position: fixed;
+      bottom: 130px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 12px;
+      z-index: 100;
+      background: rgba(15, 15, 15, 0.95);
+      backdrop-filter: blur(30px);
+      padding: 16px 20px;
+      border-radius: 24px;
+      border: 1px solid rgba(212, 175, 55, 0.2);
+      max-width: 92vw;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    #shapePicker::-webkit-scrollbar { 
+      display: none; 
+    }
+
+    .shape-btn {
+      min-width: 70px;
+      height: 40px;
+      border-radius: 20px;
+      border: 2px solid rgba(255, 255, 255, 0.15);
+      background: #1a1a1a;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      transition: all 0.3s ease;
+      color: #d4af37;
+      flex-shrink: 0;
+      padding: 0 16px;
+      font-weight: 600;
+    }
+
+    .shape-btn:hover {
+      transform: translateY(-2px);
+      border-color: rgba(212, 175, 55, 0.5);
+    }
+
+    .shape-btn.selected {
+      border-color: #d4af37;
+      background: rgba(212, 175, 55, 0.15);
+      transform: scale(1.05);
+      box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+    }
+
+    /* Design Picker - Professional (ДРУГЕ МІСЦЕ) */
+    #designPicker {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 15px;
+      z-index: 100;
+      background: rgba(15, 15, 15, 0.95);
+      backdrop-filter: blur(30px);
+      padding: 18px 22px;
+      border-radius: 28px;
+      border: 1px solid rgba(212, 175, 55, 0.2);
+      max-width: 92vw;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    #designPicker::-webkit-scrollbar { 
+      display: none; 
+    }
+
     .design-btn {
       width: 70px;
       height: 85px;
-      border-radius: 12px;
-      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      border: 2.5px solid rgba(255, 255, 255, 0.15);
       background: #1a1a1a;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      flex-shrink: 0;
       position: relative;
       overflow: hidden;
-      flex-shrink: 0;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -152,8 +217,11 @@
     .design-btn::before {
       content: '';
       position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: linear-gradient(135deg, transparent, rgba(74, 144, 226, 0.1));
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, transparent 0%, rgba(212, 175, 55, 0.1) 100%);
       opacity: 0;
       transition: opacity 0.3s ease;
     }
@@ -163,156 +231,167 @@
     }
 
     .design-btn:hover {
-      transform: translateY(-2px);
-      border-color: rgba(74, 144, 226, 0.4);
+      transform: translateY(-3px);
+      border-color: rgba(212, 175, 55, 0.5);
     }
 
     .design-btn.selected {
-      border-color: #4a90e2;
-      box-shadow: 0 0 0 2px #4a90e2, 0 8px 25px rgba(74, 144, 226, 0.3);
-      transform: scale(1.05);
+      border-color: #d4af37;
+      box-shadow: 0 0 0 3px #d4af37, 0 8px 30px rgba(212, 175, 55, 0.4);
+      transform: scale(1.08);
     }
 
     .nail-preview {
       width: 50px;
       height: 65px;
-      border-radius: 8px;
+      border-radius: 10px;
       position: relative;
       overflow: hidden;
     }
 
-    /* Shape Selector */
-    #shapeSelector {
+    /* Upload Modal - Luxury */
+    #uploadModal {
       position: fixed;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      background: rgba(20, 20, 20, 0.98);
+      background: rgba(15, 15, 15, 0.98);
       backdrop-filter: blur(40px);
       padding: 30px;
       border-radius: 24px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1.5px solid rgba(212, 175, 55, 0.3);
       z-index: 1000;
       display: none;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-      max-width: 90vw;
-      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+      color: white;
+      text-align: center;
+      width: 90%;
+      max-width: 420px;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
     }
 
-    #shapeSelector.show {
-      display: grid;
-      animation: modalAppear 0.4s ease;
+    #uploadModal.show {
+      display: block;
+      animation: modalAppear 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
 
-    .shape-option {
-      width: 100px;
-      height: 120px;
-      border-radius: 12px;
-      border: 2px solid rgba(255, 255, 255, 0.1);
-      background: #1a1a1a;
+    #imageUpload {
+      margin: 20px 0;
+      padding: 16px;
+      border: 2.5px dashed rgba(212, 175, 55, 0.4);
+      border-radius: 16px;
+      background: rgba(30, 30, 30, 0.6);
+      color: white;
+      width: 100%;
       cursor: pointer;
       transition: all 0.3s ease;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      padding: 15px;
     }
 
-    .shape-option:hover {
-      border-color: rgba(74, 144, 226, 0.4);
+    #imageUpload:hover {
+      border-color: rgba(212, 175, 55, 0.6);
+      background: rgba(40, 40, 40, 0.6);
+    }
+
+    .modal-btn {
+      padding: 12px 24px;
+      margin: 8px;
+      border: none;
+      border-radius: 20px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 15px;
+    }
+
+    #saveDesign {
+      background: linear-gradient(135deg, #d4af37, #b8941f);
+      color: #0a0a0a;
+      box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+    }
+
+    #saveDesign:hover {
       transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
     }
 
-    .shape-option.selected {
-      border-color: #4a90e2;
-      background: rgba(74, 144, 226, 0.1);
-      box-shadow: 0 0 20px rgba(74, 144, 226, 0.3);
+    #closeModal {
+      background: rgba(40, 40, 40, 0.8);
+      color: #d4af37;
+      border: 1.5px solid rgba(212, 175, 55, 0.3);
     }
 
-    .shape-preview {
-      width: 60px;
-      height: 40px;
-      background: linear-gradient(135deg, #8B4513, #A0522D);
-      border-radius: 4px;
-      position: relative;
+    #closeModal:hover {
+      background: rgba(50, 50, 50, 0.8);
+      border-color: rgba(212, 175, 55, 0.5);
     }
 
-    .shape-name {
-      font-size: 12px;
-      color: rgba(255, 255, 255, 0.9);
-      font-weight: 500;
-      text-align: center;
-    }
-
-    /* Realistic Nail Shapes */
-    .shape-option[data-shape="oval"] .shape-preview {
-      border-radius: 50% 50% 40% 40% / 60% 60% 40% 40%;
-      transform: rotate(-5deg);
-    }
-
-    .shape-option[data-shape="almond"] .shape-preview {
-      border-radius: 45% 45% 0 0 / 80% 80% 0 0;
-      transform: rotate(-5deg) scale(0.9);
-    }
-
-    .shape-option[data-shape="squoval"] .shape-preview {
-      border-radius: 25% 25% 15% 15% / 35% 35% 15% 15%;
-    }
-
-    .shape-option[data-shape="coffin"] .shape-preview {
-      border-radius: 10% 10% 0 0;
-    }
-
-    .shape-option[data-shape="stiletto"] .shape-preview {
-      border-radius: 40% 40% 0 0;
-    }
-
-    .shape-option[data-shape="square"] .shape-preview {
-      border-radius: 8% 8% 0 0;
-    }
-
-    /* Loading Screen */
+    /* Loading & Indicators */
     #loading {
       position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       background: #0a0a0a;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       z-index: 1000;
-      color: #4a90e2;
+      color: #d4af37;
       font-size: 24px;
       text-align: center;
       padding: 30px;
-      gap: 24px;
+      gap: 25px;
     }
 
     .loader {
-      width: 60px; height: 60px;
-      border: 4px solid rgba(74, 144, 226, 0.3);
-      border-top: 4px solid #4a90e2;
+      width: 60px;
+      height: 60px;
+      border: 3px solid rgba(212, 175, 55, 0.3);
+      border-top: 3px solid #d4af37;
       border-radius: 50%;
       animation: spin 1.2s linear infinite;
+      box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
     }
 
-    /* Status Messages */
+    .indicator {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(20, 20, 20, 0.95);
+      color: #d4af37;
+      padding: 12px 20px;
+      border-radius: 20px;
+      display: none;
+      align-items: center;
+      gap: 10px;
+      z-index: 99;
+      font-size: 14px;
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      backdrop-filter: blur(20px);
+    }
+
+    #handIndicator { 
+      top: 160px; 
+    }
+
+    .indicator.show {
+      display: flex;
+      animation: indicatorAppear 0.4s ease;
+    }
+
     .status-message {
       position: fixed;
       top: 100px;
       left: 50%;
       transform: translateX(-50%);
       background: rgba(20, 20, 20, 0.95);
-      color: #4a90e2;
+      color: #d4af37;
       padding: 12px 24px;
       border-radius: 20px;
       z-index: 99;
       font-size: 14px;
-      border: 1px solid rgba(74, 144, 226, 0.3);
+      border: 1px solid rgba(212, 175, 55, 0.3);
       backdrop-filter: blur(25px);
       display: none;
     }
@@ -322,121 +401,190 @@
       animation: fadeInOut 3s ease;
     }
 
-    /* Animations */
-    @keyframes spin { to { transform: rotate(360deg); } }
-    @keyframes modalAppear { 
-      from { opacity: 0; transform: translate(-50%, -48%); }
-      to { opacity: 1; transform: translate(-50%, -50%); }
+    /* Tooltips */
+    .tooltip {
+      position: absolute;
+      bottom: -35px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(20, 20, 20, 0.9);
+      color: #d4af37;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 11px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      border: 1px solid rgba(212, 175, 55, 0.2);
     }
+
+    .control-btn:hover .tooltip,
+    .mode-option:hover .tooltip {
+      opacity: 1;
+    }
+
+    /* Step Indicator */
+    .step-indicator {
+      position: absolute;
+      top: -25px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(212, 175, 55, 0.9);
+      color: #0a0a0a;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    /* Animations */
+    @keyframes spin { 
+      to { transform: rotate(360deg); } 
+    }
+
+    @keyframes modalAppear {
+      from {
+        opacity: 0;
+        transform: translate(-50%, -48%);
+      }
+      to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+      }
+    }
+
+    @keyframes indicatorAppear {
+      from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+    }
+
     @keyframes fadeInOut {
       0%, 100% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
       10%, 90% { opacity: 1; transform: translateX(-50%) translateY(0); }
     }
 
+    @keyframes confettiFall {
+      0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(1000px) rotate(360deg); opacity: 0; }
+    }
+
     /* Mobile Optimizations */
     @media (max-width: 768px) {
-      #topPanel { top: 15px; padding: 10px 16px; }
-      #bottomPanel { bottom: 15px; padding: 14px 20px; }
-      #leftPanel, #rightPanel { gap: 12px; }
-      .control-btn { min-width: 50px; height: 50px; font-size: 20px; }
+      .control-btn {
+        width: 48px;
+        height: 48px;
+        font-size: 18px;
+      }
+
+      #langBtn { top: 15px; right: 15px; }
+      #soundBtn { top: 15px; left: 15px; }
+      #uploadBtn { top: 75px; left: 15px; }
+      #shapeBtn { top: 135px; left: 15px; }
+      
+      #modeToggle { top: 15px; }
+      .mode-option { width: 40px; height: 40px; font-size: 16px; }
+      
       .design-btn { width: 65px; height: 80px; }
       .nail-preview { width: 45px; height: 60px; }
-      .shape-option { width: 90px; height: 110px; }
+      
+      .shape-btn { min-width: 65px; height: 36px; font-size: 11px; padding: 0 14px; }
+      
+      #designPicker { bottom: 15px; padding: 16px 20px; }
+      #shapePicker { bottom: 120px; padding: 14px 18px; }
     }
 
     @media (max-width: 480px) {
-      #leftPanel { left: 12px; }
-      #rightPanel { right: 12px; }
-      #topPanel { padding: 8px 14px; }
-      .control-btn { min-width: 45px; height: 45px; font-size: 18px; }
-      .btn-label { font-size: 10px; bottom: -22px; }
+      .control-btn {
+        width: 44px;
+        height: 44px;
+        font-size: 16px;
+      }
+
+      #uploadBtn { top: 70px; }
+      #shapeBtn { top: 125px; }
+      
+      .design-btn { width: 60px; height: 75px; }
+      .nail-preview { width: 40px; height: 55px; }
+      
+      .shape-btn { min-width: 60px; height: 34px; font-size: 10px; padding: 0 12px; }
     }
   </style>
 </head>
 <body>
   <div id="loading">
     <div class="loader"></div>
-    <div style="font-weight: 600; margin-bottom: 8px;">Pro Nail AR Studio</div>
-    <p style="color: #bbb; font-size: 16px; line-height: 1.4;">Покладіть руку перед камерою<br>Дозвольте доступ до камери</p>
+    <div style="font-weight: 600; margin-bottom: 8px;">Elite Nail AR Studio</div>
+    <p style="color: #aaa; font-size: 16px; line-height: 1.4;">Покладіть руку перед камерою<br>Дозвольте доступ до камери</p>
   </div>
 
   <video id="video" playsinline muted></video>
   <canvas id="canvas"></canvas>
+  <canvas id="confettiCanvas"></canvas>
 
-  <!-- Top Panel - Main Controls -->
-  <div id="topPanel" class="control-panel">
-    <button class="control-btn active" id="modeAll" title="Всі пальці">
+  <button id="langBtn" class="control-btn" aria-label="Switch language">
+    EN
+    <div class="tooltip">Мова / Language</div>
+  </button>
+  
+  <button id="soundBtn" class="control-btn" aria-label="Toggle sound">
+    🔊
+    <div class="tooltip">Звук / Sound</div>
+  </button>
+  
+  <button id="uploadBtn" class="control-btn" aria-label="Upload design">
+    📤
+    <div class="tooltip">Завантажити / Upload</div>
+  </button>
+  
+  <button id="shapeBtn" class="control-btn" aria-label="Nail shapes">
+    ✨
+    <div class="tooltip">Форми / Shapes</div>
+  </button>
+
+  <div id="modeToggle">
+    <div class="mode-option active" id="applyAllOpt" title="All fingers">
       💅
-      <div class="btn-label">Всі</div>
-    </button>
-    <button class="control-btn secondary" id="modeSingle" title="Один палець">
+      <div class="tooltip">Усі пальці / All</div>
+    </div>
+    <div class="mode-option" id="selectFingerOpt" title="Select finger">
       👆
-      <div class="btn-label">Один</div>
-    </button>
-    <button class="control-btn secondary" id="captureBtn" title="Знімок">
-      📸
-      <div class="btn-label">Знімок</div>
-    </button>
-  </div>
-
-  <!-- Bottom Panel - Design Selection -->
-  <div id="bottomPanel" class="control-panel">
-    <!-- Designs will be dynamically added here -->
-  </div>
-
-  <!-- Left Panel - Tools -->
-  <div id="leftPanel" class="control-panel">
-    <button class="control-btn secondary" id="shapeBtn" title="Форми нігтів">
-      🔧
-      <div class="btn-label">Форми</div>
-    </button>
-    <button class="control-btn secondary" id="uploadBtn" title="Завантажити дизайн">
-      📁
-      <div class="btn-label">Завантажити</div>
-    </button>
-  </div>
-
-  <!-- Right Panel - Settings -->
-  <div id="rightPanel" class="control-panel">
-    <button class="control-btn secondary" id="settingsBtn" title="Налаштування">
-      ⚙️
-      <div class="btn-label">Налаштування</div>
-    </button>
-    <button class="control-btn" id="helpBtn" title="Допомога">
-      ❓
-      <div class="btn-label">Допомога</div>
-    </button>
-  </div>
-
-  <!-- Shape Selector Modal -->
-  <div id="shapeSelector">
-    <div class="shape-option selected" data-shape="oval">
-      <div class="shape-preview"></div>
-      <div class="shape-name">Овал</div>
-    </div>
-    <div class="shape-option" data-shape="almond">
-      <div class="shape-preview"></div>
-      <div class="shape-name">Миндаль</div>
-    </div>
-    <div class="shape-option" data-shape="squoval">
-      <div class="shape-preview"></div>
-      <div class="shape-name">Скувал</div>
-    </div>
-    <div class="shape-option" data-shape="coffin">
-      <div class="shape-preview"></div>
-      <div class="shape-name">Гроб</div>
-    </div>
-    <div class="shape-option" data-shape="stiletto">
-      <div class="shape-preview"></div>
-      <div class="shape-name">Стілетто</div>
-    </div>
-    <div class="shape-option" data-shape="square">
-      <div class="shape-preview"></div>
-      <div class="shape-name">Квадрат</div>
+      <div class="tooltip">Обрати палець / Select</div>
     </div>
   </div>
 
-  <!-- Status Message -->
+  <!-- Shape Picker тепер перший -->
+  <div id="shapePicker">
+    <div class="step-indicator">Крок 1: Обрати форму</div>
+  </div>
+
+  <!-- Design Picker тепер другий -->
+  <div id="designPicker">
+    <div class="step-indicator">Крок 2: Обрати дизайн</div>
+  </div>
+
+  <div id="uploadModal">
+    <h3 style="margin:0;font-weight:600;color:#d4af37">🎨 Завантажте свій дизайн</h3>
+    <p style="margin:12px 0;color:#aaa;font-size:14px;line-height:1.4">Оберіть зображення для створення унікального дизайну нігтів. Для найкращих результатів використовуйте PNG з прозорим фоном.</p>
+    <input type="file" id="imageUpload" accept="image/*">
+    <div style="margin-top: 20px;">
+      <button id="saveDesign" class="modal-btn">💾 Зберегти</button>
+      <button id="closeModal" class="modal-btn">❌ Скасувати</button>
+    </div>
+  </div>
+
+  <div id="handIndicator" class="indicator">
+    <span>👋</span>
+    <span>Покажіть руку камері</span>
+  </div>
+
   <div class="status-message" id="statusMessage"></div>
 
   <script type="importmap">
@@ -450,10 +598,10 @@
     import * as THREE from 'three';
     import { FilesetResolver, HandLandmarker } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/+esm";
 
-    // === PROFESSIONAL CONFIG ===
+    // === CONFIGURATION ===
     const CONFIG = {
-      SMOOTHING_FACTOR: 0.8,
-      HAND_NOT_DETECTED_THRESHOLD: 15,
+      SMOOTHING_FACTOR: 0.75,
+      HAND_NOT_DETECTED_THRESHOLD: 12,
       NAIL_SCALE_FACTORS: { 
         thumb: 0.38, index: 0.48, middle: 0.52, ring: 0.48, pinky: 0.36 
       },
@@ -480,45 +628,141 @@
 
     const FINGER_KEYS = Object.keys(FINGER_INDICES);
 
+    // === TRANSLATIONS ===
+    const translations = {
+      en: {
+        title: "💅 Elite Nail AR Studio",
+        loading: "Loading AR Experience...",
+        cameraPrompt: "Position your hand in front of the camera",
+        allFingers: "All Fingers",
+        selectFinger: "Select Finger",
+        handNotDetected: "Show your hand to the camera",
+        uploadTitle: "🎨 Upload Your Design",
+        uploadHint: "Choose an image to create a unique nail design. For best results use PNG with transparent background.",
+        save: "💾 Save",
+        cancel: "❌ Cancel",
+        designSaved: "🎉 Design saved successfully!",
+        screenshotSaved: "📸 Screenshot saved!",
+        shapeChanged: "Form changed to: ",
+        modeAll: "Mode: All fingers",
+        modeSingle: "Mode: Single finger - tap on screen",
+        step1: "Step 1: Choose shape",
+        step2: "Step 2: Choose design"
+      },
+      uk: {
+        title: "💅 Elite Nail AR Studio",
+        loading: "Завантаження AR досвіду...",
+        cameraPrompt: "Покладіть руку перед камерою",
+        allFingers: "Усі пальці",
+        selectFinger: "Обрати палець",
+        handNotDetected: "Покажіть руку камері",
+        uploadTitle: "🎨 Завантажте свій дизайн",
+        uploadHint: "Оберіть зображення для створення унікального дизайну нігтів. Для найкращих результатів використовуйте PNG з прозорим фоном.",
+        save: "💾 Зберегти",
+        cancel: "❌ Скасувати",
+        designSaved: "🎉 Дизайн успішно збережено!",
+        screenshotSaved: "📸 Знімок збережено!",
+        shapeChanged: "Форма змінена на: ",
+        modeAll: "Режим: всі пальці",
+        modeSingle: "Режим: один палець - торкніться екрану",
+        step1: "Крок 1: Обрати форму",
+        step2: "Крок 2: Обрати дизайн"
+      }
+    };
+
+    // === NAIL SHAPES ===
+    const NAIL_SHAPES = [
+      { id: 'oval', name: { en: 'Oval', uk: 'Овал' } },
+      { id: 'almond', name: { en: 'Almond', uk: 'Миндаль' } },
+      { id: 'squoval', name: { en: 'Squoval', uk: 'Скувал' } },
+      { id: 'coffin', name: { en: 'Coffin', uk: 'Гроб' } },
+      { id: 'stiletto', name: { en: 'Stiletto', uk: 'Стілетто' } },
+      { id: 'square', name: { en: 'Square', uk: 'Квадрат' } }
+    ];
+
     // === STATE MANAGEMENT ===
     const state = {
-      currentDesign: "classic_french",
+      currentLang: 'uk',
+      currentDesign: "luxury_gold",
       currentShape: 'oval',
       isApplyAll: true,
       selectedFingerIndex: -1,
+      isMuted: false,
       lastLandmarks: null,
       smoothedLandmarks: null,
       handNotDetectedCount: 0,
       currentHandSize: 1.0,
-      isLeftHand: false
+      isLeftHand: false,
+      customDesigns: [],
+      showShapePicker: true // За замовчуванням показуємо вибір форми
     };
 
     // === DOM ELEMENTS ===
     const el = {
       video: document.getElementById("video"),
       canvas: document.getElementById("canvas"),
+      confettiCanvas: document.getElementById("confettiCanvas"),
       loading: document.getElementById("loading"),
-      topPanel: document.getElementById("topPanel"),
-      bottomPanel: document.getElementById("bottomPanel"),
-      leftPanel: document.getElementById("leftPanel"),
-      rightPanel: document.getElementById("rightPanel"),
-      shapeSelector: document.getElementById("shapeSelector"),
-      statusMessage: document.getElementById("statusMessage"),
-      
-      // Buttons
-      modeAll: document.getElementById("modeAll"),
-      modeSingle: document.getElementById("modeSingle"),
-      captureBtn: document.getElementById("captureBtn"),
-      shapeBtn: document.getElementById("shapeBtn"),
+      langBtn: document.getElementById("langBtn"),
+      soundBtn: document.getElementById("soundBtn"),
       uploadBtn: document.getElementById("uploadBtn"),
-      settingsBtn: document.getElementById("settingsBtn"),
-      helpBtn: document.getElementById("helpBtn")
+      shapeBtn: document.getElementById("shapeBtn"),
+      applyAllOpt: document.getElementById("applyAllOpt"),
+      selectFingerOpt: document.getElementById("selectFingerOpt"),
+      designPicker: document.getElementById("designPicker"),
+      shapePicker: document.getElementById("shapePicker"),
+      uploadModal: document.getElementById("uploadModal"),
+      imageUpload: document.getElementById("imageUpload"),
+      saveDesign: document.getElementById("saveDesign"),
+      closeModal: document.getElementById("closeModal"),
+      handIndicator: document.getElementById("handIndicator"),
+      statusMessage: document.getElementById("statusMessage")
+    };
+
+    // === AUDIO SYSTEM ===
+    const audio = {
+      click: new Audio(),
+      success: new Audio()
     };
 
     // === THREE.JS SETUP ===
     const nailTextures = {};
+    const DESIGNS = ["luxury_gold", "classic_red", "french_manicure", "glitter_pink", "marble", "ombre"];
+    let scene, camera, renderer;
     const nails = {};
-    let scene, camera, renderer, handLandmarker;
+    let handLandmarker;
+    const confettiCtx = el.confettiCanvas.getContext("2d");
+    let confettiParticles = [];
+
+    // === CONFETTI SYSTEM ===
+    class ConfettiParticle {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.vx = (Math.random() - 0.5) * 8;
+        this.vy = Math.random() * -10 - 5;
+        this.size = Math.random() * 6 + 3;
+        this.color = ['#d4af37', '#b8941f', '#ffd700', '#fff'][Math.floor(Math.random() * 4)];
+        this.life = 1.0;
+        this.gravity = 0.3;
+      }
+
+      update() {
+        this.vy += this.gravity;
+        this.x += this.vx;
+        this.y += this.vy;
+        this.life -= 0.01;
+      }
+
+      draw(ctx) {
+        if (this.life <= 0) return;
+        ctx.save();
+        ctx.globalAlpha = this.life;
+        ctx.fillStyle = this.color;
+        ctx.fillRect(this.x, this.y, this.size, this.size);
+        ctx.restore();
+      }
+    }
 
     // === PROFESSIONAL NAIL SHADER ===
     const NAIL_SHADER = {
@@ -546,21 +790,16 @@
 
         void main() {
           vec4 tex = texture2D(map, vUv);
-          
-          // Realistic nail base color with transparency
           if (tex.a < 0.1) discard;
           
           vec3 color = mix(nailColor, tex.rgb, 0.7);
           
-          // Professional shine effect
           float highlight = pow(smoothstep(0.2, 0.8, vUv.y + sin(vUv.y * 8.0 - time) * 0.05), 3.0) * shine;
           color += vec3(1.0) * highlight * 0.8;
           
-          // Rim lighting for 3D effect
           float rim = pow(1.0 - dot(normalize(vViewPosition), vNormal), 3.0) * 0.4;
           color += vec3(1.0, 0.98, 0.95) * rim;
           
-          // Subtle shadow at nail base
           float shadow = smoothstep(0.0, 0.4, vUv.y);
           color *= (1.0 - shadow * 0.2);
           
@@ -569,94 +808,348 @@
       `
     };
 
+    // === LUXURY NAIL RENDERER ===
+    class LuxuryNailRenderer {
+      constructor() {
+        this.masks = {};
+        this.initMasks();
+      }
+
+      initMasks() {
+        NAIL_SHAPES.forEach(shape => {
+          this.masks[shape.id] = this.createMask(shape.id);
+        });
+      }
+
+      createMask(shape) {
+        const canvas = document.createElement('canvas');
+        canvas.width = 256;
+        canvas.height = 384;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = 'white';
+        ctx.beginPath();
+
+        switch(shape) {
+          case 'oval':
+            ctx.ellipse(128, 192, 100, 150, 0, 0, Math.PI * 2);
+            break;
+          case 'almond':
+            ctx.moveTo(128, 50);
+            ctx.bezierCurveTo(180, 80, 200, 160, 128, 334);
+            ctx.bezierCurveTo(56, 160, 76, 80, 128, 50);
+            ctx.closePath();
+            break;
+          case 'squoval':
+            ctx.roundRect(64, 64, 128, 256, 32);
+            break;
+          case 'coffin':
+            ctx.moveTo(64, 64);
+            ctx.lineTo(192, 64);
+            ctx.lineTo(224, 192);
+            ctx.lineTo(192, 320);
+            ctx.lineTo(64, 320);
+            ctx.lineTo(32, 192);
+            ctx.closePath();
+            break;
+          case 'stiletto':
+            ctx.moveTo(128, 32);
+            ctx.lineTo(224, 192);
+            ctx.lineTo(192, 320);
+            ctx.lineTo(64, 320);
+            ctx.lineTo(32, 192);
+            ctx.closePath();
+            break;
+          case 'square':
+            ctx.rect(48, 48, 160, 288);
+            break;
+        }
+
+        ctx.fill();
+        return canvas;
+      }
+
+      async processImage(img, shape = 'oval') {
+        const canvas = document.createElement('canvas');
+        canvas.width = 256;
+        canvas.height = 384;
+        const ctx = canvas.getContext('2d');
+
+        ctx.drawImage(this.masks[shape], 0, 0);
+        ctx.globalCompositeOperation = 'source-in';
+        ctx.drawImage(img, 0, 0, 256, 384);
+        ctx.globalCompositeOperation = 'source-over';
+
+        const shine = ctx.createRadialGradient(128, 128, 0, 128, 128, 200);
+        shine.addColorStop(0, 'rgba(255, 255, 255, 0.4)');
+        shine.addColorStop(1, 'rgba(255, 255, 255, 0)');
+        ctx.fillStyle = shine;
+        ctx.globalAlpha = 0.3;
+        ctx.fillRect(0, 0, 256, 384);
+        ctx.globalAlpha = 1;
+
+        return new THREE.CanvasTexture(canvas);
+      }
+
+      createPreview(imageData, shape = 'oval', size = 70) {
+        return new Promise((resolve) => {
+          const canvas = document.createElement('canvas');
+          canvas.width = size;
+          canvas.height = size;
+          const ctx = canvas.getContext('2d');
+
+          ctx.fillStyle = 'white';
+          ctx.beginPath();
+
+          const center = size / 2;
+          switch(shape) {
+            case 'oval':
+              ctx.ellipse(center, center, size/3, size/2.3, 0, 0, 2 * Math.PI);
+              break;
+            case 'almond':
+              ctx.moveTo(center, 8);
+              ctx.bezierCurveTo(size-10, 15, size-8, size-12, center, size-10);
+              ctx.bezierCurveTo(10, size-12, 8, 15, center, 8);
+              ctx.closePath();
+              break;
+            case 'squoval':
+              ctx.roundRect(10, 10, size-20, size-20, 8);
+              break;
+            case 'coffin':
+              ctx.moveTo(15, 12);
+              ctx.lineTo(size-15, 12);
+              ctx.lineTo(size-10, size/2);
+              ctx.lineTo(size-15, size-12);
+              ctx.lineTo(15, size-12);
+              ctx.lineTo(10, size/2);
+              ctx.closePath();
+              break;
+            case 'stiletto':
+              ctx.moveTo(center, 8);
+              ctx.lineTo(size-15, size/2);
+              ctx.lineTo(size-20, size-12);
+              ctx.lineTo(20, size-12);
+              ctx.lineTo(15, size/2);
+              ctx.closePath();
+              break;
+            case 'square':
+              ctx.rect(12, 12, size-24, size-24);
+              break;
+          }
+
+          ctx.fill();
+          ctx.globalCompositeOperation = 'source-in';
+
+          const previewImg = new Image();
+          previewImg.onload = () => {
+            ctx.drawImage(previewImg, 0, 0, size, size);
+            resolve(canvas.toDataURL());
+          };
+          previewImg.src = imageData;
+        });
+      }
+    }
+
+    const luxuryRenderer = new LuxuryNailRenderer();
+
     // === MAIN APPLICATION ===
-    class ProNailARStudio {
+    class EliteNailARStudio {
       async init() {
         try {
+          this.setupAudio();
           this.setupEventListeners();
           await this.setupCamera();
           await this.initWebGL();
           await this.setupHandTracking();
           await this.loadProfessionalDesigns();
-          this.buildDesignPicker();
-          this.hideLoadingScreen();
+          this.buildUI();
+          this.hideLoading();
           this.startRenderLoop();
-          this.showStatus("Покладіть руку перед камерою");
+          this.showStatus(this.t('cameraPrompt'));
         } catch (error) {
           console.error('Initialization error:', error);
-          this.showError("Потрібен доступ до камери. Використовуйте Chrome або Safari на мобільному пристрої.");
+          this.showError(this.t('cameraError'));
         }
       }
 
-      setupEventListeners() {
-        // Mode toggles
-        el.modeAll.onclick = () => this.setApplicationMode(true);
-        el.modeSingle.onclick = () => this.setApplicationMode(false);
+      t(key) {
+        return translations[state.currentLang][key] || key;
+      }
+
+      setupAudio() {
+        // Simple click sound using oscillator
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
         
-        // Actions
-        el.captureBtn.onclick = () => this.takeScreenshot();
-        el.shapeBtn.onclick = () => this.toggleShapeSelector();
-        el.uploadBtn.onclick = () => this.showStatus("Функція завантаження скоро буде доступна");
-        el.settingsBtn.onclick = () => this.showStatus("Налаштування відкриються скоро");
-        el.helpBtn.onclick = () => this.showStatus("Зробіть знімок рук з дизайном та покажіть майстру");
-        
-        // Shape selection
-        document.querySelectorAll('.shape-option').forEach(option => {
-          option.onclick = () => {
-            const shape = option.dataset.shape;
-            this.changeNailShape(shape);
-            el.shapeSelector.classList.remove('show');
-          };
-        });
-        
-        // Canvas click for finger selection
-        el.canvas.onclick = (event) => this.handleCanvasClick(event);
-        
-        // Close shape selector on background click
-        el.shapeSelector.onclick = (event) => {
-          if (event.target === el.shapeSelector) {
-            el.shapeSelector.classList.remove('show');
+        audio.click = {
+          play: () => {
+            if (state.isMuted) return;
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = 800;
+            oscillator.type = 'sine';
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.1);
           }
         };
+      }
+
+      setupEventListeners() {
+        el.langBtn.onclick = () => this.toggleLanguage();
+        el.soundBtn.onclick = () => this.toggleSound();
+        el.uploadBtn.onclick = () => this.showUploadModal();
+        el.shapeBtn.onclick = () => this.toggleShapePicker();
+        el.applyAllOpt.onclick = () => this.setApplicationMode(true);
+        el.selectFingerOpt.onclick = () => this.setApplicationMode(false);
+        el.saveDesign.onclick = () => this.handleImageUpload();
+        el.closeModal.onclick = () => this.hideUploadModal();
+        
+        el.canvas.onclick = (event) => this.handleCanvasClick(event);
         
         window.addEventListener('resize', () => this.handleResize());
+        
+        document.addEventListener('click', (event) => {
+          if (!el.shapePicker.contains(event.target) && event.target !== el.shapeBtn) {
+            this.hideShapePicker();
+          }
+        });
+      }
+
+      toggleLanguage() {
+        state.currentLang = state.currentLang === 'en' ? 'uk' : 'en';
+        this.updateUI();
+        this.playSound(audio.click);
+      }
+
+      toggleSound() {
+        state.isMuted = !state.isMuted;
+        el.soundBtn.textContent = state.isMuted ? '🔇' : '🔊';
+        this.playSound(audio.click);
+      }
+
+      toggleShapePicker() {
+        state.showShapePicker = !state.showShapePicker;
+        el.shapePicker.style.display = state.showShapePicker ? 'flex' : 'none';
+        this.playSound(audio.click);
+      }
+
+      hideShapePicker() {
+        state.showShapePicker = false;
+        el.shapePicker.style.display = 'none';
       }
 
       setApplicationMode(applyToAll) {
         state.isApplyAll = applyToAll;
-        el.modeAll.classList.toggle('active', applyToAll);
-        el.modeAll.classList.toggle('secondary', !applyToAll);
-        el.modeSingle.classList.toggle('active', !applyToAll);
-        el.modeSingle.classList.toggle('secondary', applyToAll);
+        el.applyAllOpt.classList.toggle('active', applyToAll);
+        el.selectFingerOpt.classList.toggle('active', !applyToAll);
         
-        this.showStatus(applyToAll ? "Режим: всі пальці" : "Режим: один палець - торкніться пальця на екрані");
+        this.showStatus(applyToAll ? this.t('modeAll') : this.t('modeSingle'));
+        this.playSound(audio.click);
       }
 
-      toggleShapeSelector() {
-        el.shapeSelector.classList.toggle('show');
+      showUploadModal() {
+        el.uploadModal.classList.add('show');
+        this.hideShapePicker();
+        this.playSound(audio.click);
       }
 
-      changeNailShape(shape) {
-        state.currentShape = shape;
-        
-        // Update UI
-        document.querySelectorAll('.shape-option').forEach(opt => {
-          opt.classList.toggle('selected', opt.dataset.shape === shape);
-        });
-        
-        this.showStatus(`Форма змінена на: ${this.getShapeName(shape)}`);
+      hideUploadModal() {
+        el.uploadModal.classList.remove('show');
+        el.imageUpload.value = '';
       }
 
-      getShapeName(shape) {
-        const names = {
-          oval: 'Овал',
-          almond: 'Миндаль', 
-          squoval: 'Скувал',
-          coffin: 'Гроб',
-          stiletto: 'Стілетто',
-          square: 'Квадрат'
-        };
-        return names[shape] || shape;
+      async handleImageUpload() {
+        const file = el.imageUpload.files[0];
+        if (!file) {
+          alert("Please select an image file.");
+          return;
+        }
+
+        if (file.size > 5 * 1024 * 1024) {
+          alert("Please select an image smaller than 5MB.");
+          return;
+        }
+
+        try {
+          el.saveDesign.textContent = 'Processing...';
+          el.saveDesign.disabled = true;
+
+          const img = new Image();
+          await new Promise((resolve, reject) => {
+            img.onload = resolve;
+            img.onerror = () => reject(new Error("Failed to load image"));
+            img.src = URL.createObjectURL(file);
+          });
+
+          const texture = await luxuryRenderer.processImage(img, state.currentShape);
+          const designId = `custom_${Date.now()}`;
+          nailTextures[designId] = texture;
+          state.currentDesign = designId;
+
+          const previewUrl = await luxuryRenderer.createPreview(img.src, state.currentShape);
+          
+          const button = document.createElement('div');
+          button.className = 'design-btn selected';
+          button.style.backgroundImage = `url(${previewUrl})`;
+          button.style.backgroundSize = 'cover';
+          button.onclick = () => {
+            state.currentDesign = designId;
+            document.querySelectorAll('.design-btn').forEach(btn => {
+              btn.classList.remove('selected');
+            });
+            button.classList.add('selected');
+            this.triggerConfetti();
+          };
+
+          el.designPicker.appendChild(button);
+          el.uploadModal.classList.remove('show');
+          el.imageUpload.value = '';
+          
+          this.showSuccessMessage(this.t('designSaved'));
+          this.triggerConfetti();
+          
+        } catch (error) {
+          alert("Failed to process image. Please try a different image file.");
+        } finally {
+          el.saveDesign.textContent = this.t('save');
+          el.saveDesign.disabled = false;
+        }
+      }
+
+      triggerConfetti() {
+        const rect = el.designPicker.getBoundingClientRect();
+        for (let i = 0; i < 30; i++) {
+          confettiParticles.push(new ConfettiParticle(
+            rect.left + Math.random() * rect.width,
+            rect.top + Math.random() * rect.height
+          ));
+        }
+        el.confettiCanvas.style.display = 'block';
+      }
+
+      updateConfetti() {
+        confettiParticles = confettiParticles.filter(p => p.life > 0);
+        confettiParticles.forEach(p => p.update());
+        
+        confettiCtx.clearRect(0, 0, el.confettiCanvas.width, el.confettiCanvas.height);
+        confettiParticles.forEach(p => p.draw(confettiCtx));
+        
+        if (confettiParticles.length === 0) {
+          el.confettiCanvas.style.display = 'none';
+        }
+      }
+
+      playSound(sound) {
+        if (state.isMuted) return;
+        try {
+          sound.play();
+        } catch (error) {
+          console.warn('Audio play failed:', error);
+        }
       }
 
       async setupCamera() {
@@ -674,7 +1167,7 @@
           });
           el.video.play();
         } catch (error) {
-          throw new Error("Доступ до камери заборонено.");
+          throw new Error("Camera access denied");
         }
       }
 
@@ -748,12 +1241,11 @@
       }
 
       async loadProfessionalDesigns() {
-        // Create professional nail designs
         const designs = [
-          this.createFrenchManicure(),
+          this.createLuxuryGold(),
           this.createClassicRed(),
-          this.createNude(),
-          this.createGlitterGold(),
+          this.createFrenchManicure(),
+          this.createGlitterPink(),
           this.createMarble(),
           this.createOmbre()
         ];
@@ -761,39 +1253,33 @@
         await Promise.all(designs);
       }
 
-      createFrenchManicure() {
+      createLuxuryGold() {
         return new Promise(resolve => {
           const canvas = document.createElement('canvas');
           canvas.width = 512;
           canvas.height = 512;
           const ctx = canvas.getContext('2d');
           
-          // Natural nail base
-          const baseGrad = ctx.createLinearGradient(0, 0, 0, 512);
-          baseGrad.addColorStop(0, '#FFF8F0');
-          baseGrad.addColorStop(1, '#FFE8CC');
-          ctx.fillStyle = baseGrad;
+          const gradient = ctx.createLinearGradient(0, 0, 0, 512);
+          gradient.addColorStop(0, '#ffd700');
+          gradient.addColorStop(0.3, '#d4af37');
+          gradient.addColorStop(0.7, '#b8941f');
+          gradient.addColorStop(1, '#9a7c1a');
+          
+          ctx.fillStyle = gradient;
           ctx.fillRect(0, 0, 512, 512);
           
-          // French tip
-          ctx.fillStyle = '#FFFFFF';
-          ctx.beginPath();
-          ctx.moveTo(50, 400);
-          ctx.bezierCurveTo(150, 350, 362, 350, 462, 400);
-          ctx.lineTo(462, 512);
-          ctx.lineTo(50, 512);
-          ctx.closePath();
-          ctx.fill();
+          for (let i = 0; i < 150; i++) {
+            ctx.fillStyle = `rgba(255, 255, 255, ${Math.random() * 0.5 + 0.2})`;
+            const x = Math.random() * 512;
+            const y = Math.random() * 512;
+            const size = Math.random() * 3 + 1;
+            ctx.beginPath();
+            ctx.arc(x, y, size, 0, Math.PI * 2);
+            ctx.fill();
+          }
           
-          // Smile line
-          ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
-          ctx.lineWidth = 3;
-          ctx.beginPath();
-          ctx.moveTo(80, 390);
-          ctx.bezierCurveTo(150, 370, 362, 370, 432, 390);
-          ctx.stroke();
-          
-          nailTextures["classic_french"] = new THREE.CanvasTexture(canvas);
+          nailTextures["luxury_gold"] = new THREE.CanvasTexture(canvas);
           resolve();
         });
       }
@@ -811,7 +1297,6 @@
           ctx.fillStyle = redGrad;
           ctx.fillRect(0, 0, 512, 512);
           
-          // High gloss effect
           const shine = ctx.createRadialGradient(256, 100, 0, 256, 100, 300);
           shine.addColorStop(0, 'rgba(255, 255, 255, 0.4)');
           shine.addColorStop(1, 'rgba(255, 255, 255, 0)');
@@ -823,59 +1308,67 @@
         });
       }
 
-      createNude() {
+      createFrenchManicure() {
         return new Promise(resolve => {
           const canvas = document.createElement('canvas');
           canvas.width = 512;
           canvas.height = 512;
           const ctx = canvas.getContext('2d');
           
-          const nudeGrad = ctx.createLinearGradient(0, 0, 0, 512);
-          nudeGrad.addColorStop(0, '#F5E6D3');
-          nudeGrad.addColorStop(1, '#E8D5C4');
-          ctx.fillStyle = nudeGrad;
+          const baseGrad = ctx.createLinearGradient(0, 0, 0, 512);
+          baseGrad.addColorStop(0, '#FFF8F0');
+          baseGrad.addColorStop(1, '#FFE8CC');
+          ctx.fillStyle = baseGrad;
           ctx.fillRect(0, 0, 512, 512);
           
-          // Natural nail lines
-          ctx.strokeStyle = 'rgba(139, 69, 19, 0.1)';
-          ctx.lineWidth = 1;
-          for (let i = 0; i < 5; i++) {
-            ctx.beginPath();
-            ctx.moveTo(100 + i * 80, 0);
-            ctx.lineTo(100 + i * 80, 512);
-            ctx.stroke();
-          }
+          ctx.fillStyle = '#FFFFFF';
+          ctx.beginPath();
+          ctx.moveTo(50, 400);
+          ctx.bezierCurveTo(150, 350, 362, 350, 462, 400);
+          ctx.lineTo(462, 512);
+          ctx.lineTo(50, 512);
+          ctx.closePath();
+          ctx.fill();
           
-          nailTextures["nude"] = new THREE.CanvasTexture(canvas);
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.moveTo(80, 390);
+          ctx.bezierCurveTo(150, 370, 362, 370, 432, 390);
+          ctx.stroke();
+          
+          nailTextures["french_manicure"] = new THREE.CanvasTexture(canvas);
           resolve();
         });
       }
 
-      createGlitterGold() {
+      createGlitterPink() {
         return new Promise(resolve => {
           const canvas = document.createElement('canvas');
           canvas.width = 512;
           canvas.height = 512;
           const ctx = canvas.getContext('2d');
           
-          const goldGrad = ctx.createLinearGradient(0, 0, 0, 512);
-          goldGrad.addColorStop(0, '#FFD700');
-          goldGrad.addColorStop(1, '#D4AF37');
-          ctx.fillStyle = goldGrad;
+          const pinkGrad = ctx.createLinearGradient(0, 0, 0, 512);
+          pinkGrad.addColorStop(0, '#ffb6e1');
+          pinkGrad.addColorStop(0.5, '#ff85c8');
+          pinkGrad.addColorStop(1, '#ff66b2');
+          ctx.fillStyle = pinkGrad;
           ctx.fillRect(0, 0, 512, 512);
           
-          // Glitter effect
+          const glitterColors = ['#ff99cc', '#ff66aa', '#ffffff', '#ffccdd'];
           for (let i = 0; i < 200; i++) {
-            ctx.fillStyle = `rgba(255, 255, 255, ${Math.random() * 0.6 + 0.2})`;
+            ctx.fillStyle = glitterColors[Math.floor(Math.random() * glitterColors.length)];
+            ctx.globalAlpha = Math.random() * 0.6 + 0.2;
             const x = Math.random() * 512;
             const y = Math.random() * 512;
-            const size = Math.random() * 3 + 1;
+            const size = Math.random() * 4 + 1;
             ctx.beginPath();
             ctx.arc(x, y, size, 0, Math.PI * 2);
             ctx.fill();
           }
           
-          nailTextures["glitter_gold"] = new THREE.CanvasTexture(canvas);
+          nailTextures["glitter_pink"] = new THREE.CanvasTexture(canvas);
           resolve();
         });
       }
@@ -887,11 +1380,9 @@
           canvas.height = 512;
           const ctx = canvas.getContext('2d');
           
-          // Marble base
           ctx.fillStyle = '#F8F8FF';
           ctx.fillRect(0, 0, 512, 512);
           
-          // Marble veins
           ctx.strokeStyle = '#E0E0E0';
           ctx.lineWidth = 8;
           for (let i = 0; i < 15; i++) {
@@ -917,7 +1408,6 @@
           canvas.height = 512;
           const ctx = canvas.getContext('2d');
           
-          // Ombre gradient
           const ombreGrad = ctx.createLinearGradient(0, 0, 0, 512);
           ombreGrad.addColorStop(0, '#FF69B4');
           ombreGrad.addColorStop(0.5, '#FF1493');
@@ -930,14 +1420,57 @@
         });
       }
 
+      buildUI() {
+        this.buildShapePicker(); // Спочатку форми
+        this.buildDesignPicker(); // Потім дизайни
+        this.updateUI();
+      }
+
+      buildShapePicker() {
+        el.shapePicker.innerHTML = '';
+        
+        // Додаємо індикатор кроку
+        const stepIndicator = document.createElement('div');
+        stepIndicator.className = 'step-indicator';
+        stepIndicator.textContent = this.t('step1');
+        el.shapePicker.appendChild(stepIndicator);
+        
+        NAIL_SHAPES.forEach(shape => {
+          const button = document.createElement('div');
+          button.className = `shape-btn ${shape.id === state.currentShape ? 'selected' : ''}`;
+          button.textContent = shape.name[state.currentLang];
+          button.onclick = () => {
+            state.currentShape = shape.id;
+            document.querySelectorAll('.shape-btn').forEach(btn => {
+              btn.classList.remove('selected');
+            });
+            button.classList.add('selected');
+            this.showStatus(this.t('shapeChanged') + shape.name[state.currentLang]);
+            this.playSound(audio.click);
+            
+            // Оновлюємо всі прев'ю дизайнів з новою формою
+            this.updateDesignPreviews();
+          };
+          el.shapePicker.appendChild(button);
+        });
+      }
+
       buildDesignPicker() {
+        el.designPicker.innerHTML = '';
+        
+        // Додаємо індикатор кроку
+        const stepIndicator = document.createElement('div');
+        stepIndicator.className = 'step-indicator';
+        stepIndicator.textContent = this.t('step2');
+        el.designPicker.appendChild(stepIndicator);
+        
         const designs = [
-          { id: "classic_french", name: "Френч", color: "linear-gradient(135deg, #FFF8F0, #FFE8CC)" },
-          { id: "classic_red", name: "Класичний червоний", color: "linear-gradient(135deg, #C41E3A, #8B0000)" },
-          { id: "nude", name: "Нюд", color: "linear-gradient(135deg, #F5E6D3, #E8D5C4)" },
-          { id: "glitter_gold", name: "Гліттер золото", color: "linear-gradient(135deg, #FFD700, #D4AF37)" },
-          { id: "marble", name: "Мармур", color: "linear-gradient(135deg, #F8F8FF, #E0E0E0)" },
-          { id: "ombre", name: "Омбре", color: "linear-gradient(135deg, #FF69B4, #DC143C)" }
+          { id: "luxury_gold", name: { en: "Luxury Gold", uk: "Розкішне золото" }, color: "linear-gradient(135deg, #ffd700, #b8941f)" },
+          { id: "classic_red", name: { en: "Classic Red", uk: "Класичний червоний" }, color: "linear-gradient(135deg, #C41E3A, #8B0000)" },
+          { id: "french_manicure", name: { en: "French", uk: "Френч" }, color: "linear-gradient(135deg, #FFF8F0, #FFE8CC)" },
+          { id: "glitter_pink", name: { en: "Glitter Pink", uk: "Рожевий гліттер" }, color: "linear-gradient(135deg, #ffb6e1, #ff66b2)" },
+          { id: "marble", name: { en: "Marble", uk: "Мармур" }, color: "linear-gradient(135deg, #F8F8FF, #E0E0E0)" },
+          { id: "ombre", name: { en: "Ombre", uk: "Омбре" }, color: "linear-gradient(135deg, #FF69B4, #DC143C)" }
         ];
 
         designs.forEach(design => {
@@ -957,10 +1490,47 @@
               btn.classList.remove('selected');
             });
             button.classList.add('selected');
-            this.showStatus(`Обрано: ${design.name}`);
+            this.showStatus(`${this.t('selected')}: ${design.name[state.currentLang]}`);
+            this.triggerConfetti();
           };
           
-          el.bottomPanel.appendChild(button);
+          el.designPicker.appendChild(button);
+        });
+      }
+
+      updateDesignPreviews() {
+        // Оновлюємо прев'ю дизайнів з поточною формою
+        document.querySelectorAll('.design-btn').forEach(btn => {
+          const designId = btn.dataset.design;
+          if (designId && designId.startsWith('custom_')) {
+            // Для кастомних дизайнів можна оновити прев'ю
+            // Тут можна додати логіку оновлення прев'ю
+          }
+        });
+      }
+
+      updateUI() {
+        document.title = this.t('title');
+        el.loading.querySelector('div').textContent = this.t('title');
+        el.loading.querySelector('p').textContent = this.t('cameraPrompt');
+        el.handIndicator.querySelector('span:last-child').textContent = this.t('handNotDetected');
+        el.uploadModal.querySelector('h3').textContent = this.t('uploadTitle');
+        el.uploadModal.querySelector('p').textContent = this.t('uploadHint');
+        el.saveDesign.textContent = this.t('save');
+        el.closeModal.textContent = this.t('cancel');
+        el.langBtn.textContent = state.currentLang === 'en' ? 'UK' : 'EN';
+        
+        // Оновлюємо індикатори кроків
+        const shapeStep = el.shapePicker.querySelector('.step-indicator');
+        const designStep = el.designPicker.querySelector('.step-indicator');
+        if (shapeStep) shapeStep.textContent = this.t('step1');
+        if (designStep) designStep.textContent = this.t('step2');
+        
+        // Update shape picker labels
+        document.querySelectorAll('.shape-btn').forEach((btn, index) => {
+          if (NAIL_SHAPES[index]) {
+            btn.textContent = NAIL_SHAPES[index].name[state.currentLang];
+          }
         });
       }
 
@@ -968,6 +1538,7 @@
         const renderLoop = () => {
           this.detectHands();
           this.renderAR();
+          this.updateConfetti();
           requestAnimationFrame(renderLoop);
         };
         renderLoop();
@@ -981,12 +1552,15 @@
           
           if (results.landmarks && results.landmarks.length > 0) {
             state.handNotDetectedCount = 0;
+            el.handIndicator.classList.remove('show');
+            
             const landmarks = results.landmarks[0];
             state.isLeftHand = results.handednesses[0][0].displayName === "Left";
             state.lastLandmarks = this.smoothLandmarks(landmarks);
             this.updateHandSize(landmarks);
           } else {
             if (++state.handNotDetectedCount > CONFIG.HAND_NOT_DETECTED_THRESHOLD) {
+              el.handIndicator.classList.add('show');
               this.hideAllNails();
             }
           }
@@ -1044,7 +1618,6 @@
           this.updateNailPosition(fingerKey, flipFactor);
           nail.visible = true;
           
-          // Update texture and shader uniforms
           if (nailTextures[state.currentDesign]) {
             nail.material.uniforms.map.value = nailTextures[state.currentDesign];
             nail.material.uniforms.time.value = performance.now() * 0.001;
@@ -1111,8 +1684,12 @@
         
         if (selectedIndex !== -1) {
           state.selectedFingerIndex = selectedIndex;
-          const fingerNames = ['Великий', 'Вказівний', 'Середній', 'Безіменний', 'Мізинець'];
-          this.showStatus(`Обрано: ${fingerNames[selectedIndex]} палець`);
+          const fingerNames = {
+            en: ['Thumb', 'Index', 'Middle', 'Ring', 'Pinky'],
+            uk: ['Великий', 'Вказівний', 'Середній', 'Безіменний', 'Мізинець']
+          };
+          this.showStatus(`Selected: ${fingerNames[state.currentLang][selectedIndex]}`);
+          this.playSound(audio.click);
         }
       }
 
@@ -1130,29 +1707,25 @@
           tempCanvas.height = el.canvas.height;
           const tempCtx = tempCanvas.getContext('2d');
           
-          // Draw video background
           tempCtx.drawImage(el.video, 0, 0);
-          
-          // Draw AR nails
           tempCtx.drawImage(el.canvas, 0, 0);
           
-          // Create download
           tempCanvas.toBlob((blob) => {
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
-            a.download = `pro-nail-design-${new Date().getTime()}.png`;
+            a.download = `elite-nail-design-${new Date().getTime()}.png`;
             a.href = url;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
             
-            this.showStatus("Знімок збережено!");
+            this.showStatus(this.t('screenshotSaved'));
+            this.triggerConfetti();
           }, 'image/png');
           
         } catch (error) {
           console.error('Screenshot failed:', error);
-          this.showStatus("Помилка знімка. Спробуйте ще раз.");
         }
       }
 
@@ -1168,12 +1741,17 @@
         
         renderer.setSize(rect.width, rect.height);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        
+        el.confettiCanvas.width = window.innerWidth;
+        el.confettiCanvas.height = window.innerHeight;
       }
 
-      hideLoadingScreen() {
+      hideLoading() {
         el.loading.style.display = 'none';
         el.video.style.display = 'block';
         el.canvas.style.display = 'block';
+        el.confettiCanvas.width = window.innerWidth;
+        el.confettiCanvas.height = window.innerHeight;
       }
 
       showStatus(message, duration = 3000) {
@@ -1185,19 +1763,56 @@
         }, duration);
       }
 
+      showSuccessMessage(message) {
+        const successMsg = document.createElement('div');
+        successMsg.textContent = message;
+        successMsg.style.cssText = `
+          position: fixed;
+          top: 100px;
+          left: 50%;
+          transform: translateX(-50%);
+          background: rgba(212, 175, 55, 0.95);
+          color: #0a0a0a;
+          padding: 14px 24px;
+          border-radius: 20px;
+          font-weight: 600;
+          z-index: 1000;
+          animation: fadeOut 3s forwards;
+        `;
+        document.body.appendChild(successMsg);
+        setTimeout(() => successMsg.remove(), 3000);
+      }
+
       showError(message) {
         el.loading.innerHTML = `
-          <div style="color:#4a90e2; font-size:28px; margin-bottom:15px;">⚠️</div>
-          <div style="color:#4a90e2; font-size:20px; margin-bottom:15px; font-weight:600">Pro Nail AR Studio</div>
+          <div style="color:#d4af37; font-size:28px; margin-bottom:15px;">⚠️</div>
+          <div style="color:#d4af37; font-size:20px; margin-bottom:15px; font-weight:600">Elite Nail AR Studio</div>
           <p style="color:#aaa; font-size:16px; line-height:1.5; max-width:300px; margin-bottom:20px;">${message}</p>
-          <button onclick="location.reload()" style="padding:12px 24px; background:#4a90e2; color:white; border:none; border-radius:18px; font-weight:600; cursor:pointer;">Спробувати знову</button>
+          <button onclick="location.reload()" style="padding:12px 24px; background:#d4af37; color:#0a0a0a; border:none; border-radius:18px; font-weight:600; cursor:pointer;">Спробувати знову</button>
         `;
       }
     }
 
+    // Add fadeOut animation
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes fadeOut {
+        0% { opacity: 1; }
+        70% { opacity: 1; }
+        100% { opacity: 0; }
+      }
+    `;
+    document.head.appendChild(style);
+
     // Initialize application
     window.addEventListener('DOMContentLoaded', () => {
-      new ProNailARStudio().init();
+      new EliteNailARStudio().init();
+    });
+
+    // Add screenshot functionality to right-click
+    document.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+      new EliteNailARStudio().takeScreenshot();
     });
   </script>
 </body>
